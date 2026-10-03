@@ -2137,3 +2137,370 @@ form button {
             1fr;
     }
 }
+/* ============================================================
+TAARA* PROFILE & SETTINGS
+============================================================ */
+
+.chat-header-user {
+display: flex;
+align-items: center;
+gap: 12px;
+}
+
+.profile-button {
+width: 46px;
+height: 46px;
+padding: 0;
+border: 1px solid rgba(255, 255, 255, 0.16);
+border-radius: 50%;
+background: rgba(255, 255, 255, 0.08);
+color: inherit;
+display: flex;
+align-items: center;
+justify-content: center;
+cursor: pointer;
+transition:
+transform 0.2s ease,
+background 0.2s ease,
+border-color 0.2s ease,
+box-shadow 0.2s ease;
+}
+
+.profile-button:hover {
+transform: translateY(-1px);
+background: rgba(255, 255, 255, 0.14);
+border-color: rgba(255, 255, 255, 0.3);
+box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+.profile-avatar {
+font-size: 21px;
+line-height: 1;
+}
+
+/* ============================================================
+PROFILE PANEL
+============================================================ */
+
+.profile-panel {
+position: relative;
+margin: 12px 0 18px;
+padding: 18px;
+
+```
+border: 1px solid rgba(255, 255, 255, 0.12);
+border-radius: 20px;
+
+background:
+    linear-gradient(
+        145deg,
+        rgba(255, 255, 255, 0.10),
+        rgba(255, 255, 255, 0.045)
+    );
+
+backdrop-filter: blur(18px);
+-webkit-backdrop-filter: blur(18px);
+
+box-shadow:
+    0 18px 50px rgba(0, 0, 0, 0.22);
+
+animation: taaraProfileOpen 0.25s ease;
+```
+
+}
+
+.profile-panel.hidden {
+display: none;
+}
+
+@keyframes taaraProfileOpen {
+from {
+opacity: 0;
+transform: translateY(-8px);
+}
+
+```
+to {
+    opacity: 1;
+    transform: translateY(0);
+}
+```
+
+}
+
+/* ============================================================
+PANEL HEADER
+============================================================ */
+
+.profile-panel-header {
+display: flex;
+align-items: flex-start;
+justify-content: space-between;
+gap: 15px;
+margin-bottom: 18px;
+}
+
+.profile-panel-title {
+font-size: 18px;
+font-weight: 700;
+}
+
+.profile-panel-subtitle {
+margin-top: 4px;
+font-size: 12px;
+opacity: 0.6;
+}
+
+.profile-close-button {
+width: 32px;
+height: 32px;
+
+```
+border: 0;
+border-radius: 10px;
+
+background: rgba(255, 255, 255, 0.07);
+color: inherit;
+
+font-size: 22px;
+line-height: 1;
+
+cursor: pointer;
+
+transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+```
+
+}
+
+.profile-close-button:hover {
+background: rgba(255, 255, 255, 0.14);
+transform: scale(1.05);
+}
+
+/* ============================================================
+PROFILE CARD
+============================================================ */
+
+.profile-card {
+display: flex;
+align-items: center;
+gap: 14px;
+
+```
+padding: 15px;
+
+border-radius: 16px;
+
+background: rgba(255, 255, 255, 0.055);
+border: 1px solid rgba(255, 255, 255, 0.08);
+
+margin-bottom: 20px;
+```
+
+}
+
+.profile-card-avatar {
+width: 58px;
+height: 58px;
+
+```
+flex-shrink: 0;
+
+display: flex;
+align-items: center;
+justify-content: center;
+
+border-radius: 50%;
+
+background: rgba(255, 255, 255, 0.10);
+border: 1px solid rgba(255, 255, 255, 0.14);
+
+font-size: 27px;
+```
+
+}
+
+.profile-card-info {
+min-width: 0;
+}
+
+.profile-username {
+font-size: 16px;
+font-weight: 700;
+
+```
+overflow: hidden;
+text-overflow: ellipsis;
+white-space: nowrap;
+```
+
+}
+
+.profile-online-status {
+display: flex;
+align-items: center;
+gap: 7px;
+
+```
+margin-top: 5px;
+
+font-size: 12px;
+opacity: 0.7;
+```
+
+}
+
+.profile-status-dot {
+width: 7px;
+height: 7px;
+
+```
+border-radius: 50%;
+
+background: #4ade80;
+
+box-shadow:
+    0 0 8px rgba(74, 222, 128, 0.7);
+```
+
+}
+
+/* ============================================================
+SETTINGS SECTION
+============================================================ */
+
+.settings-section {
+margin-top: 18px;
+}
+
+.settings-section-title {
+margin: 0 4px 9px;
+
+```
+font-size: 11px;
+font-weight: 700;
+letter-spacing: 0.08em;
+text-transform: uppercase;
+
+opacity: 0.48;
+```
+
+}
+
+.settings-item,
+.settings-logout-item {
+width: 100%;
+
+```
+display: flex;
+align-items: center;
+
+gap: 12px;
+
+padding: 13px 12px;
+
+margin-bottom: 7px;
+
+border: 1px solid transparent;
+border-radius: 14px;
+
+background: rgba(255, 255, 255, 0.045);
+color: inherit;
+
+text-align: left;
+
+cursor: pointer;
+
+transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
+```
+
+}
+
+.settings-item:hover,
+.settings-logout-item:hover {
+background: rgba(255, 255, 255, 0.085);
+border-color: rgba(255, 255, 255, 0.10);
+transform: translateX(2px);
+}
+
+.settings-item-icon {
+width: 34px;
+height: 34px;
+
+```
+flex-shrink: 0;
+
+display: flex;
+align-items: center;
+justify-content: center;
+
+border-radius: 10px;
+
+background: rgba(255, 255, 255, 0.07);
+
+font-size: 16px;
+```
+
+}
+
+.settings-item-content {
+flex: 1;
+min-width: 0;
+
+```
+display: flex;
+flex-direction: column;
+gap: 3px;
+```
+
+}
+
+.settings-item-content strong {
+font-size: 13px;
+font-weight: 650;
+}
+
+.settings-item-content small {
+font-size: 11px;
+opacity: 0.52;
+}
+
+.settings-item-arrow {
+font-size: 22px;
+opacity: 0.4;
+}
+
+.settings-logout-item {
+margin-top: 3px;
+}
+
+/* ============================================================
+MOBILE
+============================================================ */
+
+@media (max-width: 600px) {
+
+```
+.profile-panel {
+    margin-left: -2px;
+    margin-right: -2px;
+    padding: 15px;
+    border-radius: 18px;
+}
+
+.profile-card {
+    padding: 13px;
+}
+
+.settings-item,
+.settings-logout-item {
+    padding: 12px 10px;
+}
+```
+
+}
