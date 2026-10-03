@@ -505,14 +505,22 @@ function showLogin() {
 
 function showCreate() {
 
-    if (loginScreen)
-        loginScreen.style.display = "none";
+    console.log("showCreate() called");
 
-    if (createScreen)
-        createScreen.style.display = "";
+    if (!loginScreen) {
+        console.error("loginScreen not found");
+        return;
+    }
 
-    if (chatScreen)
-        chatScreen.style.display = "none";
+    if (!createScreen) {
+        console.error("createScreen not found");
+        return;
+    }
+
+    loginScreen.classList.add("hidden");
+    createScreen.classList.remove("hidden");
+
+    console.log("Create Account screen opened");
 }
 
 
