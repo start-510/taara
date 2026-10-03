@@ -492,39 +492,43 @@ function injectFeatureStyles() {
 
 function showLogin() {
 
-    console.log("showLogin() called");
+    console.log("Showing LOGIN screen");
 
-    if (!loginScreen) {
-        console.error("loginScreen not found");
-        return;
+    if (loginScreen) {
+        loginScreen.classList.remove("hidden");
+        loginScreen.style.display = "flex";
     }
 
-    if (!createScreen) {
-        console.error("createScreen not found");
-        return;
+    if (createScreen) {
+        createScreen.classList.add("hidden");
+        createScreen.style.display = "none";
     }
 
-    createScreen.classList.add("hidden");
-    loginScreen.classList.remove("hidden");
+    if (chatScreen) {
+        chatScreen.classList.add("hidden");
+        chatScreen.style.display = "none";
+    }
 }
 
 
 function showCreate() {
 
-    console.log("showCreate() called");
+    console.log("Showing CREATE ACCOUNT screen");
 
-    if (!loginScreen) {
-        console.error("loginScreen not found");
-        return;
+    if (loginScreen) {
+        loginScreen.classList.add("hidden");
+        loginScreen.style.display = "none";
     }
 
-    if (!createScreen) {
-        console.error("createScreen not found");
-        return;
+    if (createScreen) {
+        createScreen.classList.remove("hidden");
+        createScreen.style.display = "flex";
     }
 
-    loginScreen.classList.add("hidden");
-    createScreen.classList.remove("hidden");
+    if (chatScreen) {
+        chatScreen.classList.add("hidden");
+        chatScreen.style.display = "none";
+    }
 
     console.log("Create Account screen opened");
 }
@@ -532,16 +536,23 @@ function showCreate() {
 
 function showChat() {
 
-    if (loginScreen)
+    console.log("Showing CHAT screen");
+
+    if (loginScreen) {
+        loginScreen.classList.add("hidden");
         loginScreen.style.display = "none";
+    }
 
-    if (createScreen)
+    if (createScreen) {
+        createScreen.classList.add("hidden");
         createScreen.style.display = "none";
+    }
 
-    if (chatScreen)
-        chatScreen.style.display = "";
+    if (chatScreen) {
+        chatScreen.classList.remove("hidden");
+        chatScreen.style.display = "block";
+    }
 }
-
 // ============================================================
 // CREATE ACCOUNT
 // ============================================================
