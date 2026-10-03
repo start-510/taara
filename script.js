@@ -3889,6 +3889,77 @@ function startRealtimeMessages() {
     );
 }
 
+// ============================================================
+// DISAPPEARING MESSAGES
+// ============================================================
+
+const DISAPPEARING_OPTIONS = {
+    0: "Off",
+    30: "30 seconds",
+    60: "1 minute",
+    300: "5 minutes",
+    3600: "1 hour",
+    86400: "1 day",
+    604800: "7 days"
+};
+
+async function getDisappearingMessageTimer() {
+    if (!currentConversationId) return 0;
+
+    try {
+        const { data, error } = await supabaseClient.rpc(
+            "get_disappearing_messages",
+            {
+                target_conversation_id: currentConversationId
+            }
+        );
+
+        if (error) throw error;
+
+        return Number(data) || 0;
+    } catch (error) {
+        console.error(
+            "Failed to get disappearing message timer:",
+            error
+        );
+
+        return 0;
+    }
+}
+
+
+async function setDisappearingMessageTimer(seconds) {
+    if (!currentConversationId) {
+        throw new Error("No conversation selected.");
+    }
+
+    seconds = Number(seconds);
+
+    if (!Object.prototype.hasOwnProperty.call(
+        DISAPPEARING_OPTIONS,
+        seconds
+    )) {
+        throw new Error("Invalid disappearing message timer.");
+    }
+
+    const { error } = await supabaseClient.rpc(
+        "set_disappearing_messages",
+        {
+            target_conversation_id: currentConversationId,
+            target_seconds: seconds
+        }
+    );
+
+    if (error) throw error;
+
+    return true;
+}
+
+
+function getDisappearingMessageLabel(seconds) {
+    return DISAPPEARING_OPTIONS[Number(seconds)] || "Off";
+}
+
 
 // ============================================================
 // CHAT PRESENCE
