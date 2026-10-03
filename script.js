@@ -4338,51 +4338,18 @@ supabaseClient.auth.onAuthStateChange(
 );
 
 
-// ============================================================
-// EXISTING SESSION
-// ============================================================
-
 async function checkExistingSession() {
 
-    try {
+    // TAARA* should require login again after refresh
+    await supabaseClient.auth.signOut();
 
-        const {
-            data
-        } =
-            await supabaseClient.auth.getSession();
+    currentUserId = null;
+    currentConversationId = null;
+    currentChatUserId = null;
+    currentChatUsername = null;
 
-        if (
-            data?.session
-        ) {
-
-            await setupLoggedInUser();
-
-            await updateLastSeen();
-
-            await loadConversations();
-
-            startGlobalPresence();
-
-            startLastSeenTimer();
-
-            showChat();
-
-        } else {
-
-            showLogin();
-        }
-
-    } catch (error) {
-
-        console.error(
-            "Session check failed:",
-            error
-        );
-
-        showLogin();
-    }
+    showLogin();
 }
-
 
 // ============================================================
 // CLOSE POPUPS
