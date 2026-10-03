@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
 
+```
 <meta
     name="viewport"
     content="width=device-width, initial-scale=1.0"
@@ -12,6 +13,7 @@
 <title>TAARA*</title>
 
 <link rel="stylesheet" href="style.css">
+```
 
 </head>
 
@@ -23,57 +25,58 @@
 
 <section id="loginScreen" class="screen">
 
-    <div class="auth-card">
+```
+<div class="auth-card">
 
-        <div class="logo">
-            TAARA*
-        </div>
-
-        <p class="subtitle">
-            Private conversations
-        </p>
-
-        <form id="loginForm">
-
-            <input
-                id="loginUsername"
-                type="text"
-                placeholder="Username"
-                autocomplete="username"
-                required
-            >
-
-            <input
-                id="loginPin"
-                type="password"
-                placeholder="PIN"
-                autocomplete="current-password"
-                required
-            >
-
-            <button type="submit">
-                Enter Private Chat
-            </button>
-
-        </form>
-
-        <p
-            id="loginMessage"
-            class="form-message"
-        ></p>
-
-        <button
-            id="showCreateButton"
-            class="secondary-button"
-            type="button"
-        >
-            Create Account
-        </button>
-
+    <div class="logo">
+        TAARA*
     </div>
 
-</section>
+    <p class="subtitle">
+        Private conversations
+    </p>
 
+    <form id="loginForm">
+
+        <input
+            id="loginUsername"
+            type="text"
+            placeholder="Username"
+            autocomplete="username"
+            required
+        >
+
+        <input
+            id="loginPin"
+            type="password"
+            placeholder="PIN"
+            autocomplete="current-password"
+            required
+        >
+
+        <button type="submit">
+            Enter Private Chat
+        </button>
+
+    </form>
+
+    <p
+        id="loginMessage"
+        class="form-message"
+    ></p>
+
+    <button
+        id="showCreateButton"
+        class="secondary-button"
+        type="button"
+    >
+        Create Account
+    </button>
+
+</div>
+```
+
+</section>
 
 <!-- =========================
      CREATE ACCOUNT SCREEN
@@ -84,65 +87,66 @@
     class="screen hidden"
 >
 
-    <div class="auth-card">
+```
+<div class="auth-card">
 
-        <div class="logo">
-            TAARA*
-        </div>
-
-        <p class="subtitle">
-            Create your private account
-        </p>
-
-        <form id="createForm">
-
-            <input
-                id="createUsername"
-                type="text"
-                placeholder="Choose username"
-                autocomplete="username"
-                required
-            >
-
-            <input
-                id="createPin"
-                type="password"
-                placeholder="Create PIN"
-                autocomplete="new-password"
-                required
-            >
-
-            <input
-                id="confirmPin"
-                type="password"
-                placeholder="Confirm PIN"
-                autocomplete="new-password"
-                required
-            >
-
-            <button type="submit">
-                Create Account
-            </button>
-
-        </form>
-
-        <p
-            id="createMessage"
-            class="form-message"
-        ></p>
-
-        <button
-            id="backToLoginButton"
-            class="secondary-button"
-            type="button"
-        >
-            Back to Login
-        </button>
-
+    <div class="logo">
+        TAARA*
     </div>
 
-</section>
+    <p class="subtitle">
+        Create your private account
+    </p>
 
+    <form id="createForm">
+
+        <input
+            id="createUsername"
+            type="text"
+            placeholder="Choose username"
+            autocomplete="username"
+            required
+        >
+
+        <input
+            id="createPin"
+            type="password"
+            placeholder="Create PIN"
+            autocomplete="new-password"
+            required
+        >
+
+        <input
+            id="confirmPin"
+            type="password"
+            placeholder="Confirm PIN"
+            autocomplete="new-password"
+            required
+        >
+
+        <button type="submit">
+            Create Account
+        </button>
+
+    </form>
+
+    <p
+        id="createMessage"
+        class="form-message"
+    ></p>
+
+    <button
+        id="backToLoginButton"
+        class="secondary-button"
+        type="button"
+    >
+        Back to Login
+    </button>
+
+</div>
+```
+
+</section>
 
 <!-- =========================
      CHAT SCREEN
@@ -153,13 +157,33 @@
     class="screen hidden"
 >
 
-    <div class="chat-container">
+```
+<div class="chat-container">
 
-        <!-- =========================
-             HEADER
-        ========================== -->
+    <!-- =========================
+         HEADER
+    ========================== -->
 
-        <header class="chat-header">
+    <header class="chat-header">
+
+        <div class="chat-header-user">
+
+            <button
+                id="profileButton"
+                class="profile-button"
+                type="button"
+                title="Profile & Settings"
+                aria-label="Profile & Settings"
+            >
+
+                <span
+                    id="profileAvatar"
+                    class="profile-avatar"
+                >
+                    👤
+                </span>
+
+            </button>
 
             <div>
 
@@ -174,323 +198,582 @@
 
             </div>
 
+        </div>
+
+        <button
+            id="logoutButton"
+            class="logout-button"
+            type="button"
+        >
+            Logout
+        </button>
+
+    </header>
+
+
+    <!-- =========================
+         PROFILE & SETTINGS PANEL
+    ========================== -->
+
+    <div
+        id="profilePanel"
+        class="profile-panel hidden"
+    >
+
+        <div class="profile-panel-header">
+
+            <div>
+                <div class="profile-panel-title">
+                    Profile & Settings
+                </div>
+
+                <div class="profile-panel-subtitle">
+                    Your private TAARA* settings
+                </div>
+            </div>
+
             <button
-                id="logoutButton"
-                class="logout-button"
+                id="closeProfileButton"
+                class="profile-close-button"
                 type="button"
+                aria-label="Close"
             >
-                Logout
+                ×
             </button>
 
-        </header>
+        </div>
 
 
-        <!-- =========================
-             CONVERSATIONS
-        ========================== -->
+        <!-- PROFILE CARD -->
 
-        <div class="section-title">
-            Conversations
+        <div class="profile-card">
+
+            <div class="profile-card-avatar">
+                <span id="profileLargeAvatar">
+                    👤
+                </span>
+            </div>
+
+            <div class="profile-card-info">
+
+                <div
+                    id="profileUsername"
+                    class="profile-username"
+                >
+                    @username
+                </div>
+
+                <div class="profile-online-status">
+                    <span class="profile-status-dot"></span>
+                    Online
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- SETTINGS -->
+
+        <div class="settings-section">
+
+            <div class="settings-section-title">
+                Settings
+            </div>
+
+
+            <button
+                id="profileSettingsButton"
+                class="settings-item"
+                type="button"
+            >
+
+                <span class="settings-item-icon">
+                    👤
+                </span>
+
+                <span class="settings-item-content">
+
+                    <strong>
+                        Profile
+                    </strong>
+
+                    <small>
+                        Username and profile information
+                    </small>
+
+                </span>
+
+                <span class="settings-item-arrow">
+                    ›
+                </span>
+
+            </button>
+
+
+            <button
+                id="privacySettingsButton"
+                class="settings-item"
+                type="button"
+            >
+
+                <span class="settings-item-icon">
+                    🔐
+                </span>
+
+                <span class="settings-item-content">
+
+                    <strong>
+                        Privacy
+                    </strong>
+
+                    <small>
+                        Control your presence and visibility
+                    </small>
+
+                </span>
+
+                <span class="settings-item-arrow">
+                    ›
+                </span>
+
+            </button>
+
+
+            <button
+                id="securitySettingsButton"
+                class="settings-item"
+                type="button"
+            >
+
+                <span class="settings-item-icon">
+                    🛡️
+                </span>
+
+                <span class="settings-item-content">
+
+                    <strong>
+                        Security
+                    </strong>
+
+                    <small>
+                        Protect your TAARA* account
+                    </small>
+
+                </span>
+
+                <span class="settings-item-arrow">
+                    ›
+                </span>
+
+            </button>
+
+
+            <button
+                id="notificationSettingsButton"
+                class="settings-item"
+                type="button"
+            >
+
+                <span class="settings-item-icon">
+                    🔔
+                </span>
+
+                <span class="settings-item-content">
+
+                    <strong>
+                        Notifications
+                    </strong>
+
+                    <small>
+                        Manage message notifications
+                    </small>
+
+                </span>
+
+                <span class="settings-item-arrow">
+                    ›
+                </span>
+
+            </button>
+
+
+            <button
+                id="appearanceSettingsButton"
+                class="settings-item"
+                type="button"
+            >
+
+                <span class="settings-item-icon">
+                    ✨
+                </span>
+
+                <span class="settings-item-content">
+
+                    <strong>
+                        Appearance
+                    </strong>
+
+                    <small>
+                        Customize the TAARA* experience
+                    </small>
+
+                </span>
+
+                <span class="settings-item-arrow">
+                    ›
+                </span>
+
+            </button>
+
+        </div>
+
+
+        <!-- ACCOUNT -->
+
+        <div class="settings-section">
+
+            <div class="settings-section-title">
+                Account
+            </div>
+
+            <button
+                id="settingsLogoutButton"
+                class="settings-logout-item"
+                type="button"
+            >
+
+                <span class="settings-item-icon">
+                    🚪
+                </span>
+
+                <span class="settings-item-content">
+
+                    <strong>
+                        Logout
+                    </strong>
+
+                    <small>
+                        Lock your TAARA* session
+                    </small>
+
+                </span>
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         CONVERSATIONS
+    ========================== -->
+
+    <div class="section-title">
+        Conversations
+    </div>
+
+    <div
+        id="conversationList"
+        class="conversation-list"
+    ></div>
+
+
+    <!-- =========================
+         SEARCH USER
+    ========================== -->
+
+    <div class="section-title">
+        Start a conversation
+    </div>
+
+    <form
+        id="userSearchForm"
+        class="search-form"
+    >
+
+        <input
+            id="userSearchInput"
+            type="text"
+            placeholder="Find username"
+            autocomplete="off"
+        >
+
+        <button type="submit">
+            Search
+        </button>
+
+    </form>
+
+    <p
+        id="userSearchMessage"
+        class="form-message"
+    ></p>
+
+    <div id="userSearchResult"></div>
+
+
+    <!-- =========================
+         CURRENT CHAT HEADER
+    ========================== -->
+
+    <div
+        id="currentChatHeader"
+        class="current-chat-header"
+    >
+
+        <div class="current-chat-top">
+
+            <div>
+
+                <div
+                    id="currentChatTitle"
+                    class="current-chat-title"
+                >
+                    Select a conversation
+                </div>
+
+                <div
+                    id="chatPresence"
+                    class="chat-presence"
+                ></div>
+
+            </div>
+
+            <button
+                id="chatSettingsButton"
+                class="chat-settings-button"
+                type="button"
+                disabled
+                title="Chat settings"
+                aria-label="Chat settings"
+            >
+                ⚙️
+            </button>
+
         </div>
 
         <div
-            id="conversationList"
-            class="conversation-list"
+            id="typingIndicator"
+            class="typing-indicator"
         ></div>
 
 
         <!-- =========================
-             SEARCH USER
-        ========================= -->
-
-        <div class="section-title">
-            Start a conversation
-        </div>
-
-        <form
-            id="userSearchForm"
-            class="search-form"
-        >
-
-            <input
-                id="userSearchInput"
-                type="text"
-                placeholder="Find username"
-                autocomplete="off"
-            >
-
-            <button type="submit">
-                Search
-            </button>
-
-        </form>
-
-        <p
-            id="userSearchMessage"
-            class="form-message"
-        ></p>
-
-        <div id="userSearchResult"></div>
-
-
-        <!-- =========================
-             CURRENT CHAT HEADER
+             DISAPPEARING MESSAGE PANEL
         ========================== -->
 
         <div
-            id="currentChatHeader"
-            class="current-chat-header"
+            id="disappearingPanel"
+            class="disappearing-panel hidden"
         >
 
-            <div class="current-chat-top">
+            <div class="disappearing-panel-header">
 
                 <div>
 
-                    <div
-                        id="currentChatTitle"
-                        class="current-chat-title"
-                    >
-                        Select a conversation
-                    </div>
+                    <strong>
+                        Disappearing Messages
+                    </strong>
 
-                    <div
-                        id="chatPresence"
-                        class="chat-presence"
-                    ></div>
+                    <span
+                        id="disappearingCurrentTimer"
+                        class="disappearing-current-timer"
+                    >
+                        Off
+                    </span>
 
                 </div>
 
                 <button
-                    id="chatSettingsButton"
-                    class="chat-settings-button"
+                    id="closeDisappearingButton"
                     type="button"
-                    disabled
-                    title="Chat settings"
-                    aria-label="Chat settings"
+                    class="disappearing-close-button"
+                    aria-label="Close"
                 >
-                    ⚙️
+                    ×
                 </button>
 
             </div>
 
-            <div
-                id="typingIndicator"
-                class="typing-indicator"
-            ></div>
-
-            <!-- =========================
-                 DISAPPEARING MESSAGE PANEL
-            ========================== -->
+            <p class="disappearing-description">
+                New messages in this conversation will
+                disappear after the selected time.
+            </p>
 
             <div
-                id="disappearingPanel"
-                class="disappearing-panel hidden"
+                id="disappearingOptions"
+                class="disappearing-options"
             >
 
-                <div class="disappearing-panel-header">
-
-                    <div>
-                        <strong>
-                            Disappearing Messages
-                        </strong>
-
-                        <span
-                            id="disappearingCurrentTimer"
-                            class="disappearing-current-timer"
-                        >
-                            Off
-                        </span>
-                    </div>
-
-                    <button
-                        id="closeDisappearingButton"
-                        type="button"
-                        class="disappearing-close-button"
-                        aria-label="Close"
-                    >
-                        ×
-                    </button>
-
-                </div>
-
-                <p class="disappearing-description">
-                    New messages in this conversation will
-                    disappear after the selected time.
-                </p>
-
-                <div
-                    id="disappearingOptions"
-                    class="disappearing-options"
+                <button
+                    type="button"
+                    class="disappearing-option"
+                    data-seconds="0"
                 >
+                    <span>Off</span>
+                    <span class="disappearing-check">✓</span>
+                </button>
 
-                    <button
-                        type="button"
-                        class="disappearing-option"
-                        data-seconds="0"
-                    >
-                        <span>Off</span>
-                        <span class="disappearing-check">✓</span>
-                    </button>
+                <button
+                    type="button"
+                    class="disappearing-option"
+                    data-seconds="30"
+                >
+                    <span>30 seconds</span>
+                    <span class="disappearing-check">✓</span>
+                </button>
 
-                    <button
-                        type="button"
-                        class="disappearing-option"
-                        data-seconds="30"
-                    >
-                        <span>30 seconds</span>
-                        <span class="disappearing-check">✓</span>
-                    </button>
+                <button
+                    type="button"
+                    class="disappearing-option"
+                    data-seconds="60"
+                >
+                    <span>1 minute</span>
+                    <span class="disappearing-check">✓</span>
+                </button>
 
-                    <button
-                        type="button"
-                        class="disappearing-option"
-                        data-seconds="60"
-                    >
-                        <span>1 minute</span>
-                        <span class="disappearing-check">✓</span>
-                    </button>
+                <button
+                    type="button"
+                    class="disappearing-option"
+                    data-seconds="300"
+                >
+                    <span>5 minutes</span>
+                    <span class="disappearing-check">✓</span>
+                </button>
 
-                    <button
-                        type="button"
-                        class="disappearing-option"
-                        data-seconds="300"
-                    >
-                        <span>5 minutes</span>
-                        <span class="disappearing-check">✓</span>
-                    </button>
+                <button
+                    type="button"
+                    class="disappearing-option"
+                    data-seconds="3600"
+                >
+                    <span>1 hour</span>
+                    <span class="disappearing-check">✓</span>
+                </button>
 
-                    <button
-                        type="button"
-                        class="disappearing-option"
-                        data-seconds="3600"
-                    >
-                        <span>1 hour</span>
-                        <span class="disappearing-check">✓</span>
-                    </button>
+                <button
+                    type="button"
+                    class="disappearing-option"
+                    data-seconds="86400"
+                >
+                    <span>1 day</span>
+                    <span class="disappearing-check">✓</span>
+                </button>
 
-                    <button
-                        type="button"
-                        class="disappearing-option"
-                        data-seconds="86400"
-                    >
-                        <span>1 day</span>
-                        <span class="disappearing-check">✓</span>
-                    </button>
-
-                    <button
-                        type="button"
-                        class="disappearing-option"
-                        data-seconds="604800"
-                    >
-                        <span>7 days</span>
-                        <span class="disappearing-check">✓</span>
-                    </button>
-
-                </div>
-
-                <p
-                    id="disappearingStatus"
-                    class="disappearing-status"
-                ></p>
+                <button
+                    type="button"
+                    class="disappearing-option"
+                    data-seconds="604800"
+                >
+                    <span>7 days</span>
+                    <span class="disappearing-check">✓</span>
+                </button>
 
             </div>
 
-        </div>
-
-
-        <!-- =========================
-             MESSAGES
-        ========================== -->
-
-        <div
-            id="messages"
-            class="messages"
-        >
-
-            <div class="empty-chat">
-
-                <h2>
-                    Welcome to TAARA*
-                </h2>
-
-                <p>
-                    Select a conversation to start chatting.
-                </p>
-
-            </div>
+            <p
+                id="disappearingStatus"
+                class="disappearing-status"
+            ></p>
 
         </div>
-
-
-        <!-- =========================
-             SEND MESSAGE
-        ========================== -->
-
-        <form
-            id="messageForm"
-            class="message-form"
-        >
-
-            <button
-                id="attachButton"
-                class="attach-button"
-                type="button"
-                disabled
-                title="Attach file"
-            >
-                📎
-            </button>
-
-            <button
-                id="voiceButton"
-                class="voice-button"
-                type="button"
-                disabled
-                title="Voice message"
-            >
-                🎤
-            </button>
-
-            <input
-                id="fileInput"
-                type="file"
-                hidden
-            >
-
-            <input
-                id="messageInput"
-                type="text"
-                placeholder="Type a message..."
-                autocomplete="off"
-                disabled
-            >
-
-            <button
-                id="sendButton"
-                type="submit"
-                disabled
-            >
-                Send
-            </button>
-
-        </form>
-
-        <div
-            id="uploadStatus"
-            class="upload-status"
-        ></div>
 
     </div>
 
-</section>
 
+    <!-- =========================
+         MESSAGES
+    ========================== -->
+
+    <div
+        id="messages"
+        class="messages"
+    >
+
+        <div class="empty-chat">
+
+            <h2>
+                Welcome to TAARA*
+            </h2>
+
+            <p>
+                Select a conversation to start chatting.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         SEND MESSAGE
+    ========================== -->
+
+    <form
+        id="messageForm"
+        class="message-form"
+    >
+
+        <button
+            id="attachButton"
+            class="attach-button"
+            type="button"
+            disabled
+            title="Attach file"
+        >
+            📎
+        </button>
+
+        <button
+            id="voiceButton"
+            class="voice-button"
+            type="button"
+            disabled
+            title="Voice message"
+        >
+            🎤
+        </button>
+
+        <input
+            id="fileInput"
+            type="file"
+            hidden
+        >
+
+        <input
+            id="messageInput"
+            type="text"
+            placeholder="Type a message..."
+            autocomplete="off"
+            disabled
+        >
+
+        <button
+            id="sendButton"
+            type="submit"
+            disabled
+        >
+            Send
+        </button>
+
+    </form>
+
+    <div
+        id="uploadStatus"
+        class="upload-status"
+    ></div>
+
+</div>
+```
+
+</section>
 
 <!-- SUPABASE -->
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script src="script.js"></script>
-```
 
 </body>
 </html>
