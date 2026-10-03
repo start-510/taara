@@ -492,14 +492,20 @@ function injectFeatureStyles() {
 
 function showLogin() {
 
-    if (loginScreen)
-        loginScreen.style.display = "";
+    console.log("showLogin() called");
 
-    if (createScreen)
-        createScreen.style.display = "none";
+    if (!loginScreen) {
+        console.error("loginScreen not found");
+        return;
+    }
 
-    if (chatScreen)
-        chatScreen.style.display = "none";
+    if (!createScreen) {
+        console.error("createScreen not found");
+        return;
+    }
+
+    createScreen.classList.add("hidden");
+    loginScreen.classList.remove("hidden");
 }
 
 
