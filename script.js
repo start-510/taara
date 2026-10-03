@@ -138,6 +138,25 @@ const voiceButton =
 const uploadStatus =
     document.getElementById("uploadStatus");
 
+// Disappearing messages
+const chatSettingsButton =
+    document.getElementById("chatSettingsButton");
+
+const disappearingPanel =
+    document.getElementById("disappearingPanel");
+
+const closeDisappearingButton =
+    document.getElementById("closeDisappearingButton");
+
+const disappearingCurrentTimer =
+    document.getElementById("disappearingCurrentTimer");
+
+const disappearingOptions =
+    document.getElementById("disappearingOptions");
+
+const disappearingStatus =
+    document.getElementById("disappearingStatus");
+
 
 // ============================================================
 // STATE
@@ -179,6 +198,10 @@ let globalPresenceStartedForUser = null;
 
 let lastSeenTimer = null;
 
+// Disappearing-message browser timers
+const disappearingMessageTimers =
+    new Map();
+
 
 // ============================================================
 // BASIC HELPERS
@@ -198,7 +221,8 @@ function escapeHtml(value) {
 
 function formatFileSize(bytes) {
 
-    if (!bytes) return "";
+    if (!bytes)
+        return "";
 
     if (bytes < 1024)
         return `${bytes} B`;
@@ -207,7 +231,10 @@ function formatFileSize(bytes) {
         return `${(bytes / 1024).toFixed(1)} KB`;
 
     if (bytes < 1024 * 1024 * 1024)
-        return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+        return `${(
+            bytes /
+            (1024 * 1024)
+        ).toFixed(1)} MB`;
 
     return `${(
         bytes /
@@ -228,15 +255,24 @@ function formatTime(dateString) {
 }
 
 
-function showStatus(element, text, type = "") {
+function showStatus(
+    element,
+    text,
+    type = ""
+) {
 
-    if (!element) return;
+    if (!element)
+        return;
 
-    element.textContent = text;
+    element.textContent =
+        text;
 
     element.className =
         element.className
-            .replace(/\s+(success|error|info)$/g, "");
+            .replace(
+                /\s+(success|error|info)$/g,
+                ""
+            );
 
     if (type)
         element.classList.add(type);
@@ -249,13 +285,18 @@ function showStatus(element, text, type = "") {
 
 function injectFeatureStyles() {
 
-    if (document.getElementById("taaraFeatureStyles"))
+    if (
+        document.getElementById(
+            "taaraFeatureStyles"
+        )
+    )
         return;
 
     const style =
         document.createElement("style");
 
-    style.id = "taaraFeatureStyles";
+    style.id =
+        "taaraFeatureStyles";
 
     style.textContent = `
 
@@ -480,6 +521,15 @@ function injectFeatureStyles() {
         .taara-file-name {
             word-break:break-word;
         }
+
+        .disappearing-option.active {
+            font-weight:700;
+            outline:2px solid rgba(120,100,255,.35);
+        }
+
+        .disappearing-option[aria-pressed="true"] {
+            font-weight:700;
+        }
     `;
 
     document.head.appendChild(style);
@@ -492,196 +542,255 @@ function injectFeatureStyles() {
 
 function showLogin() {
 
-    console.log("Showing LOGIN screen");
+    console.log(
+        "Showing LOGIN screen"
+    );
+
+    disableDisappearingSettings();
 
     if (loginScreen) {
-        loginScreen.classList.remove("hidden");
-        loginScreen.style.display = "flex";
+        loginScreen.classList.remove(
+            "hidden"
+        );
+        loginScreen.style.display =
+            "flex";
     }
 
     if (createScreen) {
-        createScreen.classList.add("hidden");
-        createScreen.style.display = "none";
+        createScreen.classList.add(
+            "hidden"
+        );
+        createScreen.style.display =
+            "none";
     }
 
     if (chatScreen) {
-        chatScreen.classList.add("hidden");
-        chatScreen.style.display = "none";
+        chatScreen.classList.add(
+            "hidden"
+        );
+        chatScreen.style.display =
+            "none";
     }
 }
 
 
 function showCreate() {
 
-    console.log("Showing CREATE ACCOUNT screen");
+    console.log(
+        "Showing CREATE ACCOUNT screen"
+    );
+
+    disableDisappearingSettings();
 
     if (loginScreen) {
-        loginScreen.classList.add("hidden");
-        loginScreen.style.display = "none";
+        loginScreen.classList.add(
+            "hidden"
+        );
+        loginScreen.style.display =
+            "none";
     }
 
     if (createScreen) {
-        createScreen.classList.remove("hidden");
-        createScreen.style.display = "flex";
+        createScreen.classList.remove(
+            "hidden"
+        );
+        createScreen.style.display =
+            "flex";
     }
 
     if (chatScreen) {
-        chatScreen.classList.add("hidden");
-        chatScreen.style.display = "none";
+        chatScreen.classList.add(
+            "hidden"
+        );
+        chatScreen.style.display =
+            "none";
     }
 
-    console.log("Create Account screen opened");
+    console.log(
+        "Create Account screen opened"
+    );
 }
 
 
 function showChat() {
 
-    console.log("Showing CHAT screen");
+    console.log(
+        "Showing CHAT screen"
+    );
 
     if (loginScreen) {
-        loginScreen.classList.add("hidden");
-        loginScreen.style.display = "none";
+        loginScreen.classList.add(
+            "hidden"
+        );
+        loginScreen.style.display =
+            "none";
     }
 
     if (createScreen) {
-        createScreen.classList.add("hidden");
-        createScreen.style.display = "none";
+        createScreen.classList.add(
+            "hidden"
+        );
+        createScreen.style.display =
+            "none";
     }
 
     if (chatScreen) {
-        chatScreen.classList.remove("hidden");
-        chatScreen.style.display = "block";
+        chatScreen.classList.remove(
+            "hidden"
+        );
+        chatScreen.style.display =
+            "block";
     }
 }
+
+
 // ============================================================
 // CREATE ACCOUNT
 // ============================================================
 
 if (showCreateButton) {
-    showCreateButton.addEventListener("click", showCreate);
+
+    showCreateButton.addEventListener(
+        "click",
+        showCreate
+    );
 }
 
+
 if (backToLoginButton) {
-    backToLoginButton.addEventListener("click", showLogin);
+
+    backToLoginButton.addEventListener(
+        "click",
+        showLogin
+    );
 }
+
 
 if (createForm) {
 
-    createForm.addEventListener("submit", async (event) => {
+    createForm.addEventListener(
+        "submit",
+        async (event) => {
 
-        event.preventDefault();
-
-        console.log("CREATE ACCOUNT BUTTON WORKED");
-
-        const username = createUsername.value.trim().toLowerCase();
-        const pin = createPin.value;
-        const confirm = confirmPin.value;
-
-        console.log("Username:", username);
-        console.log("PIN entered:", !!pin);
-        console.log("Confirm entered:", !!confirm);
-
-        createMessage.textContent = "";
-
-        if (!username || !pin) {
-            createMessage.textContent =
-                "Please enter username and PIN.";
-            return;
-        }
-
-        if (pin !== confirm) {
-            createMessage.textContent =
-                "PINs do not match.";
-            return;
-        }
-
-        try {
-
-            createMessage.textContent =
-                "Connecting to TAARA...";
-
-            const functionUrl =
-                `${SUPABASE_URL}/functions/v1/taara-auth`;
-
-            console.log("Calling:", functionUrl);
-
-            const response = await fetch(
-                functionUrl,
-                {
-                    method: "POST",
-
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-
-                    body: JSON.stringify({
-                        action: "signup",
-                        username: username,
-                        pin: pin
-                    })
-                }
-            );
+            event.preventDefault();
 
             console.log(
-                "HTTP STATUS:",
-                response.status
+                "CREATE ACCOUNT BUTTON WORKED"
             );
 
-            const rawResponse =
-                await response.text();
+            const username =
+                createUsername.value
+                    .trim()
+                    .toLowerCase();
 
-            console.log(
-                "RAW RESPONSE:",
-                rawResponse
-            );
+            const pin =
+                createPin.value;
 
-            let data = {};
+            const confirm =
+                confirmPin.value;
 
-            try {
-                data = JSON.parse(rawResponse);
-            } catch (e) {
-                console.log(
-                    "Response was not JSON."
-                );
-            }
+            createMessage.textContent =
+                "";
 
-            console.log(
-                "PARSED RESPONSE:",
-                data
-            );
-
-            if (!response.ok) {
+            if (!username || !pin) {
 
                 createMessage.textContent =
-                    data?.error ||
-                    data?.message ||
-                    `Server error: ${response.status}`;
+                    "Please enter username and PIN.";
 
                 return;
             }
 
-            createMessage.textContent =
-                "✅ Account created successfully!";
+            if (pin !== confirm) {
 
-            createForm.reset();
+                createMessage.textContent =
+                    "PINs do not match.";
 
-            setTimeout(() => {
-                showLogin();
-            }, 1200);
+                return;
+            }
 
-        } catch (error) {
+            try {
 
-            console.error(
-                "SIGNUP FETCH ERROR:",
-                error
-            );
+                createMessage.textContent =
+                    "Connecting to TAARA...";
 
-            createMessage.textContent =
-                "Could not connect to signup service.";
+                const functionUrl =
+                    `${SUPABASE_URL}/functions/v1/taara-auth`;
 
+                const response =
+                    await fetch(
+                        functionUrl,
+                        {
+                            method: "POST",
+
+                            headers: {
+                                "Content-Type":
+                                    "application/json"
+                            },
+
+                            body: JSON.stringify({
+                                action:
+                                    "signup",
+                                username:
+                                    username,
+                                pin:
+                                    pin
+                            })
+                        }
+                    );
+
+                const rawResponse =
+                    await response.text();
+
+                let data = {};
+
+                try {
+
+                    data =
+                        JSON.parse(
+                            rawResponse
+                        );
+
+                } catch (e) {
+
+                    console.log(
+                        "Response was not JSON."
+                    );
+                }
+
+                if (!response.ok) {
+
+                    createMessage.textContent =
+                        data?.error ||
+                        data?.message ||
+                        `Server error: ${response.status}`;
+
+                    return;
+                }
+
+                createMessage.textContent =
+                    "✅ Account created successfully!";
+
+                createForm.reset();
+
+                setTimeout(
+                    () => {
+                        showLogin();
+                    },
+                    1200
+                );
+
+            } catch (error) {
+
+                console.error(
+                    "SIGNUP FETCH ERROR:",
+                    error
+                );
+
+                createMessage.textContent =
+                    "Could not connect to signup service.";
+            }
         }
-
-    });
+    );
 }
 
 
@@ -705,7 +814,8 @@ if (loginForm) {
             const pin =
                 loginPin.value;
 
-            loginMessage.textContent = "";
+            loginMessage.textContent =
+                "";
 
             if (!username || !pin) {
 
@@ -725,10 +835,12 @@ if (loginForm) {
                         `${SUPABASE_URL}/functions/v1/taara-auth`,
                         {
                             method: "POST",
+
                             headers: {
                                 "Content-Type":
                                     "application/json"
                             },
+
                             body: JSON.stringify({
                                 action: "login",
                                 username,
@@ -747,11 +859,6 @@ if (loginForm) {
                         "Login failed."
                     );
                 }
-
-                // Supports either:
-                // { access_token, refresh_token }
-                // OR
-                // { session: { access_token, refresh_token } }
 
                 const session =
                     data.session || data;
@@ -795,7 +902,8 @@ if (loginForm) {
 
                 showChat();
 
-                loginMessage.textContent = "";
+                loginMessage.textContent =
+                    "";
 
             } catch (error) {
 
@@ -839,7 +947,10 @@ async function setupLoggedInUser() {
         await supabaseClient
             .from("profiles")
             .select("username")
-            .eq("id", currentUserId)
+            .eq(
+                "id",
+                currentUserId
+            )
             .single();
 
     if (profileError)
@@ -871,7 +982,10 @@ async function updateLastSeen() {
                 last_seen_at:
                     new Date().toISOString()
             })
-            .eq("id", currentUserId);
+            .eq(
+                "id",
+                currentUserId
+            );
 
     if (error)
         console.warn(
@@ -884,7 +998,9 @@ async function updateLastSeen() {
 function startLastSeenTimer() {
 
     if (lastSeenTimer)
-        clearInterval(lastSeenTimer);
+        clearInterval(
+            lastSeenTimer
+        );
 
     lastSeenTimer =
         setInterval(
@@ -913,7 +1029,8 @@ async function startGlobalPresence() {
 
         if (
             globalPresenceChannel &&
-            globalPresenceStartedForUser === currentUserId
+            globalPresenceStartedForUser ===
+                currentUserId
         ) {
             return;
         }
@@ -922,9 +1039,10 @@ async function startGlobalPresence() {
 
             try {
 
-                await supabaseClient.removeChannel(
-                    globalPresenceChannel
-                );
+                await supabaseClient
+                    .removeChannel(
+                        globalPresenceChannel
+                    );
 
             } catch (error) {
 
@@ -934,7 +1052,8 @@ async function startGlobalPresence() {
                 );
             }
 
-            globalPresenceChannel = null;
+            globalPresenceChannel =
+                null;
         }
 
         globalPresenceStartedForUser =
@@ -946,7 +1065,8 @@ async function startGlobalPresence() {
                 {
                     config: {
                         presence: {
-                            key: currentUserId
+                            key:
+                                currentUserId
                         }
                     }
                 }
@@ -1007,7 +1127,8 @@ async function startGlobalPresence() {
                 );
 
                 if (
-                    status === "SUBSCRIBED"
+                    status ===
+                    "SUBSCRIBED"
                 ) {
 
                     try {
@@ -1018,10 +1139,6 @@ async function startGlobalPresence() {
                             online_at:
                                 new Date().toISOString()
                         });
-
-                        console.log(
-                            "Global presence tracking started."
-                        );
 
                     } catch (error) {
 
@@ -1061,18 +1178,28 @@ if (userSearchForm) {
                     .trim()
                     .toLowerCase();
 
-            userSearchMessage.textContent = "";
-            userSearchResult.innerHTML = "";
+            userSearchMessage.textContent =
+                "";
+
+            userSearchResult.innerHTML =
+                "";
 
             if (!username) {
+
                 userSearchMessage.textContent =
                     "Enter a username.";
+
                 return;
             }
 
-            if (username === currentChatUsername) {
+            if (
+                username ===
+                currentChatUsername
+            ) {
+
                 userSearchMessage.textContent =
                     "You cannot search yourself.";
+
                 return;
             }
 
@@ -1088,7 +1215,8 @@ if (userSearchForm) {
                     await supabaseClient.rpc(
                         "search_profiles",
                         {
-                            search_username: username
+                            search_username:
+                                username
                         }
                     );
 
@@ -1108,7 +1236,8 @@ if (userSearchForm) {
                     return;
                 }
 
-                userSearchMessage.textContent = "";
+                userSearchMessage.textContent =
+                    "";
 
                 userSearchResult.innerHTML = `
                     <div class="search-result-card">
@@ -1170,7 +1299,6 @@ if (userSearchForm) {
                                 otherUserId,
                                 otherUsername
                             );
-
                         }
                     );
                 }
@@ -1188,8 +1316,9 @@ if (userSearchForm) {
             }
         }
     );
-
 }
+
+
 // ============================================================
 // START CONVERSATION
 // ============================================================
@@ -1205,14 +1334,13 @@ async function startConversation(
             data,
             error
         } =
-            await supabaseClient
-                .rpc(
-                    "create_private_conversation",
-                    {
-                        other_user_id:
-                            otherUserId
-                    }
-                );
+            await supabaseClient.rpc(
+                "create_private_conversation",
+                {
+                    other_user_id:
+                        otherUserId
+                }
+            );
 
         if (error)
             throw error;
@@ -1256,15 +1384,15 @@ async function loadConversations() {
             data,
             error
         } =
-            await supabaseClient
-                .rpc(
-                    "get_my_conversations"
-                );
+            await supabaseClient.rpc(
+                "get_my_conversations"
+            );
 
         if (error)
             throw error;
 
-        conversationList.innerHTML = "";
+        conversationList.innerHTML =
+            "";
 
         if (!data || !data.length) {
 
@@ -1278,7 +1406,9 @@ async function loadConversations() {
             (conversation) => {
 
                 const item =
-                    document.createElement("div");
+                    document.createElement(
+                        "div"
+                    );
 
                 item.className =
                     "conversation-item";
@@ -1297,6 +1427,7 @@ async function loadConversations() {
                         <strong>
                             @${escapeHtml(username)}
                         </strong>
+
                         <div>
                             ${escapeHtml(preview)}
                         </div>
@@ -1326,7 +1457,9 @@ async function loadConversations() {
                         currentChatUsername =
                             username;
 
-                        openConversation(username);
+                        openConversation(
+                            username
+                        );
                     }
                 );
 
@@ -1350,7 +1483,9 @@ async function loadConversations() {
 // OPEN CONVERSATION
 // ============================================================
 
-async function openConversation(username) {
+async function openConversation(
+    username
+) {
 
     if (!currentConversationId)
         return;
@@ -1363,20 +1498,29 @@ async function openConversation(username) {
             `@${username}`;
 
     if (messageInput)
-        messageInput.disabled = false;
+        messageInput.disabled =
+            false;
 
     if (sendButton)
-        sendButton.disabled = false;
+        sendButton.disabled =
+            false;
 
     if (attachButton)
-        attachButton.disabled = false;
+        attachButton.disabled =
+            false;
 
     if (voiceButton)
-        voiceButton.disabled = false;
+        voiceButton.disabled =
+            false;
+
+    if (chatSettingsButton)
+        chatSettingsButton.disabled =
+            false;
 
     stopTyping();
 
-    replyingToMessage = null;
+    replyingToMessage =
+        null;
 
     hideReplyBar();
 
@@ -1385,6 +1529,8 @@ async function openConversation(username) {
     await markConversationRead();
 
     await loadConversations();
+
+    await refreshDisappearingPanel();
 
     startRealtimeMessages();
 
@@ -1425,7 +1571,8 @@ async function loadMessages() {
                     mime_type,
                     reply_to,
                     edited_at,
-                    deleted_at
+                    deleted_at,
+                    expires_at
                 `)
                 .eq(
                     "conversation_id",
@@ -1441,11 +1588,16 @@ async function loadMessages() {
         if (error)
             throw error;
 
+        clearAllMessageExpiryTimers();
+
         loadedMessages.clear();
 
-        messagesContainer.innerHTML = "";
+        messagesContainer.innerHTML =
+            "";
 
-        for (const message of data || []) {
+        for (
+            const message of data || []
+        ) {
 
             loadedMessages.set(
                 message.id,
@@ -1490,14 +1642,17 @@ async function addMessageToScreen(
     }
 
     const own =
-        message.sender_id === loggedUserId;
+        message.sender_id ===
+        loggedUserId;
 
     const row =
         document.createElement("div");
 
     row.className =
         `message-row ${
-            own ? "own" : "received"
+            own
+                ? "own"
+                : "received"
         }`;
 
     row.dataset.messageId =
@@ -1516,7 +1671,9 @@ async function addMessageToScreen(
     if (message.deleted_at) {
 
         const deleted =
-            document.createElement("div");
+            document.createElement(
+                "div"
+            );
 
         deleted.className =
             "taara-deleted-message";
@@ -1549,7 +1706,9 @@ async function addMessageToScreen(
     }
 
     const time =
-        document.createElement("span");
+        document.createElement(
+            "span"
+        );
 
     time.className =
         "message-time";
@@ -1565,7 +1724,9 @@ async function addMessageToScreen(
     ) {
 
         const edited =
-            document.createElement("span");
+            document.createElement(
+                "span"
+            );
 
         edited.className =
             "taara-edited-label";
@@ -1596,7 +1757,9 @@ async function addMessageToScreen(
     }
 
     const reactions =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
 
     reactions.className =
         "taara-reactions";
@@ -1619,6 +1782,10 @@ async function addMessageToScreen(
     renderReactionSummary(
         message.id
     );
+
+    scheduleMessageExpiry(
+        message
+    );
 }
 
 
@@ -1632,13 +1799,16 @@ async function renderMessageContent(
 ) {
 
     const type =
-        message.message_type || "text";
+        message.message_type ||
+        "text";
 
     if (
         type === "image" ||
         (
             message.mime_type &&
-            message.mime_type.startsWith("image/")
+            message.mime_type.startsWith(
+                "image/"
+            )
         )
     ) {
 
@@ -1651,7 +1821,9 @@ async function renderMessageContent(
             return;
 
         const img =
-            document.createElement("img");
+            document.createElement(
+                "img"
+            );
 
         img.src =
             url;
@@ -1665,7 +1837,8 @@ async function renderMessageContent(
 
         img.addEventListener(
             "click",
-            () => openImageModal(url)
+            () =>
+                openImageModal(url)
         );
 
         bubble.appendChild(
@@ -1687,7 +1860,9 @@ async function renderMessageContent(
         type === "video" ||
         (
             message.mime_type &&
-            message.mime_type.startsWith("video/")
+            message.mime_type.startsWith(
+                "video/"
+            )
         )
     ) {
 
@@ -1700,14 +1875,18 @@ async function renderMessageContent(
             return;
 
         const video =
-            document.createElement("video");
+            document.createElement(
+                "video"
+            );
 
         video.src =
             url;
 
-        video.controls = true;
+        video.controls =
+            true;
 
-        video.playsInline = true;
+        video.playsInline =
+            true;
 
         video.preload =
             "metadata";
@@ -1735,7 +1914,9 @@ async function renderMessageContent(
         type === "voice" ||
         (
             message.mime_type &&
-            message.mime_type.startsWith("audio/")
+            message.mime_type.startsWith(
+                "audio/"
+            )
         )
     ) {
 
@@ -1748,12 +1929,15 @@ async function renderMessageContent(
             return;
 
         const audio =
-            document.createElement("audio");
+            document.createElement(
+                "audio"
+            );
 
         audio.src =
             url;
 
-        audio.controls = true;
+        audio.controls =
+            true;
 
         audio.preload =
             "metadata";
@@ -1784,13 +1968,17 @@ async function renderMessageContent(
             );
 
         const card =
-            document.createElement("div");
+            document.createElement(
+                "div"
+            );
 
         card.className =
             "taara-file-card";
 
         const icon =
-            document.createElement("div");
+            document.createElement(
+                "div"
+            );
 
         icon.className =
             "taara-file-icon";
@@ -1799,10 +1987,14 @@ async function renderMessageContent(
             "📎";
 
         const details =
-            document.createElement("div");
+            document.createElement(
+                "div"
+            );
 
         const name =
-            document.createElement("div");
+            document.createElement(
+                "div"
+            );
 
         name.className =
             "taara-file-name";
@@ -1818,7 +2010,9 @@ async function renderMessageContent(
         if (message.file_size) {
 
             const size =
-                document.createElement("small");
+                document.createElement(
+                    "small"
+                );
 
             size.textContent =
                 formatFileSize(
@@ -1857,7 +2051,9 @@ async function renderMessageContent(
 
 
     const text =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
 
     text.className =
         "message-text";
@@ -1889,7 +2085,9 @@ async function createSignedUrl(
             error
         } =
             await supabaseClient.storage
-                .from(CHAT_MEDIA_BUCKET)
+                .from(
+                    CHAT_MEDIA_BUCKET
+                )
                 .createSignedUrl(
                     filePath,
                     3600
@@ -1898,7 +2096,8 @@ async function createSignedUrl(
         if (error)
             throw error;
 
-        return data?.signedUrl || null;
+        return data?.signedUrl ||
+            null;
 
     } catch (error) {
 
@@ -1922,13 +2121,17 @@ function createMediaActions(
 ) {
 
     const wrapper =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
 
     wrapper.className =
         "taara-media-actions";
 
     const open =
-        document.createElement("a");
+        document.createElement(
+            "a"
+        );
 
     open.href =
         url;
@@ -1943,7 +2146,9 @@ function createMediaActions(
         "Open";
 
     const download =
-        document.createElement("a");
+        document.createElement(
+            "a"
+        );
 
     download.href =
         url;
@@ -1955,7 +2160,8 @@ function createMediaActions(
         "noopener";
 
     download.download =
-        filename || "download";
+        filename ||
+        "download";
 
     download.textContent =
         "Download";
@@ -1979,13 +2185,17 @@ function createMediaActions(
 function openImageModal(url) {
 
     const modal =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
 
     modal.className =
         "taara-image-modal";
 
     const close =
-        document.createElement("button");
+        document.createElement(
+            "button"
+        );
 
     close.className =
         "taara-image-close";
@@ -1994,7 +2204,9 @@ function openImageModal(url) {
         "×";
 
     const img =
-        document.createElement("img");
+        document.createElement(
+            "img"
+        );
 
     img.src =
         url;
@@ -2009,7 +2221,8 @@ function openImageModal(url) {
         (event) => {
 
             if (
-                event.target === modal
+                event.target ===
+                modal
             ) {
                 modal.remove();
             }
@@ -2039,7 +2252,9 @@ function createReplyPreview(
 ) {
 
     const wrapper =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
 
     wrapper.className =
         "taara-reply-preview";
@@ -2050,7 +2265,9 @@ function createReplyPreview(
         );
 
     const author =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
 
     author.className =
         "taara-reply-author";
@@ -2063,13 +2280,16 @@ function createReplyPreview(
     } else {
 
         author.textContent =
-            target.sender_id === currentUserId
+            target.sender_id ===
+                currentUserId
                 ? "You"
                 : `@${currentChatUsername}`;
     }
 
     const text =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
 
     let preview =
         "Replied message";
@@ -2082,7 +2302,8 @@ function createReplyPreview(
                 "Message deleted";
 
         } else if (
-            target.message_type !== "text"
+            target.message_type !==
+            "text"
         ) {
 
             preview =
@@ -2099,7 +2320,8 @@ function createReplyPreview(
 
     text.textContent =
         preview.length > 100
-            ? preview.slice(0, 100) + "..."
+            ? preview.slice(0, 100) +
+              "..."
             : preview;
 
     wrapper.appendChild(
@@ -2125,7 +2347,9 @@ function ensureReplyBar() {
     }
 
     const bar =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
 
     bar.id =
         "taaraReplyBar";
@@ -2133,10 +2357,13 @@ function ensureReplyBar() {
     bar.className =
         "taara-reply-bar";
 
-    bar.hidden = true;
+    bar.hidden =
+        true;
 
     const text =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
 
     text.id =
         "taaraReplyBarText";
@@ -2145,7 +2372,9 @@ function ensureReplyBar() {
         "taara-reply-bar-text";
 
     const cancel =
-        document.createElement("button");
+        document.createElement(
+            "button"
+        );
 
     cancel.type =
         "button";
@@ -2206,13 +2435,15 @@ function setReplyTarget(
     if (
         message.deleted_at
     ) {
+
         preview =
             "Message deleted";
     }
 
     text.textContent =
         `Replying to ${
-            message.sender_id === currentUserId
+            message.sender_id ===
+                currentUserId
                 ? "yourself"
                 : `@${currentChatUsername}`
         }: ${preview}`;
@@ -2235,7 +2466,8 @@ function hideReplyBar() {
         );
 
     if (bar)
-        bar.hidden = true;
+        bar.hidden =
+            true;
 }
 
 
@@ -2249,19 +2481,25 @@ function createMessageTools(
 ) {
 
     const wrapper =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
 
     wrapper.className =
         "taara-message-tools";
 
     const reactionWrapper =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
 
     reactionWrapper.className =
         "taara-action-wrapper";
 
     const reactionButton =
-        document.createElement("button");
+        document.createElement(
+            "button"
+        );
 
     reactionButton.type =
         "button";
@@ -2300,13 +2538,17 @@ function createMessageTools(
 
 
     const actionWrapper =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
 
     actionWrapper.className =
         "taara-action-wrapper";
 
     const actionButton =
-        document.createElement("button");
+        document.createElement(
+            "button"
+        );
 
     actionButton.type =
         "button";
@@ -2359,7 +2601,8 @@ function closeAllMenus() {
             ".taara-action-menu, .taara-reaction-picker"
         )
         .forEach(
-            element => element.remove()
+            element =>
+                element.remove()
         );
 }
 
@@ -2370,7 +2613,9 @@ function createActionMenu(
 ) {
 
     const menu =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
 
     menu.className =
         "taara-action-menu";
@@ -2378,7 +2623,9 @@ function createActionMenu(
 
     // Reply
     const reply =
-        document.createElement("button");
+        document.createElement(
+            "button"
+        );
 
     reply.textContent =
         "↩ Reply";
@@ -2402,12 +2649,15 @@ function createActionMenu(
 
     // Copy
     if (
-        message.message_type === "text" &&
+        message.message_type ===
+            "text" &&
         message.content
     ) {
 
         const copy =
-            document.createElement("button");
+            document.createElement(
+                "button"
+            );
 
         copy.textContent =
             "📋 Copy";
@@ -2424,9 +2674,7 @@ function createActionMenu(
 
                 } catch (error) {
 
-                    console.error(
-                        error
-                    );
+                    console.error(error);
 
                     alert(
                         "Copy failed."
@@ -2446,12 +2694,15 @@ function createActionMenu(
     // Edit
     if (
         own &&
-        message.message_type === "text" &&
+        message.message_type ===
+            "text" &&
         !message.deleted_at
     ) {
 
         const edit =
-            document.createElement("button");
+            document.createElement(
+                "button"
+            );
 
         edit.textContent =
             "✏️ Edit";
@@ -2465,11 +2716,13 @@ function createActionMenu(
                 const newText =
                     prompt(
                         "Edit message:",
-                        message.content || ""
+                        message.content ||
+                            ""
                     );
 
                 if (
-                    newText === null
+                    newText ===
+                    null
                 )
                     return;
 
@@ -2485,7 +2738,8 @@ function createActionMenu(
                     await supabaseClient
                         .from("messages")
                         .update({
-                            content: text,
+                            content:
+                                text,
                             edited_at:
                                 new Date().toISOString()
                         })
@@ -2528,7 +2782,9 @@ function createActionMenu(
     ) {
 
         const del =
-            document.createElement("button");
+            document.createElement(
+                "button"
+            );
 
         del.textContent =
             "🗑 Delete";
@@ -2556,7 +2812,8 @@ function createActionMenu(
                             content: "",
                             deleted_at:
                                 new Date().toISOString(),
-                            edited_at: null
+                            edited_at:
+                                null
                         })
                         .eq(
                             "id",
@@ -2625,7 +2882,9 @@ function toggleReactionPicker(
     }
 
     const picker =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
 
     picker.className =
         "taara-reaction-picker";
@@ -2634,7 +2893,9 @@ function toggleReactionPicker(
         reaction => {
 
             const button =
-                document.createElement("button");
+                document.createElement(
+                    "button"
+                );
 
             button.type =
                 "button";
@@ -2681,7 +2942,9 @@ async function toggleReaction(
             error: selectError
         } =
             await supabaseClient
-                .from("message_reactions")
+                .from(
+                    "message_reactions"
+                )
                 .select("id")
                 .eq(
                     "message_id",
@@ -2706,7 +2969,9 @@ async function toggleReaction(
                 error
             } =
                 await supabaseClient
-                    .from("message_reactions")
+                    .from(
+                        "message_reactions"
+                    )
                     .delete()
                     .eq(
                         "id",
@@ -2722,7 +2987,9 @@ async function toggleReaction(
                 error
             } =
                 await supabaseClient
-                    .from("message_reactions")
+                    .from(
+                        "message_reactions"
+                    )
                     .insert({
                         message_id:
                             messageId,
@@ -2746,7 +3013,9 @@ async function toggleReaction(
             error
         );
 
-        alert(error.message);
+        alert(
+            error.message
+        );
     }
 }
 
@@ -2770,7 +3039,9 @@ async function loadAllReactions() {
             error
         } =
             await supabaseClient
-                .from("message_reactions")
+                .from(
+                    "message_reactions"
+                )
                 .select(`
                     id,
                     message_id,
@@ -2805,7 +3076,9 @@ async function loadAllReactions() {
                     .get(
                         reaction.message_id
                     )
-                    .push(reaction);
+                    .push(
+                        reaction
+                    );
             }
         );
 
@@ -2834,7 +3107,9 @@ async function loadReactionsForMessage(
             error
         } =
             await supabaseClient
-                .from("message_reactions")
+                .from(
+                    "message_reactions"
+                )
                 .select(`
                     id,
                     message_id,
@@ -2881,21 +3156,24 @@ function renderReactionSummary(
     if (!container)
         return;
 
-    container.innerHTML = "";
+    container.innerHTML =
+        "";
 
     const reactions =
         reactionCache.get(
             messageId
         ) || [];
 
-    const grouped =
-        {};
+    const grouped = {};
 
     reactions.forEach(
         item => {
 
-            if (!grouped[item.reaction])
-                grouped[item.reaction] = 0;
+            if (
+                !grouped[item.reaction]
+            )
+                grouped[item.reaction] =
+                    0;
 
             grouped[item.reaction]++;
         }
@@ -2906,7 +3184,9 @@ function renderReactionSummary(
             ([reaction, count]) => {
 
                 const chip =
-                    document.createElement("button");
+                    document.createElement(
+                        "button"
+                    );
 
                 chip.type =
                     "button";
@@ -2919,10 +3199,11 @@ function renderReactionSummary(
 
                 chip.addEventListener(
                     "click",
-                    () => toggleReaction(
-                        messageId,
-                        reaction
-                    )
+                    () =>
+                        toggleReaction(
+                            messageId,
+                            reaction
+                        )
                 );
 
                 container.appendChild(
@@ -2985,7 +3266,8 @@ if (messageForm) {
                 if (error)
                     throw error;
 
-                messageInput.value = "";
+                messageInput.value =
+                    "";
 
                 hideReplyBar();
 
@@ -3004,7 +3286,9 @@ if (messageForm) {
                     error
                 );
 
-                alert(error.message);
+                alert(
+                    error.message
+                );
 
             } finally {
 
@@ -3049,7 +3333,8 @@ if (fileInput) {
 
             await uploadFile(file);
 
-            fileInput.value = "";
+            fileInput.value =
+                "";
         }
     );
 }
@@ -3124,7 +3409,9 @@ async function uploadFile(file) {
             error: uploadError
         } =
             await supabaseClient.storage
-                .from(CHAT_MEDIA_BUCKET)
+                .from(
+                    CHAT_MEDIA_BUCKET
+                )
                 .upload(
                     filePath,
                     file,
@@ -3143,21 +3430,27 @@ async function uploadFile(file) {
             "file";
 
         if (
-            mime.startsWith("image/")
+            mime.startsWith(
+                "image/"
+            )
         ) {
 
             messageType =
                 "image";
 
         } else if (
-            mime.startsWith("video/")
+            mime.startsWith(
+                "video/"
+            )
         ) {
 
             messageType =
                 "video";
 
         } else if (
-            mime.startsWith("audio/")
+            mime.startsWith(
+                "audio/"
+            )
         ) {
 
             messageType =
@@ -3190,7 +3483,9 @@ async function uploadFile(file) {
         if (insertError) {
 
             await supabaseClient.storage
-                .from(CHAT_MEDIA_BUCKET)
+                .from(
+                    CHAT_MEDIA_BUCKET
+                )
                 .remove([
                     filePath
                 ]);
@@ -3278,12 +3573,17 @@ function getSupportedAudioMimeType() {
         "audio/ogg"
     ];
 
-    for (const type of types) {
+    for (
+        const type of types
+    ) {
 
         if (
             window.MediaRecorder &&
-            MediaRecorder.isTypeSupported(type)
+            MediaRecorder.isTypeSupported(
+                type
+            )
         ) {
+
             return type;
         }
     }
@@ -3315,9 +3615,7 @@ async function startVoiceRecording() {
         return;
     }
 
-    if (
-        !window.MediaRecorder
-    ) {
+    if (!window.MediaRecorder) {
 
         alert(
             "Voice recording is not supported by this browser."
@@ -3452,7 +3750,8 @@ async function startVoiceRecording() {
                                     track.stop()
                             );
 
-                        mediaStream = null;
+                        mediaStream =
+                            null;
                     }
 
                     mediaRecorder =
@@ -3522,7 +3821,8 @@ function stopVoiceRecording() {
 
     if (
         mediaRecorder &&
-        mediaRecorder.state !== "inactive"
+        mediaRecorder.state !==
+            "inactive"
     ) {
 
         mediaRecorder.stop();
@@ -3622,7 +3922,9 @@ async function uploadVoiceMessage(
             error: uploadError
         } =
             await supabaseClient.storage
-                .from(CHAT_MEDIA_BUCKET)
+                .from(
+                    CHAT_MEDIA_BUCKET
+                )
                 .upload(
                     filePath,
                     file,
@@ -3662,7 +3964,9 @@ async function uploadVoiceMessage(
         if (insertError) {
 
             await supabaseClient.storage
-                .from(CHAT_MEDIA_BUCKET)
+                .from(
+                    CHAT_MEDIA_BUCKET
+                )
                 .remove([
                     filePath
                 ]);
@@ -3767,8 +4071,6 @@ function startRealtimeMessages() {
                 message.id
             );
 
-            // Since this conversation is currently open,
-            // immediately mark newly received messages as read.
             await markConversationRead();
 
             await loadConversations();
@@ -3889,6 +4191,7 @@ function startRealtimeMessages() {
     );
 }
 
+
 // ============================================================
 // DISAPPEARING MESSAGES
 // ============================================================
@@ -3903,21 +4206,33 @@ const DISAPPEARING_OPTIONS = {
     604800: "7 days"
 };
 
+
 async function getDisappearingMessageTimer() {
-    if (!currentConversationId) return 0;
+
+    if (!currentConversationId)
+        return 0;
 
     try {
-        const { data, error } = await supabaseClient.rpc(
-            "get_disappearing_messages",
-            {
-                target_conversation_id: currentConversationId
-            }
-        );
 
-        if (error) throw error;
+        const {
+            data,
+            error
+        } =
+            await supabaseClient.rpc(
+                "get_disappearing_messages",
+                {
+                    target_conversation_id:
+                        currentConversationId
+                }
+            );
+
+        if (error)
+            throw error;
 
         return Number(data) || 0;
+
     } catch (error) {
+
         console.error(
             "Failed to get disappearing message timer:",
             error
@@ -3928,36 +4243,382 @@ async function getDisappearingMessageTimer() {
 }
 
 
-async function setDisappearingMessageTimer(seconds) {
+async function setDisappearingMessageTimer(
+    seconds
+) {
+
     if (!currentConversationId) {
-        throw new Error("No conversation selected.");
+
+        throw new Error(
+            "No conversation selected."
+        );
     }
 
-    seconds = Number(seconds);
+    seconds =
+        Number(seconds);
 
-    if (!Object.prototype.hasOwnProperty.call(
-        DISAPPEARING_OPTIONS,
-        seconds
-    )) {
-        throw new Error("Invalid disappearing message timer.");
+    if (
+        !Object.prototype.hasOwnProperty.call(
+            DISAPPEARING_OPTIONS,
+            seconds
+        )
+    ) {
+
+        throw new Error(
+            "Invalid disappearing message timer."
+        );
     }
 
-    const { error } = await supabaseClient.rpc(
-        "set_disappearing_messages",
-        {
-            target_conversation_id: currentConversationId,
-            target_seconds: seconds
-        }
-    );
+    const {
+        error
+    } =
+        await supabaseClient.rpc(
+            "set_disappearing_messages",
+            {
+                target_conversation_id:
+                    currentConversationId,
+                target_seconds:
+                    seconds
+            }
+        );
 
-    if (error) throw error;
+    if (error)
+        throw error;
 
     return true;
 }
 
 
-function getDisappearingMessageLabel(seconds) {
-    return DISAPPEARING_OPTIONS[Number(seconds)] || "Off";
+function getDisappearingMessageLabel(
+    seconds
+) {
+
+    return (
+        DISAPPEARING_OPTIONS[
+            Number(seconds)
+        ] ||
+        "Off"
+    );
+}
+
+
+// ============================================================
+// DISAPPEARING MESSAGE UI
+// ============================================================
+
+function openDisappearingPanel() {
+
+    if (!disappearingPanel)
+        return;
+
+    disappearingPanel.classList.remove(
+        "hidden"
+    );
+
+    disappearingPanel.hidden =
+        false;
+
+    disappearingPanel.style.display =
+        "block";
+
+    refreshDisappearingPanel();
+}
+
+
+function closeDisappearingPanel() {
+
+    if (!disappearingPanel)
+        return;
+
+    disappearingPanel.classList.add(
+        "hidden"
+    );
+
+    disappearingPanel.hidden =
+        true;
+
+    disappearingPanel.style.display =
+        "none";
+}
+
+
+async function refreshDisappearingPanel() {
+
+    if (!currentConversationId) {
+
+        if (disappearingCurrentTimer)
+            disappearingCurrentTimer.textContent =
+                "Off";
+
+        return;
+    }
+
+    try {
+
+        const seconds =
+            await getDisappearingMessageTimer();
+
+        const label =
+            getDisappearingMessageLabel(
+                seconds
+            );
+
+        if (disappearingCurrentTimer)
+            disappearingCurrentTimer.textContent =
+                label;
+
+        if (disappearingOptions) {
+
+            disappearingOptions
+                .querySelectorAll(
+                    ".disappearing-option"
+                )
+                .forEach(
+                    button => {
+
+                        const buttonSeconds =
+                            Number(
+                                button.dataset.seconds
+                            );
+
+                        const active =
+                            buttonSeconds ===
+                            seconds;
+
+                        button.classList.toggle(
+                            "active",
+                            active
+                        );
+
+                        button.setAttribute(
+                            "aria-pressed",
+                            active
+                                ? "true"
+                                : "false"
+                        );
+                    }
+                );
+        }
+
+    } catch (error) {
+
+        console.error(
+            "Failed to refresh disappearing timer:",
+            error
+        );
+    }
+}
+
+
+async function handleDisappearingOption(
+    seconds
+) {
+
+    if (!currentConversationId) {
+
+        if (disappearingStatus)
+            disappearingStatus.textContent =
+                "Open a conversation first.";
+
+        return;
+    }
+
+    try {
+
+        seconds =
+            Number(seconds);
+
+        if (
+            !Object.prototype.hasOwnProperty.call(
+                DISAPPEARING_OPTIONS,
+                seconds
+            )
+        ) {
+
+            throw new Error(
+                "Invalid disappearing timer."
+            );
+        }
+
+        if (disappearingStatus)
+            disappearingStatus.textContent =
+                "Updating...";
+
+        await setDisappearingMessageTimer(
+            seconds
+        );
+
+        const label =
+            getDisappearingMessageLabel(
+                seconds
+            );
+
+        if (disappearingCurrentTimer)
+            disappearingCurrentTimer.textContent =
+                label;
+
+        if (disappearingOptions) {
+
+            disappearingOptions
+                .querySelectorAll(
+                    ".disappearing-option"
+                )
+                .forEach(
+                    button => {
+
+                        const value =
+                            Number(
+                                button.dataset.seconds
+                            );
+
+                        const active =
+                            value === seconds;
+
+                        button.classList.toggle(
+                            "active",
+                            active
+                        );
+
+                        button.setAttribute(
+                            "aria-pressed",
+                            active
+                                ? "true"
+                                : "false"
+                        );
+                    }
+                );
+        }
+
+        if (disappearingStatus) {
+
+            disappearingStatus.textContent =
+                seconds === 0
+                    ? "Disappearing messages are off."
+                    : `New messages will disappear after ${label}.`;
+        }
+
+    } catch (error) {
+
+        console.error(
+            "Failed to change disappearing timer:",
+            error
+        );
+
+        if (disappearingStatus)
+            disappearingStatus.textContent =
+                `Failed: ${error.message}`;
+    }
+}
+
+
+function disableDisappearingSettings() {
+
+    if (chatSettingsButton)
+        chatSettingsButton.disabled =
+            true;
+
+    closeDisappearingPanel();
+
+    if (disappearingCurrentTimer)
+        disappearingCurrentTimer.textContent =
+            "Off";
+
+    if (disappearingStatus)
+        disappearingStatus.textContent =
+            "";
+
+    if (disappearingOptions) {
+
+        disappearingOptions
+            .querySelectorAll(
+                ".disappearing-option"
+            )
+            .forEach(
+                button => {
+
+                    button.classList.remove(
+                        "active"
+                    );
+
+                    button.setAttribute(
+                        "aria-pressed",
+                        "false"
+                    );
+                }
+            );
+    }
+}
+
+
+if (chatSettingsButton) {
+
+    chatSettingsButton.addEventListener(
+        "click",
+        event => {
+
+            event.stopPropagation();
+
+            if (
+                chatSettingsButton.disabled ||
+                !currentConversationId
+            )
+                return;
+
+            if (
+                disappearingPanel &&
+                !disappearingPanel.hidden &&
+                disappearingPanel.style.display !==
+                    "none"
+            ) {
+
+                closeDisappearingPanel();
+
+            } else {
+
+                openDisappearingPanel();
+            }
+        }
+    );
+}
+
+
+if (closeDisappearingButton) {
+
+    closeDisappearingButton.addEventListener(
+        "click",
+        event => {
+
+            event.stopPropagation();
+
+            closeDisappearingPanel();
+        }
+    );
+}
+
+
+if (disappearingOptions) {
+
+    disappearingOptions.addEventListener(
+        "click",
+        async event => {
+
+            event.stopPropagation();
+
+            const button =
+                event.target.closest(
+                    ".disappearing-option"
+                );
+
+            if (!button)
+                return;
+
+            await handleDisappearingOption(
+                Number(
+                    button.dataset.seconds
+                )
+            );
+        }
+    );
 }
 
 
@@ -3965,10 +4626,14 @@ function getDisappearingMessageLabel(seconds) {
 // MESSAGE EXPIRY HANDLING
 // ============================================================
 
-function clearMessageExpiryTimer(messageId) {
+function clearMessageExpiryTimer(
+    messageId
+) {
 
     const timer =
-        disappearingMessageTimers.get(messageId);
+        disappearingMessageTimers.get(
+            messageId
+        );
 
     if (timer) {
 
@@ -3981,7 +4646,24 @@ function clearMessageExpiryTimer(messageId) {
 }
 
 
-function scheduleMessageExpiry(message) {
+function clearAllMessageExpiryTimers() {
+
+    disappearingMessageTimers.forEach(
+        timer => {
+
+            clearTimeout(
+                timer
+            );
+        }
+    );
+
+    disappearingMessageTimers.clear();
+}
+
+
+function scheduleMessageExpiry(
+    message
+) {
 
     if (
         !message ||
@@ -4057,11 +4739,10 @@ function removeExpiredMessageFromScreen(
             `[data-message-id="${messageId}"]`
         );
 
-    if (messageElement) {
-
+    if (messageElement)
         messageElement.remove();
-    }
 }
+
 
 // ============================================================
 // CHAT PRESENCE
@@ -4105,7 +4786,6 @@ async function startChatPresence() {
             }
         );
 
-
     channel.on(
         "presence",
         {
@@ -4118,7 +4798,6 @@ async function startChatPresence() {
             );
         }
     );
-
 
     channel.on(
         "presence",
@@ -4133,7 +4812,6 @@ async function startChatPresence() {
         }
     );
 
-
     channel.on(
         "presence",
         {
@@ -4146,7 +4824,6 @@ async function startChatPresence() {
             );
         }
     );
-
 
     channel.on(
         "broadcast",
@@ -4161,9 +4838,7 @@ async function startChatPresence() {
             )
                 return;
 
-            if (
-                typingIndicator
-            ) {
+            if (typingIndicator) {
 
                 typingIndicator.textContent =
                     payload?.isTyping
@@ -4173,10 +4848,8 @@ async function startChatPresence() {
         }
     );
 
-
     chatPresenceChannel =
         channel;
-
 
     channel.subscribe(
         async (status) => {
@@ -4187,7 +4860,8 @@ async function startChatPresence() {
             );
 
             if (
-                status === "SUBSCRIBED"
+                status ===
+                "SUBSCRIBED"
             ) {
 
                 try {
@@ -4265,9 +4939,11 @@ if (messageInput) {
             typingTimeout =
                 setTimeout(
                     () => {
+
                         sendTypingState(
                             false
                         );
+
                     },
                     1200
                 );
@@ -4347,15 +5023,14 @@ async function markConversationRead() {
             await supabaseClient.rpc(
                 "mark_conversation_read",
                 {
-                    target_conversation_id: currentConversationId
+                    target_conversation_id:
+                        currentConversationId
                 }
             );
 
         if (error)
             throw error;
 
-        // Refresh the conversation list so
-        // unread badges disappear immediately.
         await loadConversations();
 
     } catch (error) {
@@ -4399,7 +5074,9 @@ if (logoutButton) {
                 if (mediaRecorder) {
 
                     try {
+
                         stopVoiceRecording();
+
                     } catch (_) {}
                 }
 
@@ -4446,6 +5123,8 @@ if (logoutButton) {
                         null;
                 }
 
+                clearAllMessageExpiryTimers();
+
                 await supabaseClient.auth.signOut();
 
                 currentConversationId =
@@ -4463,6 +5142,8 @@ if (logoutButton) {
                 loadedMessages.clear();
 
                 reactionCache.clear();
+
+                disableDisappearingSettings();
 
                 showLogin();
 
@@ -4485,61 +5166,86 @@ if (logoutButton) {
 supabaseClient.auth.onAuthStateChange(
     async (event, session) => {
 
-        console.log("Auth event:", event);
+        console.log(
+            "Auth event:",
+            event
+        );
 
-        if (event === "SIGNED_OUT") {
+        if (
+            event ===
+            "SIGNED_OUT"
+        ) {
 
-            currentUserId = null;
-            currentConversationId = null;
-            currentChatUserId = null;
-            currentChatUsername = null;
+            currentUserId =
+                null;
 
-            // Stop global presence
+            currentConversationId =
+                null;
+
+            currentChatUserId =
+                null;
+
+            currentChatUsername =
+                null;
+
+            clearAllMessageExpiryTimers();
+
+            disableDisappearingSettings();
+
             if (globalPresenceChannel) {
 
                 try {
+
                     await supabaseClient.removeChannel(
                         globalPresenceChannel
                     );
+
                 } catch (_) {}
 
-                globalPresenceChannel = null;
+                globalPresenceChannel =
+                    null;
             }
 
-            // Stop chat presence
             if (chatPresenceChannel) {
 
                 try {
+
                     await supabaseClient.removeChannel(
                         chatPresenceChannel
                     );
+
                 } catch (_) {}
 
-                chatPresenceChannel = null;
+                chatPresenceChannel =
+                    null;
             }
 
-            // Stop realtime messages
             if (realtimeChannel) {
 
                 try {
+
                     await supabaseClient.removeChannel(
                         realtimeChannel
                     );
+
                 } catch (_) {}
 
-                realtimeChannel = null;
+                realtimeChannel =
+                    null;
             }
 
-            // Stop last-seen timer
             if (lastSeenTimer) {
 
-                clearInterval(lastSeenTimer);
+                clearInterval(
+                    lastSeenTimer
+                );
 
-                lastSeenTimer = null;
+                lastSeenTimer =
+                    null;
             }
 
-            // Reset chat UI
             if (messagesContainer) {
+
                 messagesContainer.innerHTML = `
                     <div class="empty-chat">
                         <h2>Welcome to TAARA*</h2>
@@ -4549,16 +5255,21 @@ supabaseClient.auth.onAuthStateChange(
             }
 
             if (currentChatTitle) {
+
                 currentChatTitle.textContent =
                     "Select a conversation";
             }
 
             if (chatPresence) {
-                chatPresence.textContent = "";
+
+                chatPresence.textContent =
+                    "";
             }
 
             if (typingIndicator) {
-                typingIndicator.textContent = "";
+
+                typingIndicator.textContent =
+                    "";
             }
 
             showLogin();
@@ -4616,11 +5327,12 @@ async function checkExistingSession() {
         );
 
         try {
+
             await supabaseClient.auth.signOut();
+
         } catch (_) {}
     }
 
-    // Always show login after page refresh
     showLogin();
 }
 
@@ -4631,9 +5343,21 @@ async function checkExistingSession() {
 
 document.addEventListener(
     "click",
-    () => {
+    (event) => {
 
         closeAllMenus();
+
+        if (
+            disappearingPanel &&
+            !disappearingPanel.contains(
+                event.target
+            ) &&
+            event.target !==
+                chatSettingsButton
+        ) {
+
+            closeDisappearingPanel();
+        }
     }
 );
 
@@ -4647,5 +5371,7 @@ injectFeatureStyles();
 ensureReplyBar();
 
 updateVoiceButton();
+
+disableDisappearingSettings();
 
 checkExistingSession();
