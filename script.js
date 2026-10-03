@@ -4120,8 +4120,7 @@ async function markConversationRead() {
             await supabaseClient.rpc(
                 "mark_conversation_read",
                 {
-                    p_conversation_id:
-                        currentConversationId
+                    target_conversation_id: currentConversationId
                 }
             );
 
