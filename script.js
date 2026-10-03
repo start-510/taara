@@ -528,7 +528,6 @@ function showChat() {
         chatScreen.style.display = "";
 }
 
-
 // ============================================================
 // CREATE ACCOUNT
 // ============================================================
@@ -547,40 +546,42 @@ if (createForm) {
 
         event.preventDefault();
 
-        const username =
-            createUsername.value.trim().toLowerCase();
+        console.log("CREATE ACCOUNT BUTTON WORKED");
 
-        const pin =
-            createPin.value;
+        const username = createUsername.value.trim().toLowerCase();
+        const pin = createPin.value;
+        const confirm = confirmPin.value;
 
-        const confirm =
-            confirmPin.value;
+        console.log("Username:", username);
+        console.log("PIN entered:", !!pin);
+        console.log("Confirm entered:", !!confirm);
 
         createMessage.textContent = "";
 
         if (!username || !pin) {
-
             createMessage.textContent =
                 "Please enter username and PIN.";
-
             return;
         }
 
         if (pin !== confirm) {
-
             createMessage.textContent =
                 "PINs do not match.";
-
             return;
         }
 
         try {
 
             createMessage.textContent =
-                "Creating account...";
+                "Connecting to TAARA...";
+
+            const functionUrl =
+                `${SUPABASE_URL}/functions/v1/taara-auth`;
+
+            console.log("Calling:", functionUrl);
 
             const response = await fetch(
-                `${SUPABASE_URL}/functions/v1/taara-auth`,
+                functionUrl,
                 {
                     method: "POST",
 
@@ -596,62 +597,63 @@ if (createForm) {
                 }
             );
 
-            // Safely read response
-            const responseText =
+            console.log(
+                "HTTP STATUS:",
+                response.status
+            );
+
+            const rawResponse =
                 await response.text();
+
+            console.log(
+                "RAW RESPONSE:",
+                rawResponse
+            );
 
             let data = {};
 
             try {
-                data = responseText
-                    ? JSON.parse(responseText)
-                    : {};
-            } catch (parseError) {
-
-                console.error(
-                    "Invalid server response:",
-                    responseText
-                );
-
-                throw new Error(
-                    "Server returned an invalid response."
+                data = JSON.parse(rawResponse);
+            } catch (e) {
+                console.log(
+                    "Response was not JSON."
                 );
             }
 
             console.log(
-                "CREATE ACCOUNT RESPONSE:",
-                response.status,
+                "PARSED RESPONSE:",
                 data
             );
 
             if (!response.ok) {
 
-                throw new Error(
+                createMessage.textContent =
                     data?.error ||
                     data?.message ||
-                    `Account creation failed (${response.status}).`
-                );
+                    `Server error: ${response.status}`;
+
+                return;
             }
 
             createMessage.textContent =
-                "Account created. You can login now.";
+                "✅ Account created successfully!";
 
             createForm.reset();
 
             setTimeout(() => {
                 showLogin();
-            }, 1000);
+            }, 1200);
 
         } catch (error) {
 
             console.error(
-                "CREATE ACCOUNT ERROR:",
+                "SIGNUP FETCH ERROR:",
                 error
             );
 
             createMessage.textContent =
-                error?.message ||
-                "Unable to create account.";
+                "Could not connect to signup service.";
+
         }
 
     });
