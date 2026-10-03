@@ -1716,6 +1716,11 @@ async function addMessageToScreen(
                 : "received-message"
         }`;
 
+
+    // =====================================================
+    // MESSAGE CONTENT
+    // =====================================================
+
     if (message.deleted_at) {
 
         const deleted =
@@ -1753,6 +1758,11 @@ async function addMessageToScreen(
         );
     }
 
+
+    // =====================================================
+    // MESSAGE TIME
+    // =====================================================
+
     const time =
         document.createElement(
             "span"
@@ -1765,6 +1775,11 @@ async function addMessageToScreen(
         formatTime(
             message.created_at
         );
+
+
+    // =====================================================
+    // EDITED LABEL
+    // =====================================================
 
     if (
         message.edited_at &&
@@ -1791,6 +1806,11 @@ async function addMessageToScreen(
         time
     );
 
+
+    // =====================================================
+    // MESSAGE TOOLS
+    // =====================================================
+
     if (!message.deleted_at) {
 
         const tools =
@@ -1803,6 +1823,11 @@ async function addMessageToScreen(
             tools
         );
     }
+
+
+    // =====================================================
+    // REACTIONS
+    // =====================================================
 
     const reactions =
         document.createElement(
@@ -1819,6 +1844,11 @@ async function addMessageToScreen(
         reactions
     );
 
+
+    // =====================================================
+    // ADD MESSAGE TO SCREEN
+    // =====================================================
+
     row.appendChild(
         bubble
     );
@@ -1827,13 +1857,40 @@ async function addMessageToScreen(
         row
     );
 
+
+    // =====================================================
+    // REACTION SUMMARY
+    // =====================================================
+
     renderReactionSummary(
         message.id
     );
 
+
+    // =====================================================
+    // DISAPPEARING MESSAGE
+    // =====================================================
+
     scheduleMessageExpiry(
         message
     );
+
+
+    // =====================================================
+    // PINNED MESSAGE UI
+    // =====================================================
+
+    if (
+        typeof pinnedMessageIds !== "undefined" &&
+        pinnedMessageIds instanceof Set &&
+        pinnedMessageIds.has(message.id)
+    ) {
+
+        updatePinnedMessageUI(
+            message.id,
+            true
+        );
+    }
 }
 
 
