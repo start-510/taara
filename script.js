@@ -4259,77 +4259,80 @@ if (logoutButton) {
 supabaseClient.auth.onAuthStateChange(
     async (event, session) => {
 
-        console.log(
-            "Auth event:",
-            event
-        );
+        console.log("Auth event:", event);
 
-        if (
-            event === "SIGNED_OUT"
-        ) {
+        if (event === "SIGNED_OUT") {
 
-            currentUserId =
-                null;
+            currentUserId = null;
+            currentConversationId = null;
+            currentChatUserId = null;
+            currentChatUsername = null;
 
-            currentConversationId =
-                null;
-
-            currentChatUserId =
-                null;
-
-            currentChatUsername =
-                null;
-
+            // Stop global presence
             if (globalPresenceChannel) {
 
                 try {
-
                     await supabaseClient.removeChannel(
                         globalPresenceChannel
                     );
-
                 } catch (_) {}
 
-                globalPresenceChannel =
-                    null;
+                globalPresenceChannel = null;
             }
 
+            // Stop chat presence
             if (chatPresenceChannel) {
 
                 try {
-
                     await supabaseClient.removeChannel(
                         chatPresenceChannel
                     );
-
                 } catch (_) {}
 
-                chatPresenceChannel =
-                    null;
+                chatPresenceChannel = null;
             }
 
+            // Stop realtime messages
             if (realtimeChannel) {
 
                 try {
-
                     await supabaseClient.removeChannel(
                         realtimeChannel
                     );
-
                 } catch (_) {}
 
-                realtimeChannel =
-                    null;
+                realtimeChannel = null;
             }
 
+            // Stop last-seen timer
             if (lastSeenTimer) {
 
-                clearInterval(
-                    lastSeenTimer
-                );
+                clearInterval(lastSeenTimer);
 
-                lastSeenTimer =
-                    null;
+                lastSeenTimer = null;
+            }
+
+            // Reset chat UI
+            if (messagesContainer) {
+                messagesContainer.innerHTML = `
+                    <div class="empty-chat">
+                        <h2>Welcome to TAARA*</h2>
+                        <p>Select a conversation to start chatting.</p>
+                    </div>
+                `;
+            }
+
+            if (currentChatTitle) {
+                currentChatTitle.textContent =
+                    "Select a conversation";
+            }
+
+            if (chatPresence) {
+                chatPresence.textContent = "";
+            }
+
+            if (typingIndicator) {
+                typingIndicator.textContent = "";
             }
 
             showLogin();
@@ -4338,18 +4341,6 @@ supabaseClient.auth.onAuthStateChange(
 );
 
 
-async function checkExistingSession() {
-
-    // TAARA* should require login again after refresh
-    await supabaseClient.auth.signOut();
-
-    currentUserId = null;
-    currentConversationId = null;
-    currentChatUserId = null;
-    currentChatUsername = null;
-
-    showLogin();
-}
 
 // ============================================================
 // CLOSE POPUPS
