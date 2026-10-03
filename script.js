@@ -2476,6 +2476,320 @@ function hideReplyBar() {
             true;
 }
 
+// ============================================================
+// PIN / UNPIN MESSAGES
+// ============================================================
+
+function isMessagePinned(message) {
+    if (!message || !message.id) {
+        return false;
+    }
+
+    return pinnedMessageIds.has(
+        message.id
+    );
+}
+
+
+async function pinMessage(message) {
+
+    if (!message || !message.id) {
+        return;
+    }
+
+    if (!currentConversationId) {
+        alert(
+            "Open a conversation first."
+        );
+        return;
+    }
+
+    try {
+
+        const {
+            error
+        } =
+            await supabaseClient.rpc(
+                "pin_message",
+                {
+                    target_message_id:
+                        message.id
+                }
+            );
+
+        if (error) {
+            console.error(
+                "Pin message failed:",
+                error
+            );
+
+            alert(
+                `Could not pin message: ${error.message}`
+            );
+
+            return;
+        }
+
+        pinnedMessageIds.add(
+            message.id
+        );
+
+        updatePinnedMessageUI(
+            message.id,
+            true
+        );
+
+        showMessageActionNotice(
+            "Message pinned"
+        );
+
+    } catch (error) {
+
+        console.error(
+            "Pin message error:",
+            error
+        );
+
+        alert(
+            `Could not pin message: ${error.message}`
+        );
+    }
+}
+
+
+async function unpinMessage(message) {
+
+    if (!message || !message.id) {
+        return;
+    }
+
+    if (!currentConversationId) {
+        alert(
+            "Open a conversation first."
+        );
+        return;
+    }
+
+    try {
+
+        const {
+            error
+        } =
+            await supabaseClient.rpc(
+                "unpin_message",
+                {
+                    target_message_id:
+                        message.id
+                }
+            );
+
+        if (error) {
+            console.error(
+                "Unpin message failed:",
+                error
+            );
+
+            alert(
+                `Could not unpin message: ${error.message}`
+            );
+
+            return;
+        }
+
+        pinnedMessageIds.delete(
+            message.id
+        );
+
+        updatePinnedMessageUI(
+            message.id,
+            false
+        );
+
+        showMessageActionNotice(
+            "Message unpinned"
+        );
+
+    } catch (error) {
+
+        console.error(
+            "Unpin message error:",
+            error
+        );
+
+        alert(
+            `Could not unpin message: ${error.message}`
+        );
+    }
+}
+
+
+function updatePinnedMessageUI(
+    messageId,
+    pinned
+) {
+
+    const row =
+        messagesContainer?.querySelector(
+            `[data-message-id="${messageId}"]`
+        );
+
+    if (!row) {
+        return;
+    }
+
+    const bubble =
+        row.querySelector(
+            ".message-bubble"
+        );
+
+    if (!bubble) {
+        return;
+    }
+
+    if (pinned) {
+
+        row.classList.add(
+            "taara-pinned-message"
+        );
+
+        let badge =
+            bubble.querySelector(
+                ".taara-pinned-badge"
+            );
+
+        if (!badge) {
+
+            badge =
+                document.createElement(
+                    "div"
+                );
+
+            badge.className =
+                "taara-pinned-badge";
+
+            badge.textContent =
+                "📌 Pinned";
+
+            const tools =
+                bubble.querySelector(
+                    ".taara-message-tools"
+                );
+
+            if (tools) {
+
+                bubble.insertBefore(
+                    badge,
+                    tools
+                );
+
+            } else {
+
+                bubble.appendChild(
+                    badge
+                );
+            }
+        }
+
+    } else {
+
+        row.classList.remove(
+            "taara-pinned-message"
+        );
+
+        const badge =
+            bubble.querySelector(
+                ".taara-pinned-badge"
+            );
+
+        if (badge) {
+            badge.remove();
+        }
+    }
+}
+
+
+function showMessageActionNotice(
+    text
+) {
+
+    let notice =
+        document.getElementById(
+            "taaraMessageActionNotice"
+        );
+
+    if (!notice) {
+
+        notice =
+            document.createElement(
+                "div"
+            );
+
+        notice.id =
+            "taaraMessageActionNotice";
+
+        notice.className =
+            "taara-message-action-notice";
+
+        document.body.appendChild(
+            notice
+        );
+    }
+
+    notice.textContent =
+        text;
+
+    notice.classList.add(
+        "show"
+    );
+
+    clearTimeout(
+        notice._hideTimer
+    );
+
+    notice._hideTimer =
+        setTimeout(
+            () => {
+
+                notice.classList.remove(
+                    "show"
+                );
+
+            },
+            1800
+        );
+}
+
+
+function clearPinnedMessageState() {
+
+    pinnedMessageIds.clear();
+
+    if (!messagesContainer) {
+        return;
+    }
+
+    messagesContainer
+        .querySelectorAll(
+            ".taara-pinned-message"
+        )
+        .forEach(
+            row => {
+
+                row.classList.remove(
+                    "taara-pinned-message"
+                );
+
+                const badge =
+                    row.querySelector(
+                        ".taara-pinned-badge"
+                    );
+
+                if (badge) {
+                    badge.remove();
+                }
+            }
+        );
+}
 
 // ============================================================
 // MESSAGE TOOLS
