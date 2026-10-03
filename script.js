@@ -534,112 +534,127 @@ function showChat() {
 // ============================================================
 
 if (showCreateButton) {
-
-    showCreateButton.addEventListener(
-        "click",
-        showCreate
-    );
+    showCreateButton.addEventListener("click", showCreate);
 }
-
 
 if (backToLoginButton) {
-
-    backToLoginButton.addEventListener(
-        "click",
-        showLogin
-    );
+    backToLoginButton.addEventListener("click", showLogin);
 }
-
 
 if (createForm) {
 
-    createForm.addEventListener(
-        "submit",
-        async (event) => {
+    createForm.addEventListener("submit", async (event) => {
 
-            event.preventDefault();
+        event.preventDefault();
 
-            const username =
-                createUsername.value
-                    .trim()
-                    .toLowerCase();
+        const username =
+            createUsername.value.trim().toLowerCase();
 
-            const pin =
-                createPin.value;
+        const pin =
+            createPin.value;
 
-            const confirm =
-                confirmPin.value;
+        const confirm =
+            confirmPin.value;
 
-            createMessage.textContent = "";
+        createMessage.textContent = "";
 
-            if (!username || !pin) {
+        if (!username || !pin) {
 
-                createMessage.textContent =
-                    "Please enter username and PIN.";
+            createMessage.textContent =
+                "Please enter username and PIN.";
 
-                return;
-            }
+            return;
+        }
 
-            if (pin !== confirm) {
+        if (pin !== confirm) {
 
-                createMessage.textContent =
-                    "PINs do not match.";
+            createMessage.textContent =
+                "PINs do not match.";
 
-                return;
-            }
+            return;
+        }
+
+        try {
+
+            createMessage.textContent =
+                "Creating account...";
+
+            const response = await fetch(
+                `${SUPABASE_URL}/functions/v1/taara-auth`,
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+
+                    body: JSON.stringify({
+                        action: "signup",
+                        username: username,
+                        pin: pin
+                    })
+                }
+            );
+
+            // Safely read response
+            const responseText =
+                await response.text();
+
+            let data = {};
 
             try {
+                data = responseText
+                    ? JSON.parse(responseText)
+                    : {};
+            } catch (parseError) {
 
-                createMessage.textContent =
-                    "Creating account...";
-
-                const response =
-                    await fetch(
-                        `${SUPABASE_URL}/functions/v1/taara-auth`,
-                        {
-                            method: "POST",
-                            headers: {
-                                "Content-Type":
-                                    "application/json"
-                            },
-                            body: JSON.stringify({
-                                action: "signup",
-                                username,
-                                pin
-                            })
-                        }
-                    );
-
-                const data =
-                    await response.json();
-
-                if (!response.ok) {
-
-                    throw new Error(
-                        data.error ||
-                        "Account creation failed."
-                    );
-                }
-
-                createMessage.textContent =
-                    "Account created. You can login now.";
-
-                createForm.reset();
-
-                setTimeout(
-                    showLogin,
-                    1000
+                console.error(
+                    "Invalid server response:",
+                    responseText
                 );
 
-            } catch (error) {
-
-                console.error(error);
-
-                createMessage.textContent =
-                    error.message;
+                throw new Error(
+                    "Server returned an invalid response."
+                );
             }
+
+            console.log(
+                "CREATE ACCOUNT RESPONSE:",
+                response.status,
+                data
+            );
+
+            if (!response.ok) {
+
+                throw new Error(
+                    data?.error ||
+                    data?.message ||
+                    `Account creation failed (${response.status}).`
+                );
+            }
+
+            createMessage.textContent =
+                "Account created. You can login now.";
+
+            createForm.reset();
+
+            setTimeout(() => {
+                showLogin();
+            }, 1000);
+
+        } catch (error) {
+
+            console.error(
+                "CREATE ACCOUNT ERROR:",
+                error
+            );
+
+            createMessage.textContent =
+                error?.message ||
+                "Unable to create account.";
         }
-    );
+
+    });
 }
 
 
