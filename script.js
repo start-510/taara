@@ -158,6 +158,30 @@ const disappearingStatus =
     document.getElementById("disappearingStatus");
 
 
+
+
+//profile button
+const profileButton =
+document.getElementById("profileButton");
+
+const profilePanel =
+document.getElementById("profilePanel");
+
+const closeProfileButton =
+document.getElementById("closeProfileButton");
+
+const profileUsername =
+document.getElementById("profileUsername");
+
+const profileLargeAvatar =
+document.getElementById("profileLargeAvatar");
+
+const profileAvatar =
+document.getElementById("profileAvatar");
+
+const settingsLogoutButton =
+document.getElementById("settingsLogoutButton");
+
 // ============================================================
 // STATE
 // ============================================================
@@ -3325,6 +3349,137 @@ function createActionMenu(
     }
     return menu;
 }
+
+
+// ============================================================
+// PROFILE & SETTINGS PANEL
+// ============================================================
+
+function openProfilePanel() {
+
+```
+if (!profilePanel)
+    return;
+
+profilePanel.classList.remove(
+    "hidden"
+);
+
+refreshProfilePanel();
+```
+
+}
+
+function closeProfilePanel() {
+
+```
+if (!profilePanel)
+    return;
+
+profilePanel.classList.add(
+    "hidden"
+);
+```
+
+}
+
+function refreshProfilePanel() {
+
+```
+if (!currentUserId)
+    return;
+
+const username =
+    currentChatUsername ||
+    loggedInUsername?.textContent ||
+    "User";
+
+if (profileUsername) {
+    profileUsername.textContent =
+        `@${username.replace(/^@/, "")}`;
+}
+
+if (profileLargeAvatar) {
+    profileLargeAvatar.textContent =
+        "👤";
+}
+
+if (profileAvatar) {
+    profileAvatar.textContent =
+        "👤";
+}
+```
+
+}
+
+// ============================================================
+// PROFILE EVENTS
+// ============================================================
+
+if (profileButton) {
+
+```
+profileButton.addEventListener(
+    "click",
+    event => {
+
+        event.stopPropagation();
+
+        if (
+            profilePanel &&
+            !profilePanel.classList.contains(
+                "hidden"
+            )
+        ) {
+
+            closeProfilePanel();
+
+        } else {
+
+            openProfilePanel();
+        }
+    }
+);
+```
+
+}
+
+if (closeProfileButton) {
+
+```
+closeProfileButton.addEventListener(
+    "click",
+    event => {
+
+        event.stopPropagation();
+
+        closeProfilePanel();
+    }
+);
+```
+
+}
+
+if (settingsLogoutButton) {
+
+```
+settingsLogoutButton.addEventListener(
+    "click",
+    async event => {
+
+        event.stopPropagation();
+
+        closeProfilePanel();
+
+        if (logoutButton) {
+            logoutButton.click();
+        }
+    }
+);
+```
+
+}
+
 
 // ============================================================
 // DISAPPEARING MESSAGE SETTINGS UI
