@@ -4341,6 +4341,63 @@ supabaseClient.auth.onAuthStateChange(
 );
 
 
+// ============================================================
+// EXISTING SESSION
+// ============================================================
+
+async function checkExistingSession() {
+
+    console.log(
+        "Checking existing session..."
+    );
+
+    /*
+     * TAARA* security behavior:
+     *
+     * Every full page refresh requires
+     * the user to login again.
+     */
+
+    try {
+
+        const {
+            data: {
+                session
+            }
+        } =
+            await supabaseClient.auth.getSession();
+
+        if (session) {
+
+            console.log(
+                "Existing session found - locking TAARA*"
+            );
+
+            await supabaseClient.auth.signOut();
+
+        } else {
+
+            console.log(
+                "No existing session."
+            );
+        }
+
+    } catch (error) {
+
+        console.error(
+            "Session check failed:",
+            error
+        );
+
+        try {
+            await supabaseClient.auth.signOut();
+        } catch (_) {}
+    }
+
+    // Always show login after page refresh
+    showLogin();
+}
+
 
 // ============================================================
 // CLOSE POPUPS
