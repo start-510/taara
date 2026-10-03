@@ -202,6 +202,12 @@ let lastSeenTimer = null;
 const disappearingMessageTimers =
     new Map();
 
+// ============================================================
+// PINNED MESSAGE STATE
+// ============================================================
+
+const pinnedMessageIds =
+    new Set();
 
 // ============================================================
 // BASIC HELPERS
