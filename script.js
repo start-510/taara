@@ -26,7 +26,7 @@ const supabaseClient =
 const CHAT_MEDIA_BUCKET = "chat-media";
 
 const MAX_FILE_SIZE =
-    100 * 1024 * 1024; // 100 MB
+    100 * 1024 * 1024;
 
 
 // ============================================================
@@ -603,7 +603,7 @@ if (createForm) {
                                     "application/json"
                             },
                             body: JSON.stringify({
-                                action: "register",
+                                action: "signup",
                                 username,
                                 pin
                             })
@@ -706,10 +706,29 @@ if (loginForm) {
                     );
                 }
 
-                const {
-                    access_token,
-                    refresh_token
-                } = data;
+                // Supports either:
+                // { access_token, refresh_token }
+                // OR
+                // { session: { access_token, refresh_token } }
+
+                const session =
+                    data.session || data;
+
+                const access_token =
+                    session.access_token;
+
+                const refresh_token =
+                    session.refresh_token;
+
+                if (
+                    !access_token ||
+                    !refresh_token
+                ) {
+
+                    throw new Error(
+                        "Login succeeded but no session tokens were returned."
+                    );
+                }
 
                 const {
                     error
@@ -764,7 +783,9 @@ async function setupLoggedInUser() {
         throw error;
 
     if (!data.user)
-        throw new Error("User session not found.");
+        throw new Error(
+            "User session not found."
+        );
 
     currentUserId =
         data.user.id;
@@ -832,7 +853,7 @@ function startLastSeenTimer() {
 
 
 // ============================================================
-// GLOBAL PRESENCE - FIXED
+// GLOBAL PRESENCE
 // ============================================================
 
 async function startGlobalPresence() {
@@ -840,13 +861,14 @@ async function startGlobalPresence() {
     try {
 
         if (!currentUserId) {
+
             console.warn(
                 "No current user for global presence."
             );
+
             return;
         }
 
-        // Do not create another channel for the same user
         if (
             globalPresenceChannel &&
             globalPresenceStartedForUser === currentUserId
@@ -854,7 +876,6 @@ async function startGlobalPresence() {
             return;
         }
 
-        // Remove old channel
         if (globalPresenceChannel) {
 
             try {
@@ -888,8 +909,6 @@ async function startGlobalPresence() {
                     }
                 }
             );
-
-        // ALL callbacks BEFORE subscribe()
 
         channel.on(
             "presence",
@@ -934,11 +953,9 @@ async function startGlobalPresence() {
             }
         );
 
-        // Save reference before subscribing
         globalPresenceChannel =
             channel;
 
-        // ONLY subscribe after all callbacks
         channel.subscribe(
             async (status) => {
 
@@ -1172,6 +1189,7 @@ async function loadConversations() {
 
                 const username =
                     conversation.username ||
+                    conversation.other_username ||
                     "Unknown";
 
                 const preview =
@@ -1248,11 +1266,14 @@ async function openConversation(username) {
         currentChatTitle.textContent =
             `@${username}`;
 
-    messageInput.disabled = false;
+    if (messageInput)
+        messageInput.disabled = false;
 
-    sendButton.disabled = false;
+    if (sendButton)
+        sendButton.disabled = false;
 
-    attachButton.disabled = false;
+    if (attachButton)
+        attachButton.disabled = false;
 
     if (voiceButton)
         voiceButton.disabled = false;
@@ -1267,11 +1288,14 @@ async function openConversation(username) {
 
     await markConversationRead();
 
+    await loadConversations();
+
     startRealtimeMessages();
 
     startChatPresence();
 
-    messageInput.focus();
+    if (messageInput)
+        messageInput.focus();
 }
 
 
@@ -1393,7 +1417,6 @@ async function addMessageToScreen(
                 : "received-message"
         }`;
 
-    // Deleted
     if (message.deleted_at) {
 
         const deleted =
@@ -1411,7 +1434,6 @@ async function addMessageToScreen(
 
     } else {
 
-        // Reply preview
         if (message.reply_to) {
 
             const reply =
@@ -1430,7 +1452,6 @@ async function addMessageToScreen(
         );
     }
 
-    // Time
     const time =
         document.createElement("span");
 
@@ -1465,7 +1486,6 @@ async function addMessageToScreen(
         time
     );
 
-    // Tools
     if (!message.deleted_at) {
 
         const tools =
@@ -1479,7 +1499,6 @@ async function addMessageToScreen(
         );
     }
 
-    // Reaction summary
     const reactions =
         document.createElement("div");
 
@@ -2139,7 +2158,6 @@ function createMessageTools(
     wrapper.className =
         "taara-message-tools";
 
-    // Reaction
     const reactionWrapper =
         document.createElement("div");
 
@@ -2185,7 +2203,6 @@ function createMessageTools(
     );
 
 
-    // Actions
     const actionWrapper =
         document.createElement("div");
 
@@ -2261,6 +2278,7 @@ function createActionMenu(
 
     menu.className =
         "taara-action-menu";
+
 
     // Reply
     const reply =
@@ -3653,6 +3671,8 @@ function startRealtimeMessages() {
                 message.id
             );
 
+            // Since this conversation is currently open,
+            // immediately mark newly received messages as read.
             await markConversationRead();
 
             await loadConversations();
@@ -3816,9 +3836,6 @@ async function startChatPresence() {
             }
         );
 
-
-    // IMPORTANT:
-    // Every callback BEFORE subscribe()
 
     channel.on(
         "presence",
@@ -4055,10 +4072,23 @@ async function markConversationRead() {
 
     try {
 
-        // Keep this compatible with the existing
-        // conversation/message setup.
-        // If your project already has a read RPC,
-        // use it here.
+        const {
+            error
+        } =
+            await supabaseClient.rpc(
+                "mark_conversation_read",
+                {
+                    p_conversation_id:
+                        currentConversationId
+                }
+            );
+
+        if (error)
+            throw error;
+
+        // Refresh the conversation list so
+        // unread badges disappear immediately.
+        await loadConversations();
 
     } catch (error) {
 
@@ -4192,12 +4222,6 @@ supabaseClient.auth.onAuthStateChange(
             event
         );
 
-        // IMPORTANT:
-        // Do NOT start global presence here.
-        //
-        // Login/session restoration handles it.
-        // This prevents duplicate presence channels.
-
         if (
             event === "SIGNED_OUT"
         ) {
@@ -4239,6 +4263,30 @@ supabaseClient.auth.onAuthStateChange(
                 } catch (_) {}
 
                 chatPresenceChannel =
+                    null;
+            }
+
+            if (realtimeChannel) {
+
+                try {
+
+                    await supabaseClient.removeChannel(
+                        realtimeChannel
+                    );
+
+                } catch (_) {}
+
+                realtimeChannel =
+                    null;
+            }
+
+            if (lastSeenTimer) {
+
+                clearInterval(
+                    lastSeenTimer
+                );
+
+                lastSeenTimer =
                     null;
             }
 
