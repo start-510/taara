@@ -3962,6 +3962,108 @@ function getDisappearingMessageLabel(seconds) {
 
 
 // ============================================================
+// MESSAGE EXPIRY HANDLING
+// ============================================================
+
+function clearMessageExpiryTimer(messageId) {
+
+    const timer =
+        disappearingMessageTimers.get(messageId);
+
+    if (timer) {
+
+        clearTimeout(timer);
+
+        disappearingMessageTimers.delete(
+            messageId
+        );
+    }
+}
+
+
+function scheduleMessageExpiry(message) {
+
+    if (
+        !message ||
+        !message.id ||
+        !message.expires_at
+    ) {
+        return;
+    }
+
+    clearMessageExpiryTimer(
+        message.id
+    );
+
+    const expiresAt =
+        new Date(
+            message.expires_at
+        ).getTime();
+
+    const remaining =
+        expiresAt -
+        Date.now();
+
+    if (remaining <= 0) {
+
+        removeExpiredMessageFromScreen(
+            message.id
+        );
+
+        return;
+    }
+
+    const timer =
+        setTimeout(
+            () => {
+
+                disappearingMessageTimers.delete(
+                    message.id
+                );
+
+                removeExpiredMessageFromScreen(
+                    message.id
+                );
+
+            },
+            remaining
+        );
+
+    disappearingMessageTimers.set(
+        message.id,
+        timer
+    );
+}
+
+
+function removeExpiredMessageFromScreen(
+    messageId
+) {
+
+    clearMessageExpiryTimer(
+        messageId
+    );
+
+    loadedMessages.delete(
+        messageId
+    );
+
+    reactionCache.delete(
+        messageId
+    );
+
+    const messageElement =
+        messagesContainer?.querySelector(
+            `[data-message-id="${messageId}"]`
+        );
+
+    if (messageElement) {
+
+        messageElement.remove();
+    }
+}
+
+// ============================================================
 // CHAT PRESENCE
 // ============================================================
 
