@@ -3165,7 +3165,65 @@ function createActionMenu(
             del
         );
     }
+    // ========================================================
+    // PIN / UNPIN
+    // ========================================================
 
+    if (!message.deleted_at) {
+
+        const pinButton =
+            document.createElement(
+                "button"
+            );
+
+        const currentlyPinned =
+            isMessagePinned(
+                message
+            );
+
+        pinButton.className =
+            "taara-pin-button";
+
+        pinButton.textContent =
+            currentlyPinned
+                ? "📌 Unpin"
+                : "📌 Pin";
+
+        if (currentlyPinned) {
+            pinButton.classList.add(
+                "is-pinned"
+            );
+        }
+
+        pinButton.addEventListener(
+            "click",
+            async () => {
+
+                menu.remove();
+
+                if (
+                    isMessagePinned(
+                        message
+                    )
+                ) {
+
+                    await unpinMessage(
+                        message
+                    );
+
+                } else {
+
+                    await pinMessage(
+                        message
+                    );
+                }
+            }
+        );
+
+        menu.appendChild(
+            pinButton
+        );
+    }
     return menu;
 }
 
