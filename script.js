@@ -1594,12 +1594,43 @@ async function loadMessages() {
         if (error)
             throw error;
 
+
+        // =====================================================
+        // CLEAR OLD MESSAGE EXPIRY TIMERS
+        // =====================================================
+
         clearAllMessageExpiryTimers();
+
+
+        // =====================================================
+        // CLEAR OLD PIN STATE
+        // =====================================================
+
+        if (
+            typeof pinnedMessageIds !== "undefined" &&
+            pinnedMessageIds instanceof Set
+        ) {
+            pinnedMessageIds.clear();
+        }
+
+
+        // =====================================================
+        // CLEAR LOADED MESSAGE CACHE
+        // =====================================================
 
         loadedMessages.clear();
 
-        messagesContainer.innerHTML =
-            "";
+
+        // =====================================================
+        // CLEAR CHAT UI
+        // =====================================================
+
+        messagesContainer.innerHTML = "";
+
+
+        // =====================================================
+        // RENDER MESSAGES
+        // =====================================================
 
         for (
             const message of data || []
@@ -1616,9 +1647,20 @@ async function loadMessages() {
             );
         }
 
+
+        // =====================================================
+        // LOAD REACTIONS
+        // =====================================================
+
         await loadAllReactions();
 
+
+        // =====================================================
+        // SCROLL TO BOTTOM
+        // =====================================================
+
         scrollMessagesToBottom();
+
 
     } catch (error) {
 
@@ -1626,9 +1668,9 @@ async function loadMessages() {
             "Load messages failed:",
             error
         );
+
     }
 }
-
 
 // ============================================================
 // MESSAGE SCREEN
