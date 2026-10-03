@@ -1045,14 +1045,14 @@ async function startGlobalPresence() {
 
 
 // ============================================================
-// SEARCH USERS
+// USER SEARCH
 // ============================================================
 
 if (userSearchForm) {
 
     userSearchForm.addEventListener(
         "submit",
-        async (event) => {
+        async function (event) {
 
             event.preventDefault();
 
@@ -1062,33 +1062,45 @@ if (userSearchForm) {
                     .toLowerCase();
 
             userSearchMessage.textContent = "";
-
             userSearchResult.innerHTML = "";
 
             if (!username) {
-
                 userSearchMessage.textContent =
                     "Enter a username.";
+                return;
+            }
 
+            if (username === currentChatUsername) {
+                userSearchMessage.textContent =
+                    "You cannot search yourself.";
                 return;
             }
 
             try {
 
+                userSearchMessage.textContent =
+                    "Searching...";
+
                 const {
                     data,
                     error
                 } =
-                    await supabaseClient
-                        .from("profiles")
-                        .select("id, username")
-                        .eq("username", username)
-                        .maybeSingle();
+                    await supabaseClient.rpc(
+                        "search_profiles",
+                        {
+                            search_username: username
+                        }
+                    );
 
                 if (error)
                     throw error;
 
-                if (!data) {
+                const profile =
+                    data && data.length
+                        ? data[0]
+                        : null;
+
+                if (!profile) {
 
                     userSearchMessage.textContent =
                         "User not found.";
@@ -1096,46 +1108,88 @@ if (userSearchForm) {
                     return;
                 }
 
-                if (data.id === currentUserId) {
+                userSearchMessage.textContent = "";
 
-                    userSearchMessage.textContent =
-                        "You cannot chat with yourself.";
+                userSearchResult.innerHTML = `
+                    <div class="search-result-card">
 
-                    return;
+                        <div class="search-result-info">
+
+                            <strong>
+                                ${escapeHtml(
+                                    profile.username
+                                )}
+                            </strong>
+
+                            ${
+                                profile.display_name
+                                    ? `
+                                        <span>
+                                            ${escapeHtml(
+                                                profile.display_name
+                                            )}
+                                        </span>
+                                      `
+                                    : ""
+                            }
+
+                        </div>
+
+                        <button
+                            type="button"
+                            class="start-chat-button"
+                            data-user-id="${profile.id}"
+                            data-username="${escapeHtml(
+                                profile.username
+                            )}"
+                        >
+                            Chat
+                        </button>
+
+                    </div>
+                `;
+
+                const chatButton =
+                    userSearchResult.querySelector(
+                        ".start-chat-button"
+                    );
+
+                if (chatButton) {
+
+                    chatButton.addEventListener(
+                        "click",
+                        async function () {
+
+                            const otherUserId =
+                                this.dataset.userId;
+
+                            const otherUsername =
+                                this.dataset.username;
+
+                            await startConversation(
+                                otherUserId,
+                                otherUsername
+                            );
+
+                        }
+                    );
                 }
-
-                const button =
-                    document.createElement("button");
-
-                button.type = "button";
-
-                button.textContent =
-                    `💬 Chat with @${data.username}`;
-
-                button.addEventListener(
-                    "click",
-                    () => startConversation(
-                        data.id,
-                        data.username
-                    )
-                );
-
-                userSearchResult.appendChild(
-                    button
-                );
 
             } catch (error) {
 
-                console.error(error);
+                console.error(
+                    "User search failed:",
+                    error
+                );
 
                 userSearchMessage.textContent =
-                    error.message;
+                    error.message ||
+                    "Unable to search users.";
             }
         }
     );
+
 }
-
-
 // ============================================================
 // START CONVERSATION
 // ============================================================
