@@ -2504,3 +2504,140 @@ MOBILE
 ```
 
 }
+
+/* ============================================================
+TAARA* PROFILE VIEW
+============================================================ */
+
+.profile-edit-panel {
+animation: taaraProfileOpen 0.25s ease;
+}
+
+.profile-edit-panel.hidden {
+display: none;
+}
+
+.profile-edit-header {
+display: flex;
+align-items: center;
+gap: 12px;
+margin-bottom: 25px;
+}
+
+.profile-edit-back {
+width: 36px;
+height: 36px;
+
+```
+border: 0;
+border-radius: 11px;
+
+background: rgba(255, 255, 255, 0.07);
+color: inherit;
+
+font-size: 20px;
+
+cursor: pointer;
+
+transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+```
+
+}
+
+.profile-edit-back:hover {
+background: rgba(255, 255, 255, 0.14);
+transform: translateX(-2px);
+}
+
+.profile-edit-title {
+font-size: 18px;
+font-weight: 700;
+}
+
+.profile-edit-subtitle {
+margin-top: 3px;
+font-size: 11px;
+opacity: 0.5;
+}
+
+.profile-edit-avatar {
+width: 82px;
+height: 82px;
+
+```
+margin: 0 auto 25px;
+
+display: flex;
+align-items: center;
+justify-content: center;
+
+border-radius: 50%;
+
+background: rgba(255, 255, 255, 0.08);
+border: 1px solid rgba(255, 255, 255, 0.14);
+
+font-size: 38px;
+
+box-shadow:
+    0 12px 35px rgba(0, 0, 0, 0.18);
+```
+
+}
+
+.profile-edit-field {
+margin-bottom: 15px;
+}
+
+.profile-edit-field label {
+display: block;
+
+```
+margin-bottom: 7px;
+padding-left: 3px;
+
+font-size: 11px;
+text-transform: uppercase;
+letter-spacing: 0.07em;
+
+opacity: 0.5;
+```
+
+}
+
+.profile-edit-value,
+.profile-edit-status {
+min-height: 45px;
+
+```
+display: flex;
+align-items: center;
+
+padding: 0 14px;
+
+border-radius: 13px;
+
+background: rgba(255, 255, 255, 0.055);
+border: 1px solid rgba(255, 255, 255, 0.08);
+
+font-size: 14px;
+```
+
+}
+
+.profile-edit-status {
+gap: 8px;
+}
+
+.profile-edit-note {
+margin: 18px 3px 0;
+
+```
+font-size: 11px;
+line-height: 1.6;
+
+opacity: 0.45;
+```
+
+}
