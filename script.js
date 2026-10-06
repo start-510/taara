@@ -140,58 +140,69 @@ const uploadStatus =
 
 // Disappearing messages
 const chatSettingsButton =
-    document.getElementById("chatSettingsButton");
+    document.getElementById(
+        "chatSettingsButton"
+    );
 
-const disappearingPanel =
-    document.getElementById("disappearingPanel");
-
-const closeDisappearingButton =
-    document.getElementById("closeDisappearingButton");
-
-const disappearingCurrentTimer =
-    document.getElementById("disappearingCurrentTimer");
-
-const disappearingOptions =
-    document.getElementById("disappearingOptions");
-
-const disappearingStatus =
-    document.getElementById("disappearingStatus");
-
-chatSearchButton =
+const chatSearchButton =
     document.getElementById(
         "chatSearchButton"
     );
 
-chatSearchBar =
+const chatSearchBar =
     document.getElementById(
         "chatSearchBar"
     );
 
-chatSearchInput =
+const chatSearchInput =
     document.getElementById(
         "chatSearchInput"
     );
 
-chatSearchCount =
+const chatSearchCount =
     document.getElementById(
         "chatSearchCount"
     );
 
-chatSearchPrev =
+const chatSearchPrev =
     document.getElementById(
         "chatSearchPrev"
     );
 
-chatSearchNext =
+const chatSearchNext =
     document.getElementById(
         "chatSearchNext"
     );
 
-chatSearchClose =
+const chatSearchClose =
     document.getElementById(
         "chatSearchClose"
     );
 
+const disappearingPanel =
+    document.getElementById(
+        "disappearingPanel"
+    );
+
+const closeDisappearingButton =
+    document.getElementById(
+        "closeDisappearingButton"
+    );
+
+const disappearingCurrentTimer =
+    document.getElementById(
+        "disappearingCurrentTimer"
+    );
+
+const disappearingOptions =
+    document.getElementById(
+        "disappearingOptions"
+    );
+
+const disappearingStatus =
+    document.getElementById(
+        "disappearingStatus"
+    );
 
 //profile button
 const profileButton =
@@ -256,17 +267,6 @@ let globalPresenceStartedForUser = null;
 let unreadSyncChannel = null;
 
 let lastSeenTimer = null;
-
-let chatSearchButton = null;
-let chatSearchBar = null;
-let chatSearchInput = null;
-let chatSearchCount = null;
-let chatSearchPrev = null;
-let chatSearchNext = null;
-let chatSearchClose = null;
-
-let chatSearchResults = [];
-let chatSearchIndex = -1;
 
 // Disappearing-message browser timers
 const disappearingMessageTimers =
