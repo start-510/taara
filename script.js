@@ -400,56 +400,67 @@ function injectFeatureStyles() {
             position:relative;
         }
 
-        .taara-action-menu {
-            position:absolute;
-            z-index:1000;
-            bottom:32px;
-            right:0;
-            min-width:130px;
-            background:white;
-            border:1px solid #ddd;
-            border-radius:10px;
-            padding:5px;
-            box-shadow:0 8px 25px rgba(0,0,0,.15);
-        }
+       .taara-action-menu {
+    position: absolute;
+    z-index: 1000;
+    bottom: 34px;
+    right: 0;
+    min-width: 145px;
+    max-width: 190px;
+    background: rgba(20, 22, 32, 0.96);
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    border-radius: 14px;
+    padding: 6px;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+}
 
-        .taara-action-menu button {
-            display:block;
-            width:100%;
-            border:0;
-            background:none;
-            padding:9px;
-            text-align:left;
-            border-radius:7px;
-            cursor:pointer;
-        }
+.taara-action-menu button {
+    width: 100%;
+    border: 0;
+    background: transparent;
+    color: rgba(255, 255, 255, 0.86);
+    padding: 10px 12px;
+    border-radius: 9px;
+    text-align: left;
+    cursor: pointer;
+    font: inherit;
+}
 
-        .taara-action-menu button:hover {
-            background:#f1f1f1;
-        }
+.taara-action-menu button:hover {
+    background: rgba(255, 255, 255, 0.08);
+}
 
-        .taara-reaction-picker {
-            position:absolute;
-            z-index:1001;
-            bottom:32px;
-            left:0;
-            background:white;
-            border:1px solid #ddd;
-            border-radius:12px;
-            padding:7px;
-            display:flex;
-            gap:5px;
-            box-shadow:0 8px 25px rgba(0,0,0,.15);
-        }
+.taara-reaction-picker {
+    position: absolute;
+    z-index: 1001;
+    bottom: 34px;
+    left: 0;
+    background: rgba(20, 22, 32, 0.96);
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    border-radius: 14px;
+    padding: 7px;
+    display: flex;
+    gap: 5px;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+}
 
-        .taara-reaction-picker button {
-            border:0;
-            background:none;
-            font-size:20px;
-            cursor:pointer;
-            padding:3px;
-        }
+.taara-reaction-picker button {
+    width: 36px;
+    height: 36px;
+    border: 0;
+    background: transparent;
+    border-radius: 9px;
+    cursor: pointer;
+    font-size: 19px;
+}
 
+.taara-reaction-picker button:hover {
+    background: rgba(255, 255, 255, 0.08);
+}
         .taara-reactions {
             display:flex;
             flex-wrap:wrap;
