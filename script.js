@@ -1708,14 +1708,33 @@ async function openConversation(
         messageInput.focus();
 }
 
-// ============================================================
-// LOAD MESSAGES
-// ============================================================
-
-async function loadMessages() {
+async function loadMessages(
+    options = {}
+) {
 
     if (!currentConversationId)
         return;
+
+    const {
+        forceBottom = true,
+        preserveScroll = false
+    } = options;
+
+    if (!messagesContainer)
+        return;
+
+    /*
+     * Remember the current position before
+     * rebuilding the message list.
+     */
+    const previousScrollHeight =
+        messagesContainer.scrollHeight;
+
+    const previousScrollTop =
+        messagesContainer.scrollTop;
+
+    const wasNearBottom =
+        isMessagesNearBottom();
 
     try {
 
@@ -1757,41 +1776,37 @@ async function loadMessages() {
 
 
         // =====================================================
-        // CLEAR OLD MESSAGE EXPIRY TIMERS
+        // CLEAR OLD EXPIRY TIMERS
         // =====================================================
 
         clearAllMessageExpiryTimers();
 
 
         // =====================================================
-        // CLEAR OLD PIN STATE
+        // CLEAR PIN STATE
         // =====================================================
 
         if (
-            typeof pinnedMessageIds !== "undefined" &&
             pinnedMessageIds instanceof Set
         ) {
+
             pinnedMessageIds.clear();
         }
 
 
         // =====================================================
-        // CLEAR LOADED MESSAGE CACHE
+        // CLEAR MESSAGE CACHE
         // =====================================================
 
         loadedMessages.clear();
 
 
         // =====================================================
-        // CLEAR CHAT UI
+        // REBUILD MESSAGE UI
         // =====================================================
 
         messagesContainer.innerHTML = "";
 
-
-        // =====================================================
-        // RENDER MESSAGES
-        // =====================================================
 
         for (
             const message of data || []
@@ -1817,11 +1832,43 @@ async function loadMessages() {
 
 
         // =====================================================
-        // SCROLL TO BOTTOM
+        // RESTORE / SET SCROLL
         // =====================================================
 
-        scrollMessagesToBottom();
+        requestAnimationFrame(
+            () => {
 
+                if (
+                    preserveScroll &&
+                    previousScrollHeight > 0
+                ) {
+
+                    const newScrollHeight =
+                        messagesContainer.scrollHeight;
+
+                    const heightDifference =
+                        newScrollHeight -
+                        previousScrollHeight;
+
+                    messagesContainer.scrollTop =
+                        previousScrollTop +
+                        heightDifference;
+
+                    return;
+                }
+
+
+                if (
+                    forceBottom ||
+                    wasNearBottom
+                ) {
+
+                    scrollMessagesToBottom(
+                        "auto"
+                    );
+                }
+            }
+        );
 
     } catch (error) {
 
@@ -1829,10 +1876,8 @@ async function loadMessages() {
             "Load messages failed:",
             error
         );
-
     }
 }
-
 // ============================================================
 // MESSAGE SCREEN
 // ============================================================
