@@ -930,6 +930,8 @@ if (loginForm) {
 
                 startGlobalPresence();
 
+                startUnreadSync();
+
                 startLastSeenTimer();
 
                 showChat();
