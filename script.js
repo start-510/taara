@@ -3493,12 +3493,6 @@ if (profileLargeAvatar) {
         "👤";
 }
 
-if (profileAvatar) {
-    profileAvatar.textContent =
-        "👤";
-}
-```
-
 }
 
 // ============================================================
