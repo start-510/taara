@@ -3504,6 +3504,7 @@ function openProfilePanel() {
     refreshProfilePanel();
 }
 
+
 function closeProfilePanel() {
 
     if (!profilePanel)
@@ -3513,6 +3514,7 @@ function closeProfilePanel() {
         "hidden"
     );
 }
+
 
 function refreshProfilePanel() {
 
@@ -3524,10 +3526,16 @@ function refreshProfilePanel() {
         loggedInUsername?.textContent ||
         "User";
 
+    const cleanUsername =
+        username.replace(
+            /^@/,
+            ""
+        );
+
     if (profileUsername) {
 
         profileUsername.textContent =
-            `@${username.replace(/^@/, "")}`;
+            `@${cleanUsername}`;
     }
 
     if (profileLargeAvatar) {
@@ -3535,6 +3543,163 @@ function refreshProfilePanel() {
         profileLargeAvatar.textContent =
             "👤";
     }
+
+    if (profileAvatar) {
+
+        profileAvatar.textContent =
+            "👤";
+    }
+}
+
+
+// ============================================================
+// PROFILE PANEL BUTTONS
+// ============================================================
+
+if (profileButton) {
+
+    profileButton.addEventListener(
+        "click",
+        () => {
+
+            openProfilePanel();
+        }
+    );
+}
+
+
+if (closeProfileButton) {
+
+    closeProfileButton.addEventListener(
+        "click",
+        () => {
+
+            closeProfilePanel();
+        }
+    );
+}
+
+
+// ============================================================
+// PROFILE SETTINGS
+// ============================================================
+
+if (profileSettingsButton) {
+
+    profileSettingsButton.addEventListener(
+        "click",
+        () => {
+
+            alert(
+                "Profile settings will be added here."
+            );
+        }
+    );
+}
+
+
+// ============================================================
+// PRIVACY SETTINGS
+// ============================================================
+
+if (privacySettingsButton) {
+
+    privacySettingsButton.addEventListener(
+        "click",
+        () => {
+
+            alert(
+                "Privacy settings will be added here."
+            );
+        }
+    );
+}
+
+
+// ============================================================
+// SECURITY SETTINGS
+// ============================================================
+
+if (securitySettingsButton) {
+
+    securitySettingsButton.addEventListener(
+        "click",
+        () => {
+
+            alert(
+                "Security settings will be added here."
+            );
+        }
+    );
+}
+
+
+// ============================================================
+// NOTIFICATION SETTINGS
+// ============================================================
+
+if (notificationSettingsButton) {
+
+    notificationSettingsButton.addEventListener(
+        "click",
+        () => {
+
+            alert(
+                "Notification settings will be added here."
+            );
+        }
+    );
+}
+
+
+// ============================================================
+// APPEARANCE SETTINGS
+// ============================================================
+
+if (appearanceSettingsButton) {
+
+    appearanceSettingsButton.addEventListener(
+        "click",
+        () => {
+
+            alert(
+                "Appearance settings will be added here."
+            );
+        }
+    );
+}
+
+
+// ============================================================
+// SETTINGS LOGOUT
+// ============================================================
+
+if (settingsLogoutButton) {
+
+    settingsLogoutButton.addEventListener(
+        "click",
+        async () => {
+
+            if (logoutButton) {
+
+                logoutButton.click();
+
+                return;
+            }
+
+            try {
+
+                await supabaseClient.auth.signOut();
+
+            } catch (error) {
+
+                console.error(
+                    "Settings logout failed:",
+                    error
+                );
+            }
+        }
+    );
 }
 
 // ============================================================
