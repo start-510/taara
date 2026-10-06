@@ -6544,6 +6544,66 @@ async function markConversationRead() {
     }
 }
 
+// ============================================================
+// MESSAGE SCROLL HELPERS
+// ============================================================
+
+function isMessagesNearBottom(
+    threshold = 90
+) {
+
+    if (!messagesContainer)
+        return true;
+
+    const distanceFromBottom =
+        messagesContainer.scrollHeight -
+        messagesContainer.scrollTop -
+        messagesContainer.clientHeight;
+
+    return distanceFromBottom <= threshold;
+}
+
+
+function scrollMessagesToBottom(
+    behavior = "auto"
+) {
+
+    if (!messagesContainer)
+        return;
+
+    const target =
+        messagesContainer.scrollHeight -
+        messagesContainer.clientHeight;
+
+    if (behavior === "smooth") {
+
+        messagesContainer.scrollTo({
+            top: Math.max(0, target),
+            behavior: "smooth"
+        });
+
+    } else {
+
+        messagesContainer.scrollTop =
+            Math.max(0, target);
+    }
+}
+
+
+function scrollMessagesToBottomIfNeeded() {
+
+    if (!messagesContainer)
+        return;
+
+    if (
+        isMessagesNearBottom()
+    ) {
+
+        scrollMessagesToBottom(
+            "auto"
+        );
+    }
+}
 
 // ============================================================
 // LOGOUT
