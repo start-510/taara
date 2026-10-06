@@ -5489,23 +5489,26 @@ if (shouldStickToBottom) {
 }
 
 
-    // Message updates
-    realtimeChannel.on(
-        "postgres_changes",
-        {
-            event: "UPDATE",
-            schema: "public",
-            table: "messages",
-            filter:
-                `conversation_id=eq.${currentConversationId}`
-        },
-        async () => {
+   // Updated messages
+realtimeChannel.on(
+    "postgres_changes",
+    {
+        event: "UPDATE",
+        schema: "public",
+        table: "messages",
+        filter:
+            `conversation_id=eq.${currentConversationId}`
+    },
+    async () => {
 
-            await loadMessages();
+        await loadMessages({
+            forceBottom: false,
+            preserveScroll: true
+        });
 
-            await loadConversations();
-        }
-    );
+        await loadConversations();
+    }
+);
 
 
     // Message deletes
