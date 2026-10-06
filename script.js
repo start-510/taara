@@ -1680,6 +1680,11 @@ async function openConversation(
         chatSettingsButton.disabled =
             false;
 
+    // Enable chat search
+    if (chatSearchButton)
+        chatSearchButton.disabled =
+            false;
+
     stopTyping();
 
     replyingToMessage =
@@ -1702,7 +1707,6 @@ async function openConversation(
     if (messageInput)
         messageInput.focus();
 }
-
 
 // ============================================================
 // LOAD MESSAGES
