@@ -525,12 +525,65 @@
 
             <div>
 
-                <div
-                    id="currentChatTitle"
-                    class="current-chat-title"
-                >
-                    Select a conversation
-                </div>
+               <div class="current-chat-info">
+
+    <div
+        id="currentChatTitle"
+        class="current-chat-title"
+    >
+        Select a conversation
+    </div>
+
+    <div
+        id="chatSearchBar"
+        class="chat-search-bar hidden"
+    >
+
+        <input
+            id="chatSearchInput"
+            type="search"
+            placeholder="Search messages..."
+            autocomplete="off"
+        />
+
+        <span
+            id="chatSearchCount"
+            class="chat-search-count"
+        ></span>
+
+        <button
+            id="chatSearchPrev"
+            type="button"
+            class="chat-search-nav"
+            title="Previous result"
+            aria-label="Previous result"
+        >
+            ↑
+        </button>
+
+        <button
+            id="chatSearchNext"
+            type="button"
+            class="chat-search-nav"
+            title="Next result"
+            aria-label="Next result"
+        >
+            ↓
+        </button>
+
+        <button
+            id="chatSearchClose"
+            type="button"
+            class="chat-search-close"
+            title="Close search"
+            aria-label="Close search"
+        >
+            ×
+        </button>
+
+    </div>
+
+</div>
 
                 <div
                     id="chatPresence"
