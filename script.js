@@ -1692,7 +1692,11 @@ async function openConversation(
 
     hideReplyBar();
 
-    await loadMessages();
+    await loadMessages({
+    forceBottom: true
+});
+
+await loadConversations();
 
     await markConversationRead();
 
@@ -4295,7 +4299,11 @@ if (messageForm) {
 
                 stopTyping();
 
-                await loadMessages();
+               await loadMessages({
+    forceBottom: true
+});
+
+await loadConversations();
 
                 await loadConversations();
 
@@ -4519,7 +4527,11 @@ async function uploadFile(file) {
             uploadStatus.textContent =
                 "Uploaded.";
 
-        await loadMessages();
+       await loadMessages({
+    forceBottom: true
+});
+
+await loadConversations();
 
         await loadConversations();
 
@@ -5000,9 +5012,11 @@ async function uploadVoiceMessage(
             uploadStatus.textContent =
                 "Voice message sent.";
 
-        await loadMessages();
+        await loadMessages({
+    forceBottom: true
+});
 
-        await loadConversations();
+await loadConversations();
 
     } catch (error) {
 
@@ -5447,22 +5461,33 @@ function startRealtimeMessages() {
                 message
             );
 
-            await addMessageToScreen(
-                message,
-                currentUserId
+           const shouldStickToBottom =
+    isMessagesNearBottom();
+
+await addMessageToScreen(
+    message,
+    currentUserId
+);
+
+await loadReactionsForMessage(
+    message.id
+);
+
+await markConversationRead();
+
+await loadConversations();
+
+if (shouldStickToBottom) {
+
+    requestAnimationFrame(
+        () => {
+
+            scrollMessagesToBottom(
+                "auto"
             );
-
-            await loadReactionsForMessage(
-                message.id
-            );
-
-            await markConversationRead();
-
-            await loadConversations();
-
-            scrollMessagesToBottom();
         }
     );
+}
 
 
     // Message updates
