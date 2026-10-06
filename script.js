@@ -5952,6 +5952,10 @@ supabaseClient.auth.onAuthStateChange(
 
             disableDisappearingSettings();
 
+            // ----------------------------------------------------
+            // GLOBAL PRESENCE CLEANUP
+            // ----------------------------------------------------
+
             if (globalPresenceChannel) {
 
                 try {
@@ -5965,6 +5969,28 @@ supabaseClient.auth.onAuthStateChange(
                 globalPresenceChannel =
                     null;
             }
+
+            // ----------------------------------------------------
+            // UNREAD SYNC CLEANUP
+            // ----------------------------------------------------
+
+            if (unreadSyncChannel) {
+
+                try {
+
+                    await supabaseClient.removeChannel(
+                        unreadSyncChannel
+                    );
+
+                } catch (_) {}
+
+                unreadSyncChannel =
+                    null;
+            }
+
+            // ----------------------------------------------------
+            // CHAT PRESENCE CLEANUP
+            // ----------------------------------------------------
 
             if (chatPresenceChannel) {
 
@@ -5980,6 +6006,10 @@ supabaseClient.auth.onAuthStateChange(
                     null;
             }
 
+            // ----------------------------------------------------
+            // MESSAGE REALTIME CLEANUP
+            // ----------------------------------------------------
+
             if (realtimeChannel) {
 
                 try {
@@ -5994,6 +6024,10 @@ supabaseClient.auth.onAuthStateChange(
                     null;
             }
 
+            // ----------------------------------------------------
+            // LAST SEEN TIMER CLEANUP
+            // ----------------------------------------------------
+
             if (lastSeenTimer) {
 
                 clearInterval(
@@ -6003,6 +6037,10 @@ supabaseClient.auth.onAuthStateChange(
                 lastSeenTimer =
                     null;
             }
+
+            // ----------------------------------------------------
+            // CLEAR CHAT UI
+            // ----------------------------------------------------
 
             if (messagesContainer) {
 
@@ -6032,11 +6070,14 @@ supabaseClient.auth.onAuthStateChange(
                     "";
             }
 
+            // ----------------------------------------------------
+            // SHOW LOGIN
+            // ----------------------------------------------------
+
             showLogin();
         }
     }
 );
-
 
 // ============================================================
 // EXISTING SESSION
