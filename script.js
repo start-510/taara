@@ -5511,31 +5511,33 @@ realtimeChannel.on(
 );
 
 
-    // Message deletes
-    realtimeChannel.on(
-        "postgres_changes",
-        {
-            event: "DELETE",
-            schema: "public",
-            table: "messages"
-        },
-        async (payload) => {
+   // Deleted messages
+realtimeChannel.on(
+    "postgres_changes",
+    {
+        event: "DELETE",
+        schema: "public",
+        table: "messages"
+    },
+    async (payload) => {
 
-            const messageId =
-                payload.old?.id;
+        const messageId =
+            payload.old?.id;
 
-            if (
-                messageId &&
-                loadedMessages.has(
-                    messageId
-                )
-            ) {
+        if (
+            messageId &&
+            loadedMessages.has(
+                messageId
+            )
+        ) {
 
-                await loadMessages();
-            }
+            await loadMessages({
+                forceBottom: false,
+                preserveScroll: true
+            });
         }
-    );
-
+    }
+);
 
     // Reactions
     realtimeChannel.on(
