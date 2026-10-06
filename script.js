@@ -5482,14 +5482,14 @@ function startRealtimeMessages() {
     if (!currentConversationId)
         return;
 
+    // Remove previous realtime channel
     if (realtimeChannel) {
 
         supabaseClient.removeChannel(
             realtimeChannel
         );
 
-        realtimeChannel =
-            null;
+        realtimeChannel = null;
     }
 
     realtimeChannel =
@@ -5498,7 +5498,10 @@ function startRealtimeMessages() {
         );
 
 
-    // New messages
+    // ========================================================
+    // NEW MESSAGE
+    // ========================================================
+
     realtimeChannel.on(
         "postgres_changes",
         {
@@ -5513,6 +5516,7 @@ function startRealtimeMessages() {
             const message =
                 payload.new;
 
+            // Ignore if already rendered
             if (
                 loadedMessages.has(
                     message.id
@@ -5521,91 +5525,104 @@ function startRealtimeMessages() {
                 return;
             }
 
+            const shouldStickToBottom =
+                isMessagesNearBottom();
+
             loadedMessages.set(
                 message.id,
                 message
             );
 
-           const shouldStickToBottom =
-    isMessagesNearBottom();
-
-await addMessageToScreen(
-    message,
-    currentUserId
-);
-
-await loadReactionsForMessage(
-    message.id
-);
-
-await markConversationRead();
-
-await loadConversations();
-
-if (shouldStickToBottom) {
-
-    requestAnimationFrame(
-        () => {
-
-            scrollMessagesToBottom(
-                "auto"
+            await addMessageToScreen(
+                message,
+                currentUserId
             );
+
+            await loadReactionsForMessage(
+                message.id
+            );
+
+            await markConversationRead();
+
+            await loadConversations();
+
+            if (shouldStickToBottom) {
+
+                requestAnimationFrame(
+                    () => {
+
+                        scrollMessagesToBottom(
+                            "auto"
+                        );
+
+                    }
+                );
+            }
         }
     );
-}
 
 
-   // Updated messages
-realtimeChannel.on(
-    "postgres_changes",
-    {
-        event: "UPDATE",
-        schema: "public",
-        table: "messages",
-        filter:
-            `conversation_id=eq.${currentConversationId}`
-    },
-    async () => {
+    // ========================================================
+    // MESSAGE UPDATED
+    // ========================================================
 
-        await loadMessages({
-            forceBottom: false,
-            preserveScroll: true
-        });
-
-        await loadConversations();
-    }
-);
-
-
-   // Deleted messages
-realtimeChannel.on(
-    "postgres_changes",
-    {
-        event: "DELETE",
-        schema: "public",
-        table: "messages"
-    },
-    async (payload) => {
-
-        const messageId =
-            payload.old?.id;
-
-        if (
-            messageId &&
-            loadedMessages.has(
-                messageId
-            )
-        ) {
+    realtimeChannel.on(
+        "postgres_changes",
+        {
+            event: "UPDATE",
+            schema: "public",
+            table: "messages",
+            filter:
+                `conversation_id=eq.${currentConversationId}`
+        },
+        async () => {
 
             await loadMessages({
                 forceBottom: false,
                 preserveScroll: true
             });
-        }
-    }
-);
 
-    // Reactions
+            await loadConversations();
+        }
+    );
+
+
+    // ========================================================
+    // MESSAGE DELETED
+    // ========================================================
+
+    realtimeChannel.on(
+        "postgres_changes",
+        {
+            event: "DELETE",
+            schema: "public",
+            table: "messages"
+        },
+        async (payload) => {
+
+            const messageId =
+                payload.old?.id;
+
+            if (
+                messageId &&
+                loadedMessages.has(
+                    messageId
+                )
+            ) {
+
+                await loadMessages({
+                    forceBottom: false,
+                    preserveScroll: true
+                });
+            }
+        }
+    );
+
+
+    // ========================================================
+    // REACTION ADDED
+    // ========================================================
+
     realtimeChannel.on(
         "postgres_changes",
         {
@@ -5632,6 +5649,10 @@ realtimeChannel.on(
         }
     );
 
+
+    // ========================================================
+    // REACTION REMOVED
+    // ========================================================
 
     realtimeChannel.on(
         "postgres_changes",
@@ -5660,6 +5681,10 @@ realtimeChannel.on(
     );
 
 
+    // ========================================================
+    // SUBSCRIBE
+    // ========================================================
+
     realtimeChannel.subscribe(
         (status) => {
 
@@ -5668,6 +5693,8 @@ realtimeChannel.on(
                 status
             );
         }
+    );
+}
 
 
 // ============================================================
