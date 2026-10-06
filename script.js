@@ -6549,19 +6549,6 @@ async function markConversationRead() {
 
 
 // ============================================================
-// SCROLL
-// ============================================================
-
-function scrollMessagesToBottom() {
-
-    if (!messagesContainer)
-        return;
-
-    messagesContainer.scrollTop =
-        messagesContainer.scrollHeight;
-}
-
-// ============================================================
 // LOGOUT
 // ============================================================
 
