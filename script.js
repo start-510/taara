@@ -3495,7 +3495,6 @@ function refreshProfilePanel() {
 
 if (profileButton) {
 
-```
 profileButton.addEventListener(
     "click",
     event => {
@@ -3517,13 +3516,10 @@ profileButton.addEventListener(
         }
     }
 );
-```
-
 }
 
 if (closeProfileButton) {
 
-```
 closeProfileButton.addEventListener(
     "click",
     event => {
@@ -3533,13 +3529,11 @@ closeProfileButton.addEventListener(
         closeProfilePanel();
     }
 );
-```
 
 }
 
 if (settingsLogoutButton) {
 
-```
 settingsLogoutButton.addEventListener(
     "click",
     async event => {
@@ -3553,7 +3547,6 @@ settingsLogoutButton.addEventListener(
         }
     }
 );
-```
 
 }
 
