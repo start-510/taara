@@ -220,6 +220,8 @@ const reactionCache = new Map();
 
 let globalPresenceStartedForUser = null;
 
+let unreadSyncChannel = null;
+
 let lastSeenTimer = null;
 
 // Disappearing-message browser timers
