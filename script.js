@@ -3571,9 +3571,8 @@ function refreshProfilePanel() {
         return;
 
     const username =
-        currentChatUsername ||
-        loggedInUsername?.textContent ||
-        "User";
+    loggedInUsername?.textContent ||
+    "User";
 
     const cleanUsername =
         username.replace(
