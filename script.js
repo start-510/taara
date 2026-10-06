@@ -4791,6 +4791,369 @@ async function uploadVoiceMessage(
 
 
 // ============================================================
+// CHAT SEARCH LOGIC
+// ============================================================
+
+let chatSearchResults = [];
+let chatSearchIndex = -1;
+
+
+// ------------------------------------------------------------
+// OPEN CHAT SEARCH
+// ------------------------------------------------------------
+
+function openChatSearch() {
+
+    if (
+        !currentConversationId ||
+        !chatSearchBar ||
+        !chatSearchInput
+    ) {
+        return;
+    }
+
+    chatSearchBar.classList.remove(
+        "hidden"
+    );
+
+    chatSearchInput.focus();
+
+    updateChatSearch();
+}
+
+
+// ------------------------------------------------------------
+// CLOSE CHAT SEARCH
+// ------------------------------------------------------------
+
+function closeChatSearch() {
+
+    if (chatSearchBar) {
+
+        chatSearchBar.classList.add(
+            "hidden"
+        );
+    }
+
+    if (chatSearchInput) {
+
+        chatSearchInput.value =
+            "";
+    }
+
+    chatSearchResults =
+        [];
+
+    chatSearchIndex =
+        -1;
+
+    if (chatSearchCount) {
+
+        chatSearchCount.textContent =
+            "";
+    }
+
+    clearChatSearchHighlight();
+}
+
+
+// ------------------------------------------------------------
+// SEARCH CURRENT MESSAGES
+// ------------------------------------------------------------
+
+function updateChatSearch() {
+
+    if (
+        !chatSearchInput ||
+        !messagesContainer
+    ) {
+        return;
+    }
+
+    const query =
+        chatSearchInput.value
+            .trim()
+            .toLowerCase();
+
+    clearChatSearchHighlight();
+
+    chatSearchResults =
+        [];
+
+    chatSearchIndex =
+        -1;
+
+    if (!query) {
+
+        if (chatSearchCount) {
+
+            chatSearchCount.textContent =
+                "";
+        }
+
+        return;
+    }
+
+    const messageElements =
+        messagesContainer.querySelectorAll(
+            "[data-message-id]"
+        );
+
+    messageElements.forEach(
+        (element) => {
+
+            const text =
+                element.textContent
+                    .toLowerCase();
+
+            if (
+                text.includes(query)
+            ) {
+
+                chatSearchResults.push(
+                    element
+                );
+            }
+        }
+    );
+
+    if (!chatSearchResults.length) {
+
+        if (chatSearchCount) {
+
+            chatSearchCount.textContent =
+                "No results";
+        }
+
+        return;
+    }
+
+    chatSearchIndex =
+        0;
+
+    showChatSearchResult();
+}
+
+
+// ------------------------------------------------------------
+// SHOW CURRENT RESULT
+// ------------------------------------------------------------
+
+function showChatSearchResult() {
+
+    clearChatSearchHighlight();
+
+    if (
+        chatSearchIndex < 0 ||
+        chatSearchIndex >=
+            chatSearchResults.length
+    ) {
+        return;
+    }
+
+    const element =
+        chatSearchResults[
+            chatSearchIndex
+        ];
+
+    element.classList.add(
+        "chat-search-highlight"
+    );
+
+    element.scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+    });
+
+    if (chatSearchCount) {
+
+        chatSearchCount.textContent =
+            `${chatSearchIndex + 1} / ${chatSearchResults.length}`;
+    }
+}
+
+
+// ------------------------------------------------------------
+// CLEAR HIGHLIGHT
+// ------------------------------------------------------------
+
+function clearChatSearchHighlight() {
+
+    if (!messagesContainer)
+        return;
+
+    const highlighted =
+        messagesContainer.querySelectorAll(
+            ".chat-search-highlight"
+        );
+
+    highlighted.forEach(
+        (element) => {
+
+            element.classList.remove(
+                "chat-search-highlight"
+            );
+        }
+    );
+}
+
+
+// ------------------------------------------------------------
+// NEXT RESULT
+// ------------------------------------------------------------
+
+function nextChatSearchResult() {
+
+    if (!chatSearchResults.length)
+        return;
+
+    chatSearchIndex++;
+
+    if (
+        chatSearchIndex >=
+        chatSearchResults.length
+    ) {
+
+        chatSearchIndex =
+            0;
+    }
+
+    showChatSearchResult();
+}
+
+
+// ------------------------------------------------------------
+// PREVIOUS RESULT
+// ------------------------------------------------------------
+
+function previousChatSearchResult() {
+
+    if (!chatSearchResults.length)
+        return;
+
+    chatSearchIndex--;
+
+    if (
+        chatSearchIndex < 0
+    ) {
+
+        chatSearchIndex =
+            chatSearchResults.length - 1;
+    }
+
+    showChatSearchResult();
+}
+
+
+// ------------------------------------------------------------
+// SEARCH BUTTON
+// ------------------------------------------------------------
+
+if (chatSearchButton) {
+
+    chatSearchButton.addEventListener(
+        "click",
+        () => {
+
+            openChatSearch();
+        }
+    );
+}
+
+
+// ------------------------------------------------------------
+// SEARCH INPUT
+// ------------------------------------------------------------
+
+if (chatSearchInput) {
+
+    chatSearchInput.addEventListener(
+        "input",
+        () => {
+
+            updateChatSearch();
+        }
+    );
+
+    chatSearchInput.addEventListener(
+        "keydown",
+        (event) => {
+
+            if (
+                event.key ===
+                "Enter"
+            ) {
+
+                event.preventDefault();
+
+                if (
+                    event.shiftKey
+                ) {
+
+                    previousChatSearchResult();
+
+                } else {
+
+                    nextChatSearchResult();
+                }
+            }
+
+            if (
+                event.key ===
+                "Escape"
+            ) {
+
+                closeChatSearch();
+            }
+        }
+    );
+}
+
+
+// ------------------------------------------------------------
+// SEARCH NAVIGATION
+// ------------------------------------------------------------
+
+if (chatSearchNext) {
+
+    chatSearchNext.addEventListener(
+        "click",
+        () => {
+
+            nextChatSearchResult();
+        }
+    );
+}
+
+
+if (chatSearchPrev) {
+
+    chatSearchPrev.addEventListener(
+        "click",
+        () => {
+
+            previousChatSearchResult();
+        }
+    );
+}
+
+
+// ------------------------------------------------------------
+// CLOSE SEARCH
+// ------------------------------------------------------------
+
+if (chatSearchClose) {
+
+    chatSearchClose.addEventListener(
+        "click",
+        () => {
+
+            closeChatSearch();
+        }
+    );
+}
+
+// ============================================================
 // REALTIME MESSAGES
 // ============================================================
 
