@@ -377,24 +377,28 @@ function injectFeatureStyles() {
     style.textContent = `
 
         .taara-message-tools {
-            display:flex;
-            gap:5px;
-            margin-top:5px;
-            align-items:center;
+    display: flex;
+    gap: 5px;
+    margin-top: 5px;
+    align-items: center;
+    flex-wrap: wrap;
+}
         }
 
-        .taara-tool-button {
-            border:0;
-            background:rgba(0,0,0,.08);
-            border-radius:8px;
-            padding:4px 7px;
-            cursor:pointer;
-            font-size:13px;
-        }
+        ..taara-tool-button {
+    border: 1px solid rgba(255,255,255,.08);
+    background: rgba(255,255,255,.06);
+    color: rgba(255,255,255,.78);
+    border-radius: 8px;
+    padding: 4px 7px;
+    cursor: pointer;
+    font-size: 13px;
+}
 
-        .taara-tool-button:hover {
-            background:rgba(0,0,0,.15);
-        }
+.taara-tool-button:hover {
+    background: rgba(255,255,255,.12);
+    color: #fff;
+}
 
         .taara-action-wrapper {
             position:relative;
@@ -468,23 +472,29 @@ function injectFeatureStyles() {
             margin-top:5px;
         }
 
-        .taara-reaction-chip {
-            border:1px solid rgba(0,0,0,.1);
-            background:rgba(255,255,255,.7);
-            border-radius:12px;
-            padding:2px 7px;
-            cursor:pointer;
-            font-size:13px;
-        }
+       .taara-reaction-chip {
+    border: 1px solid rgba(255,255,255,.10);
+    background: rgba(255,255,255,.07);
+    color: rgba(255,255,255,.88);
+    border-radius: 12px;
+    padding: 3px 8px;
+    cursor: pointer;
+    font-size: 13px;
+}
 
-        .taara-reply-preview {
-            border-left:3px solid #777;
-            background:rgba(0,0,0,.06);
-            padding:6px 9px;
-            margin-bottom:6px;
-            border-radius:6px;
-            font-size:12px;
-        }
+.taara-reaction-chip:hover {
+    background: rgba(255,255,255,.13);
+}
+
+       .taara-reply-preview {
+    border-left: 3px solid rgba(150,135,255,.75);
+    background: rgba(255,255,255,.06);
+    color: rgba(255,255,255,.72);
+    padding: 6px 9px;
+    margin-bottom: 6px;
+    border-radius: 7px;
+    font-size: 12px;
+}
 
         .taara-reply-author {
             font-weight:bold;
@@ -561,15 +571,20 @@ function injectFeatureStyles() {
         }
 
         .taara-media-actions a,
-        .taara-media-actions button {
-            text-decoration:none;
-            border:0;
-            border-radius:7px;
-            padding:5px 8px;
-            background:rgba(0,0,0,.08);
-            cursor:pointer;
-            color:inherit;
-        }
+.taara-media-actions button {
+    text-decoration: none;
+    border: 1px solid rgba(255,255,255,.08);
+    border-radius: 7px;
+    padding: 5px 8px;
+    background: rgba(255,255,255,.06);
+    cursor: pointer;
+    color: rgba(255,255,255,.82);
+}
+
+.taara-media-actions a:hover,
+.taara-media-actions button:hover {
+    background: rgba(255,255,255,.12);
+}
 
         .taara-chat-image {
             max-width:280px;
