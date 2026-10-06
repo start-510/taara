@@ -5808,7 +5808,6 @@ function scrollMessagesToBottom() {
         messagesContainer.scrollHeight;
 }
 
-
 // ============================================================
 // LOGOUT
 // ============================================================
@@ -5849,6 +5848,16 @@ if (logoutButton) {
                     );
 
                     globalPresenceChannel =
+                        null;
+                }
+
+                if (unreadSyncChannel) {
+
+                    await supabaseClient.removeChannel(
+                        unreadSyncChannel
+                    );
+
+                    unreadSyncChannel =
                         null;
                 }
 
@@ -5909,7 +5918,6 @@ if (logoutButton) {
         }
     );
 }
-
 
 // ============================================================
 // AUTH STATE
