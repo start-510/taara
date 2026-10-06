@@ -491,21 +491,61 @@ function injectFeatureStyles() {
             margin-bottom:2px;
         }
 
-        .taara-reply-bar {
-            display:flex;
-            align-items:center;
-            justify-content:space-between;
-            gap:10px;
-            padding:8px 12px;
-            background:#f1f3f5;
-            border-radius:10px;
-            margin-bottom:7px;
-        }
+.taara-reply-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 9px 12px;
+    margin: 0;
+    background: rgba(18, 20, 30, 0.94);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-left: 3px solid rgba(140, 120, 255, 0.85);
+    border-radius: 12px 12px 0 0;
+    color: rgba(255, 255, 255, 0.84);
+    box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.18);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+}
 
-        .taara-reply-bar-text {
-            overflow:hidden;
-            flex:1;
-        }
+.taara-reply-bar .reply-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.taara-reply-bar .reply-name {
+    display: block;
+    font-size: 12px;
+    font-weight: 700;
+    color: rgba(190, 180, 255, 0.95);
+    margin-bottom: 2px;
+}
+
+.taara-reply-bar .reply-text {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.65);
+}
+
+.taara-reply-bar button {
+    flex: 0 0 auto;
+    width: 32px;
+    height: 32px;
+    border: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.07);
+    color: rgba(255, 255, 255, 0.75);
+    cursor: pointer;
+}
+
+.taara-reply-bar button:hover {
+    background: rgba(255, 255, 255, 0.13);
+    color: #fff;
+}
 
         .taara-reply-cancel {
             border:0;
