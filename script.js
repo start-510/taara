@@ -3446,53 +3446,47 @@ function createActionMenu(
 
 function openProfilePanel() {
 
-```
-if (!profilePanel)
-    return;
+    if (!profilePanel)
+        return;
 
-profilePanel.classList.remove(
-    "hidden"
-);
+    profilePanel.classList.remove(
+        "hidden"
+    );
 
-refreshProfilePanel();
-```
-
+    refreshProfilePanel();
 }
 
 function closeProfilePanel() {
 
-```
-if (!profilePanel)
-    return;
+    if (!profilePanel)
+        return;
 
-profilePanel.classList.add(
-    "hidden"
-);
-```
-
+    profilePanel.classList.add(
+        "hidden"
+    );
 }
 
 function refreshProfilePanel() {
 
-```
-if (!currentUserId)
-    return;
+    if (!currentUserId)
+        return;
 
-const username =
-    currentChatUsername ||
-    loggedInUsername?.textContent ||
-    "User";
+    const username =
+        currentChatUsername ||
+        loggedInUsername?.textContent ||
+        "User";
 
-if (profileUsername) {
-    profileUsername.textContent =
-        `@${username.replace(/^@/, "")}`;
-}
+    if (profileUsername) {
 
-if (profileLargeAvatar) {
-    profileLargeAvatar.textContent =
-        "👤";
-}
+        profileUsername.textContent =
+            `@${username.replace(/^@/, "")}`;
+    }
 
+    if (profileLargeAvatar) {
+
+        profileLargeAvatar.textContent =
+            "👤";
+    }
 }
 
 // ============================================================
