@@ -3581,90 +3581,130 @@ if (closeProfileButton) {
 
 
 // ============================================================
-// PROFILE SETTINGS
+// SETTINGS BUTTONS
 // ============================================================
 
-if (profileSettingsButton) {
+const profileSettingsBtn =
+    document.getElementById(
+        "profileSettingsButton"
+    );
 
-    profileSettingsButton.addEventListener(
+const privacySettingsBtn =
+    document.getElementById(
+        "privacySettingsButton"
+    );
+
+const securitySettingsBtn =
+    document.getElementById(
+        "securitySettingsButton"
+    );
+
+const notificationSettingsBtn =
+    document.getElementById(
+        "notificationSettingsButton"
+    );
+
+const appearanceSettingsBtn =
+    document.getElementById(
+        "appearanceSettingsButton"
+    );
+
+const settingsLogoutBtn =
+    document.getElementById(
+        "settingsLogoutButton"
+    );
+
+
+// ============================================================
+// PROFILE
+// ============================================================
+
+if (profileSettingsBtn) {
+
+    profileSettingsBtn.addEventListener(
         "click",
         () => {
 
             alert(
-                "Profile settings will be added here."
+                "Profile settings clicked"
             );
+
         }
     );
 }
 
 
 // ============================================================
-// PRIVACY SETTINGS
+// PRIVACY
 // ============================================================
 
-if (privacySettingsButton) {
+if (privacySettingsBtn) {
 
-    privacySettingsButton.addEventListener(
+    privacySettingsBtn.addEventListener(
         "click",
         () => {
 
             alert(
-                "Privacy settings will be added here."
+                "Privacy settings clicked"
             );
+
         }
     );
 }
 
 
 // ============================================================
-// SECURITY SETTINGS
+// SECURITY
 // ============================================================
 
-if (securitySettingsButton) {
+if (securitySettingsBtn) {
 
-    securitySettingsButton.addEventListener(
+    securitySettingsBtn.addEventListener(
         "click",
         () => {
 
             alert(
-                "Security settings will be added here."
+                "Security settings clicked"
             );
+
         }
     );
 }
 
 
 // ============================================================
-// NOTIFICATION SETTINGS
+// NOTIFICATIONS
 // ============================================================
 
-if (notificationSettingsButton) {
+if (notificationSettingsBtn) {
 
-    notificationSettingsButton.addEventListener(
+    notificationSettingsBtn.addEventListener(
         "click",
         () => {
 
             alert(
-                "Notification settings will be added here."
+                "Notification settings clicked"
             );
+
         }
     );
 }
 
 
 // ============================================================
-// APPEARANCE SETTINGS
+// APPEARANCE
 // ============================================================
 
-if (appearanceSettingsButton) {
+if (appearanceSettingsBtn) {
 
-    appearanceSettingsButton.addEventListener(
+    appearanceSettingsBtn.addEventListener(
         "click",
         () => {
 
             alert(
-                "Appearance settings will be added here."
+                "Appearance settings clicked"
             );
+
         }
     );
 }
@@ -3674,11 +3714,11 @@ if (appearanceSettingsButton) {
 // SETTINGS LOGOUT
 // ============================================================
 
-if (settingsLogoutButton) {
+if (settingsLogoutBtn) {
 
-    settingsLogoutButton.addEventListener(
+    settingsLogoutBtn.addEventListener(
         "click",
-        async () => {
+        () => {
 
             if (logoutButton) {
 
@@ -3687,21 +3727,12 @@ if (settingsLogoutButton) {
                 return;
             }
 
-            try {
-
-                await supabaseClient.auth.signOut();
-
-            } catch (error) {
-
-                console.error(
-                    "Settings logout failed:",
-                    error
-                );
-            }
+            console.error(
+                "Logout button not found."
+            );
         }
     );
 }
-
 // ============================================================
 // PROFILE EVENTS
 // ============================================================
