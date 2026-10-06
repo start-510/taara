@@ -3733,67 +3733,67 @@ if (settingsLogoutBtn) {
         }
     );
 }
+
 // ============================================================
 // PROFILE EVENTS
 // ============================================================
 
 if (profileButton) {
 
-profileButton.addEventListener(
-    "click",
-    event => {
+    profileButton.addEventListener(
+        "click",
+        event => {
 
-        event.stopPropagation();
+            event.stopPropagation();
 
-        if (
-            profilePanel &&
-            !profilePanel.classList.contains(
-                "hidden"
-            )
-        ) {
+            if (
+                profilePanel &&
+                !profilePanel.classList.contains(
+                    "hidden"
+                )
+            ) {
 
-            closeProfilePanel();
+                closeProfilePanel();
 
-        } else {
+            } else {
 
-            openProfilePanel();
+                openProfilePanel();
+            }
         }
-    }
-);
+    );
 }
 
 if (closeProfileButton) {
 
-closeProfileButton.addEventListener(
-    "click",
-    event => {
+    closeProfileButton.addEventListener(
+        "click",
+        event => {
 
-        event.stopPropagation();
+            event.stopPropagation();
 
-        closeProfilePanel();
-    }
-);
+            closeProfilePanel();
+        }
+    );
 
 }
 
 if (settingsLogoutButton) {
 
-settingsLogoutButton.addEventListener(
-    "click",
-    async event => {
+    settingsLogoutButton.addEventListener(
+        "click",
+        async event => {
 
-        event.stopPropagation();
+            event.stopPropagation();
 
-        closeProfilePanel();
+            closeProfilePanel();
 
-        if (logoutButton) {
-            logoutButton.click();
+            if (logoutButton) {
+                logoutButton.click();
+            }
         }
-    }
-);
+    );
 
 }
-
 
 // ============================================================
 // DISAPPEARING MESSAGE SETTINGS UI
