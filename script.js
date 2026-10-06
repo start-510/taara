@@ -1762,7 +1762,6 @@ async function openConversation(
     forceBottom: true
 });
 
-await loadConversations();
 
     await markConversationRead();
 
@@ -4368,7 +4367,6 @@ if (messageForm) {
     forceBottom: true
 });
 
-await loadConversations();
 
                 await loadConversations();
 
@@ -4596,7 +4594,6 @@ async function uploadFile(file) {
     forceBottom: true
 });
 
-await loadConversations();
 
         await loadConversations();
 
