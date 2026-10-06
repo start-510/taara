@@ -157,7 +157,40 @@ const disappearingOptions =
 const disappearingStatus =
     document.getElementById("disappearingStatus");
 
+chatSearchButton =
+    document.getElementById(
+        "chatSearchButton"
+    );
 
+chatSearchBar =
+    document.getElementById(
+        "chatSearchBar"
+    );
+
+chatSearchInput =
+    document.getElementById(
+        "chatSearchInput"
+    );
+
+chatSearchCount =
+    document.getElementById(
+        "chatSearchCount"
+    );
+
+chatSearchPrev =
+    document.getElementById(
+        "chatSearchPrev"
+    );
+
+chatSearchNext =
+    document.getElementById(
+        "chatSearchNext"
+    );
+
+chatSearchClose =
+    document.getElementById(
+        "chatSearchClose"
+    );
 
 
 //profile button
