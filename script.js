@@ -224,6 +224,17 @@ let unreadSyncChannel = null;
 
 let lastSeenTimer = null;
 
+let chatSearchButton = null;
+let chatSearchBar = null;
+let chatSearchInput = null;
+let chatSearchCount = null;
+let chatSearchPrev = null;
+let chatSearchNext = null;
+let chatSearchClose = null;
+
+let chatSearchResults = [];
+let chatSearchIndex = -1;
+
 // Disappearing-message browser timers
 const disappearingMessageTimers =
     new Map();
