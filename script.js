@@ -1192,6 +1192,91 @@ async function startGlobalPresence() {
     }
 }
 
+// ============================================================
+// GLOBAL UNREAD SYNCHRONIZATION
+// ============================================================
+
+async function startUnreadSync() {
+
+    if (!currentUserId)
+        return;
+
+    if (unreadSyncChannel) {
+
+        try {
+
+            await supabaseClient.removeChannel(
+                unreadSyncChannel
+            );
+
+        } catch (error) {
+
+            console.warn(
+                "Old unread sync removal failed:",
+                error
+            );
+        }
+
+        unreadSyncChannel = null;
+    }
+
+    const channel =
+        supabaseClient.channel(
+            `unread-sync-${currentUserId}`
+        );
+
+    channel.on(
+        "postgres_changes",
+        {
+            event: "INSERT",
+            schema: "public",
+            table: "messages"
+        },
+        async (payload) => {
+
+            const message =
+                payload.new;
+
+            if (
+                !message ||
+                message.sender_id === currentUserId
+            ) {
+                return;
+            }
+
+            await loadConversations();
+        }
+    );
+
+    channel.on(
+        "postgres_changes",
+        {
+            event: "UPDATE",
+            schema: "public",
+            table: "conversation_members",
+            filter:
+                `user_id=eq.${currentUserId}`
+        },
+        async () => {
+
+            await loadConversations();
+        }
+    );
+
+    unreadSyncChannel =
+        channel;
+
+    channel.subscribe(
+        (status) => {
+
+            console.log(
+                "Unread sync:",
+                status
+            );
+        }
+    );
+}
+
 
 // ============================================================
 // USER SEARCH
