@@ -1,51 +1,63 @@
-/* =========================================================
-   TAARA* PRIVATE CHAT — COMPLETE NEW DESIGN
-   Dark Glass • Midnight Navy • Electric Violet • Responsive
-   ========================================================= */
 
-/* ===================== 1. DESIGN TOKENS ===================== */
+/* ==========================================================
+   TAARA* — MIDNIGHT AURORA
+   Complete responsive stylesheet
+   Desktop • Tablet • Mobile
+   ========================================================== */
+
+/* ----------------------------------------------------------
+   01. DESIGN SYSTEM
+   ---------------------------------------------------------- */
 
 :root {
     color-scheme: dark;
 
-    --bg: #080b14;
-    --bg-deep: #060810;
-    --surface: #101522;
-    --surface-2: #151b2b;
-    --surface-3: #1b2235;
-    --surface-hover: #222a40;
+    --bg: #090b12;
+    --bg-secondary: #0d1019;
+    --surface: #111521;
+    --surface-raised: #171c2a;
+    --surface-hover: #202638;
+    --surface-active: #282d43;
 
-    --primary: #8b7cff;
-    --primary-hover: #a397ff;
-    --primary-soft: rgba(139, 124, 255, 0.13);
-    --secondary: #4edbd0;
+    --primary: #a18aff;
+    --primary-strong: #8969fa;
+    --primary-soft: rgba(161, 138, 255, 0.12);
+    --primary-glow: rgba(161, 138, 255, 0.22);
 
-    --text: #f2f4ff;
-    --text-secondary: #a1aac2;
-    --text-muted: #69738e;
+    --teal: #72e5d2;
+    --green: #63e6a8;
+    --red: #ff7285;
+    --yellow: #f8ce7a;
 
-    --border: rgba(180, 190, 225, 0.11);
-    --border-strong: rgba(180, 190, 225, 0.19);
+    --text: #f4f3fc;
+    --text-secondary: #a7acc0;
+    --text-muted: #717991;
 
-    --success: #47dfa0;
-    --danger: #ff667d;
-    --warning: #ffca73;
+    --border: rgba(202, 208, 239, 0.09);
+    --border-hover: rgba(202, 208, 239, 0.17);
+    --border-focus: rgba(161, 138, 255, 0.65);
+
+    --sidebar-width: 310px;
+    --header-height: 76px;
+    --composer-height: auto;
 
     --radius-xs: 8px;
     --radius-sm: 12px;
     --radius-md: 16px;
-    --radius-lg: 22px;
-    --radius-xl: 28px;
+    --radius-lg: 21px;
+    --radius-xl: 27px;
     --radius-pill: 999px;
 
-    --sidebar-width: 280px;
-    --chat-width: 50vw;
+    --shadow-sm: 0 5px 18px rgba(0, 0, 0, 0.16);
+    --shadow-md: 0 16px 45px rgba(0, 0, 0, 0.25);
+    --shadow-lg: 0 28px 90px rgba(0, 0, 0, 0.42);
 
-    --shadow: 0 18px 55px rgba(0, 0, 0, 0.25);
-    --transition: 180ms ease;
+    --ease: 180ms ease;
 }
 
-/* ===================== 2. RESET ===================== */
+/* ----------------------------------------------------------
+   02. RESET AND GLOBAL STYLES
+   ---------------------------------------------------------- */
 
 * {
     box-sizing: border-box;
@@ -53,27 +65,47 @@
 
 html {
     width: 100%;
+    min-width: 0;
     min-height: 100%;
     margin: 0;
     background: var(--bg);
     scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
 }
 
 body {
     width: 100%;
+    min-width: 0;
     min-height: 100vh;
+    min-height: 100dvh;
     margin: 0;
     overflow-x: hidden;
     background:
-        radial-gradient(ellipse at 15% 0%, rgba(91, 79, 190, 0.12), transparent 36%),
-        radial-gradient(ellipse at 85% 100%, rgba(46, 170, 177, 0.07), transparent 32%),
+        radial-gradient(
+            ellipse at 12% 0%,
+            rgba(113, 87, 201, 0.10),
+            transparent 36%
+        ),
+        radial-gradient(
+            ellipse at 95% 100%,
+            rgba(50, 163, 155, 0.055),
+            transparent 35%
+        ),
         var(--bg);
     color: var(--text);
-    font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI",
-        Roboto, Helvetica, Arial, sans-serif;
+    font-family:
+        Inter,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Helvetica,
+        Arial,
+        sans-serif;
     font-size: 14px;
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
 }
 
 button,
@@ -85,34 +117,18 @@ select {
 
 button {
     color: inherit;
-}
-
-button,
-[role="button"] {
     -webkit-tap-highlight-color: transparent;
 }
 
-button:focus-visible,
-input:focus-visible,
-textarea:focus-visible,
-select:focus-visible {
-    outline: 2px solid var(--primary);
-    outline-offset: 3px;
-}
-
-input,
-textarea,
-select {
-    color: var(--text);
-}
-
-input::placeholder,
-textarea::placeholder {
-    color: var(--text-muted);
+button:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
 }
 
 img,
-video {
+video,
+canvas,
+svg {
     max-width: 100%;
 }
 
@@ -120,18 +136,28 @@ img {
     object-fit: cover;
 }
 
-[hidden] {
-    display: none !important;
-}
-
 a {
-    color: var(--primary-hover);
+    color: var(--primary);
     text-decoration: none;
 }
 
+p {
+    overflow-wrap: anywhere;
+}
+
+[hidden],
+.hidden {
+    display: none !important;
+}
+
 ::selection {
+    background: rgba(161, 138, 255, 0.3);
     color: white;
-    background: rgba(139, 124, 255, 0.4);
+}
+
+:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 3px;
 }
 
 ::-webkit-scrollbar {
@@ -144,72 +170,30 @@ a {
 }
 
 ::-webkit-scrollbar-thumb {
-    background: rgba(160, 170, 205, 0.22);
-    border-radius: 99px;
+    border-radius: var(--radius-pill);
+    background: rgba(172, 180, 213, 0.19);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: rgba(160, 170, 205, 0.38);
+    background: rgba(172, 180, 213, 0.32);
 }
 
-/* ===================== 3. COMMON ELEMENTS ===================== */
+/* ----------------------------------------------------------
+   03. BUTTONS
+   ---------------------------------------------------------- */
 
 button {
     cursor: pointer;
     transition:
-        background var(--transition),
-        border-color var(--transition),
-        color var(--transition),
-        transform var(--transition),
-        box-shadow var(--transition);
-}
-
-button:disabled {
-    cursor: not-allowed;
-    opacity: 0.48;
+        background var(--ease),
+        border-color var(--ease),
+        color var(--ease),
+        box-shadow var(--ease),
+        transform var(--ease);
 }
 
 button:active:not(:disabled) {
     transform: scale(0.97);
-}
-
-.hidden {
-    display: none !important;
-}
-
-.muted,
-.secondary-text {
-    color: var(--text-secondary);
-}
-
-.small,
-.helper-text {
-    font-size: 12px;
-    color: var(--text-muted);
-}
-
-.icon-button,
-.close-button,
-.back-button {
-    display: inline-flex;
-    flex: 0 0 auto;
-    align-items: center;
-    justify-content: center;
-    width: 38px;
-    height: 38px;
-    padding: 0;
-    border: 1px solid transparent;
-    border-radius: 12px;
-    background: transparent;
-    color: var(--text-secondary);
-    cursor: pointer;
-}
-
-.icon-button:hover,
-.close-button:hover,
-.back-button:hover {
-    background: var(--surface-hover);
-    color: var(--text);
 }
 
 .primary-button,
@@ -219,19 +203,19 @@ button:active:not(:disabled) {
     justify-content: center;
     gap: 9px;
     min-height: 44px;
-    padding: 0 18px;
+    padding: 0 19px;
     border: 1px solid transparent;
     border-radius: 13px;
-    background: var(--primary);
+    background: var(--primary-strong);
     color: #fff;
     font-weight: 650;
-    box-shadow: 0 7px 22px rgba(139, 124, 255, 0.17);
+    box-shadow: 0 5px 18px rgba(137, 105, 250, 0.18);
 }
 
 .primary-button:hover,
 .btn-primary:hover {
-    background: var(--primary-hover);
-    box-shadow: 0 9px 26px rgba(139, 124, 255, 0.26);
+    background: var(--primary);
+    box-shadow: 0 8px 26px rgba(137, 105, 250, 0.28);
 }
 
 .secondary-button,
@@ -244,27 +228,68 @@ button:active:not(:disabled) {
     padding: 0 15px;
     border: 1px solid var(--border);
     border-radius: 12px;
-    background: var(--surface-2);
+    background: var(--surface-raised);
     color: var(--text);
 }
 
 .secondary-button:hover,
 .btn-secondary:hover {
-    border-color: var(--border-strong);
-    background: var(--surface-3);
+    border-color: var(--border-hover);
+    background: var(--surface-hover);
 }
 
 .danger-button,
 .btn-danger {
-    border: 1px solid rgba(255, 102, 125, 0.2);
+    border: 1px solid rgba(255, 114, 133, 0.17);
     border-radius: 12px;
-    background: rgba(255, 102, 125, 0.1);
-    color: var(--danger);
+    background: rgba(255, 114, 133, 0.09);
+    color: var(--red);
 }
 
 .danger-button:hover,
 .btn-danger:hover {
-    background: rgba(255, 102, 125, 0.18);
+    background: rgba(255, 114, 133, 0.17);
+}
+
+.icon-button,
+.close-button,
+.back-button {
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border: 1px solid transparent;
+    border-radius: 12px;
+    background: transparent;
+    color: var(--text-secondary);
+}
+
+.icon-button:hover,
+.close-button:hover,
+.back-button:hover {
+    border-color: var(--border);
+    background: var(--surface-hover);
+    color: var(--text);
+}
+
+.icon-button svg,
+.close-button svg,
+.back-button svg {
+    width: 19px;
+    height: 19px;
+}
+
+/* ----------------------------------------------------------
+   04. INPUTS
+   ---------------------------------------------------------- */
+
+input,
+textarea,
+select {
+    color: var(--text);
 }
 
 input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),
@@ -274,14 +299,17 @@ select {
     min-width: 0;
     border: 1px solid var(--border);
     border-radius: 12px;
-    background: rgba(7, 10, 19, 0.7);
+    background: #0c101a;
     color: var(--text);
-    transition: border-color var(--transition), box-shadow var(--transition);
+    transition:
+        border-color var(--ease),
+        box-shadow var(--ease),
+        background var(--ease);
 }
 
 input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),
 select {
-    min-height: 44px;
+    min-height: 45px;
     padding: 0 13px;
 }
 
@@ -290,24 +318,32 @@ textarea {
     resize: vertical;
 }
 
+input::placeholder,
+textarea::placeholder {
+    color: var(--text-muted);
+}
+
 input:focus,
 textarea:focus,
 select:focus {
-    border-color: rgba(139, 124, 255, 0.7);
-    box-shadow: 0 0 0 3px rgba(139, 124, 255, 0.1);
+    border-color: var(--border-focus);
+    background: #0f1320;
+    box-shadow: 0 0 0 3px rgba(161, 138, 255, 0.08);
     outline: none;
 }
 
 input[type="checkbox"],
 input[type="radio"] {
-    accent-color: var(--primary);
+    accent-color: var(--primary-strong);
 }
 
 label {
     color: var(--text-secondary);
 }
 
-/* ===================== 4. AUTHENTICATION ===================== */
+/* ----------------------------------------------------------
+   05. AUTHENTICATION
+   ---------------------------------------------------------- */
 
 #authScreen,
 .auth-screen,
@@ -319,6 +355,7 @@ label {
     justify-content: center;
     width: 100%;
     min-height: 100vh;
+    min-height: 100dvh;
     padding: 28px 18px;
     overflow: hidden;
 }
@@ -329,8 +366,16 @@ label {
     position: absolute;
     inset: 0;
     background:
-        radial-gradient(circle at 25% 30%, rgba(139, 124, 255, 0.13), transparent 35%),
-        radial-gradient(circle at 80% 70%, rgba(78, 219, 208, 0.08), transparent 30%);
+        radial-gradient(
+            circle at 22% 25%,
+            rgba(161, 138, 255, 0.16),
+            transparent 32%
+        ),
+        radial-gradient(
+            circle at 80% 75%,
+            rgba(114, 229, 210, 0.08),
+            transparent 30%
+        );
     content: "";
     pointer-events: none;
 }
@@ -342,14 +387,14 @@ label {
     position: relative;
     z-index: 1;
     width: 100%;
-    max-width: 420px;
+    max-width: 425px;
     padding: 36px;
-    border: 1px solid var(--border);
+    border: 1px solid var(--border-hover);
     border-radius: var(--radius-xl);
-    background: rgba(16, 21, 34, 0.91);
-    box-shadow: var(--shadow);
-    backdrop-filter: blur(22px);
-    -webkit-backdrop-filter: blur(22px);
+    background: rgba(17, 21, 33, 0.94);
+    box-shadow: var(--shadow-lg);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
 }
 
 .auth-logo,
@@ -358,9 +403,9 @@ label {
     display: flex;
     align-items: center;
     gap: 10px;
-    margin-bottom: 28px;
+    margin-bottom: 30px;
     color: var(--text);
-    font-size: 25px;
+    font-size: 26px;
     font-weight: 800;
     letter-spacing: -1px;
 }
@@ -376,9 +421,9 @@ label {
 .auth-box h1,
 .auth-panel h1 {
     margin: 0 0 8px;
-    font-size: clamp(24px, 4vw, 30px);
+    font-size: clamp(25px, 4vw, 31px);
     font-weight: 750;
-    letter-spacing: -0.8px;
+    letter-spacing: -0.9px;
 }
 
 .auth-card > p,
@@ -387,6 +432,7 @@ label {
 .auth-panel > p {
     margin: 0 0 25px;
     color: var(--text-secondary);
+    line-height: 1.7;
 }
 
 .auth-form,
@@ -411,7 +457,7 @@ label {
 .login-form label,
 .create-account-form label {
     font-size: 12px;
-    font-weight: 600;
+    font-weight: 650;
 }
 
 .auth-form button[type="submit"],
@@ -426,8 +472,8 @@ label {
 .login-footer {
     margin-top: 22px;
     color: var(--text-secondary);
-    text-align: center;
     font-size: 13px;
+    text-align: center;
 }
 
 .auth-switch button,
@@ -436,38 +482,34 @@ label {
     padding: 0;
     border: 0;
     background: none;
-    color: var(--primary-hover);
-    font-weight: 650;
+    color: var(--primary);
+    font-weight: 700;
 }
 
 .auth-error,
 .login-error,
 .auth-message.error,
 .form-error {
-    color: var(--danger);
+    color: var(--red);
     font-size: 12px;
 }
 
 .auth-success,
 .auth-message.success {
-    color: var(--success);
+    color: var(--green);
     font-size: 12px;
 }
 
-/* ===================== 5. MAIN APPLICATION ===================== */
-
-#mainApp,
-.main-app,
-.app-container,
-.app-frame,
-.app-shell {
-    min-width: 0;
-}
+/* ----------------------------------------------------------
+   06. FULL-SCREEN APPLICATION FRAME
+   ---------------------------------------------------------- */
 
 #mainApp,
 .main-app {
     width: 100%;
+    min-width: 0;
     min-height: 100vh;
+    min-height: 100dvh;
 }
 
 .app-frame,
@@ -477,10 +519,14 @@ label {
     display: flex;
     align-items: stretch;
     width: 100%;
+    min-width: 0;
     min-height: 100vh;
+    min-height: 100dvh;
 }
 
-/* ===================== 6. SIDEBAR ===================== */
+/* ----------------------------------------------------------
+   07. CONVERSATION SIDEBAR
+   ---------------------------------------------------------- */
 
 .sidebar,
 .chat-sidebar,
@@ -492,9 +538,11 @@ label {
     flex-direction: column;
     width: var(--sidebar-width);
     min-width: 0;
-    min-height: 100vh;
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
     border-right: 1px solid var(--border);
-    background: rgba(13, 17, 29, 0.96);
+    background: rgba(14, 17, 27, 0.97);
 }
 
 .sidebar-header,
@@ -503,8 +551,9 @@ label {
     align-items: center;
     justify-content: space-between;
     gap: 12px;
-    min-height: 72px;
-    padding: 17px 18px;
+    flex: 0 0 auto;
+    min-height: var(--header-height);
+    padding: 17px 19px;
     border-bottom: 1px solid var(--border);
 }
 
@@ -513,9 +562,9 @@ label {
 .chat-sidebar-header h1,
 .chat-sidebar-header h2 {
     margin: 0;
-    font-size: 20px;
+    font-size: 21px;
     font-weight: 800;
-    letter-spacing: -0.6px;
+    letter-spacing: -0.8px;
 }
 
 .sidebar-header h1 span,
@@ -536,16 +585,18 @@ label {
 .user-search,
 .search-container {
     position: relative;
+    flex: 0 0 auto;
     min-width: 0;
-    margin: 16px;
+    margin: 17px 15px 16px;
 }
 
 .sidebar-search input,
 .user-search input,
 .search-container input {
-    padding-left: 40px;
+    min-height: 43px;
+    padding-left: 41px;
     border-radius: 13px;
-    background: var(--surface);
+    background: #101420;
 }
 
 .sidebar-search::before,
@@ -566,11 +617,12 @@ label {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 4px 18px 10px;
+    flex: 0 0 auto;
+    padding: 0 19px 11px;
     color: var(--text-muted);
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 750;
-    letter-spacing: 1.3px;
+    letter-spacing: 1.35px;
     text-transform: uppercase;
 }
 
@@ -580,10 +632,12 @@ label {
     display: flex;
     flex: 1 1 auto;
     flex-direction: column;
+    min-width: 0;
     min-height: 0;
-    padding: 0 9px 14px;
+    padding: 0 9px 12px;
     overflow-x: hidden;
     overflow-y: auto;
+    overscroll-behavior: contain;
 }
 
 .conversation-item,
@@ -595,27 +649,47 @@ label {
     gap: 12px;
     width: 100%;
     min-width: 0;
+    margin-bottom: 3px;
     padding: 12px 10px;
     border: 1px solid transparent;
     border-radius: 14px;
     background: transparent;
     text-align: left;
     cursor: pointer;
-    transition: background var(--transition), border-color var(--transition);
+    transition:
+        background var(--ease),
+        border-color var(--ease);
 }
 
 .conversation-item:hover,
 .chat-list-item:hover,
 .conversation:hover {
-    background: var(--surface);
+    background: rgba(255, 255, 255, 0.035);
 }
 
 .conversation-item.active,
 .chat-list-item.active,
 .conversation.active,
 .conversation-item[aria-selected="true"] {
-    border-color: rgba(139, 124, 255, 0.17);
-    background: var(--primary-soft);
+    border-color: rgba(161, 138, 255, 0.15);
+    background: linear-gradient(
+        100deg,
+        rgba(161, 138, 255, 0.13),
+        rgba(161, 138, 255, 0.045)
+    );
+}
+
+.conversation-item.active::before,
+.chat-list-item.active::before,
+.conversation.active::before {
+    position: absolute;
+    top: 14px;
+    bottom: 14px;
+    left: -1px;
+    width: 3px;
+    border-radius: var(--radius-pill);
+    background: var(--primary);
+    content: "";
 }
 
 .avatar,
@@ -632,8 +706,8 @@ label {
     overflow: hidden;
     border: 1px solid var(--border);
     border-radius: 15px;
-    background: linear-gradient(145deg, #302b54, #19263a);
-    color: #e6e1ff;
+    background: linear-gradient(145deg, #393151, #1b2838);
+    color: #f0eaff;
     font-size: 15px;
     font-weight: 750;
 }
@@ -642,6 +716,7 @@ label {
 .user-avatar img,
 .chat-avatar img,
 .profile-avatar img {
+    display: block;
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -653,11 +728,11 @@ label {
     position: absolute;
     right: 0;
     bottom: 0;
-    width: 10px;
-    height: 10px;
+    width: 11px;
+    height: 11px;
     border: 2px solid var(--surface);
     border-radius: 50%;
-    background: var(--success);
+    background: var(--green);
     content: "";
 }
 
@@ -682,10 +757,10 @@ label {
 .conversation-preview,
 .chat-list-preview {
     display: block;
-    margin-top: 3px;
+    margin-top: 4px;
     overflow: hidden;
     color: var(--text-muted);
-    font-size: 12px;
+    font-size: 11px;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
@@ -710,8 +785,8 @@ label {
     min-width: 19px;
     height: 19px;
     padding: 0 5px;
-    border-radius: 99px;
-    background: var(--primary);
+    border-radius: var(--radius-pill);
+    background: var(--primary-strong);
     color: white;
     font-size: 10px;
     font-weight: 750;
@@ -719,12 +794,13 @@ label {
 
 .sidebar-footer {
     display: flex;
+    flex: 0 0 auto;
     align-items: center;
     gap: 11px;
-    min-height: 72px;
-    padding: 13px 15px;
+    min-height: 75px;
+    padding: 13px 16px;
     border-top: 1px solid var(--border);
-    background: rgba(8, 11, 20, 0.5);
+    background: rgba(9, 11, 18, 0.55);
 }
 
 .sidebar-footer .profile-info {
@@ -740,16 +816,24 @@ label {
     white-space: nowrap;
 }
 
+.sidebar-footer .profile-info strong {
+    font-size: 12px;
+}
+
 .sidebar-footer .profile-info span {
+    margin-top: 3px;
     color: var(--text-muted);
     font-size: 11px;
 }
 
-/* ===================== 7. MAIN CHAT AREA ===================== */
+/* ----------------------------------------------------------
+   08. FULL-SCREEN CHAT WORKSPACE
+   ---------------------------------------------------------- */
 
 /*
-   Desktop: the chat panel is 50% of the viewport.
-   The remaining width stays empty instead of stretching the chat.
+   Desktop: the conversation sidebar has a fixed width.
+   The active chat fills every remaining horizontal pixel.
+   Do not use a half-screen width on the main chat.
 */
 
 .current-chat,
@@ -758,16 +842,16 @@ label {
 .chat-container {
     position: relative;
     display: flex;
-    flex: 0 0 var(--chat-width);
+    flex: 1 1 0%;
     flex-direction: column;
-    width: var(--chat-width);
-    max-width: var(--chat-width);
+    width: auto;
+    max-width: none;
     min-width: 0;
     height: 100vh;
+    height: 100dvh;
     min-height: 0;
     overflow: hidden;
-    border-right: 1px solid var(--border);
-    background: rgba(10, 14, 24, 0.78);
+    background: rgba(9, 12, 20, 0.48);
 }
 
 .chat-placeholder,
@@ -779,7 +863,7 @@ label {
     align-items: center;
     justify-content: center;
     min-width: 0;
-    padding: 35px;
+    padding: 30px;
     color: var(--text-secondary);
     text-align: center;
 }
@@ -787,35 +871,45 @@ label {
 .chat-placeholder h2,
 .empty-chat h2,
 .no-chat-selected h2 {
-    margin: 20px 0 8px;
+    margin: 21px 0 8px;
     color: var(--text);
-    font-size: 22px;
-    letter-spacing: -0.5px;
+    font-size: 24px;
+    font-weight: 750;
+    letter-spacing: -0.7px;
 }
 
 .chat-placeholder p,
 .empty-chat p,
 .no-chat-selected p {
-    max-width: 300px;
+    max-width: 340px;
     margin: 0;
     color: var(--text-muted);
-    line-height: 1.7;
+    line-height: 1.8;
 }
 
 .empty-chat-icon {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 82px;
-    height: 82px;
-    border: 1px solid rgba(139, 124, 255, 0.2);
-    border-radius: 26px;
-    background: var(--primary-soft);
-    color: var(--primary-hover);
-    font-size: 32px;
+    width: 88px;
+    height: 88px;
+    border: 1px solid rgba(161, 138, 255, 0.19);
+    border-radius: 27px;
+    background:
+        radial-gradient(
+            circle at 30% 20%,
+            rgba(161, 138, 255, 0.2),
+            transparent 75%
+        ),
+        var(--surface);
+    color: var(--primary);
+    font-size: 33px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
 }
 
-/* ===================== 8. CHAT HEADER ===================== */
+/* ----------------------------------------------------------
+   09. CHAT HEADER AND CALL CONTROLS
+   ---------------------------------------------------------- */
 
 .current-chat-header,
 .chat-main-header,
@@ -825,16 +919,16 @@ label {
     flex: 0 0 auto;
     width: 100%;
     min-width: 0;
-    padding: 14px 17px;
+    padding: 15px 23px;
     border-bottom: 1px solid var(--border);
-    background: rgba(15, 20, 33, 0.97);
+    background: rgba(15, 19, 30, 0.95);
 }
 
 .current-chat-top {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 10px;
+    gap: 14px;
     width: 100%;
     min-width: 0;
 }
@@ -844,10 +938,18 @@ label {
     display: flex;
     flex: 1 1 0%;
     align-items: center;
-    gap: 11px;
+    gap: 13px;
     width: 0;
     min-width: 0;
     overflow: hidden;
+}
+
+.current-chat-identity .avatar,
+.chat-user-identity .avatar {
+    flex: 0 0 45px;
+    width: 45px;
+    height: 45px;
+    border-radius: 15px;
 }
 
 .current-chat-info,
@@ -864,8 +966,9 @@ label {
     margin: 0;
     overflow: hidden;
     color: var(--text);
-    font-size: 14px;
-    font-weight: 730;
+    font-size: 15px;
+    font-weight: 750;
+    letter-spacing: -0.2px;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
@@ -885,7 +988,7 @@ label {
 
 .current-chat-info .online-status,
 .chat-user-info .online-status {
-    color: var(--success);
+    color: var(--green);
 }
 
 .chat-header-actions {
@@ -895,7 +998,7 @@ label {
     flex: 0 0 auto;
     align-items: center;
     justify-content: flex-end;
-    gap: 5px;
+    gap: 7px;
     min-width: max-content;
     overflow: visible;
 }
@@ -906,47 +1009,48 @@ label {
 #videoCallButton {
     position: relative;
     display: inline-flex;
-    flex: 0 0 36px;
+    flex: 0 0 40px;
     align-items: center;
     justify-content: center;
-    width: 36px;
-    min-width: 36px;
-    max-width: 36px;
-    height: 36px;
+    width: 40px;
+    min-width: 40px;
+    max-width: 40px;
+    height: 40px;
     padding: 0;
     border: 1px solid var(--border);
-    border-radius: 11px;
-    background: var(--surface-2);
+    border-radius: 13px;
+    background: var(--surface-raised);
     color: var(--text-secondary);
-    cursor: pointer;
 }
 
 .call-button:hover,
 .chat-settings-button:hover,
 #voiceCallButton:hover,
 #videoCallButton:hover {
-    border-color: rgba(139, 124, 255, 0.4);
+    border-color: rgba(161, 138, 255, 0.35);
     background: var(--primary-soft);
-    color: var(--primary-hover);
+    color: var(--primary);
 }
 
 #voiceCallButton {
-    color: var(--success);
+    color: var(--green);
 }
 
 #videoCallButton {
-    color: var(--primary-hover);
+    color: var(--primary);
 }
 
 .call-button svg,
 .chat-settings-button svg,
 #voiceCallButton svg,
 #videoCallButton svg {
-    width: 18px;
-    height: 18px;
+    width: 19px;
+    height: 19px;
 }
 
-/* ===================== 9. CHAT SEARCH ===================== */
+/* ----------------------------------------------------------
+   10. CHAT SEARCH
+   ---------------------------------------------------------- */
 
 .chat-search-panel,
 .chat-search-container,
@@ -954,7 +1058,7 @@ label {
     position: relative;
     z-index: 3;
     flex: 0 0 auto;
-    padding: 10px 15px;
+    padding: 11px 23px;
     border-bottom: 1px solid var(--border);
     background: var(--surface);
 }
@@ -962,39 +1066,41 @@ label {
 .chat-search-panel input,
 .chat-search-container input,
 #chatSearchPanel input {
-    min-height: 38px;
+    min-height: 40px;
 }
 
 .chat-search-results,
 #chatSearchResults {
     display: flex;
     flex-direction: column;
-    gap: 6px;
-    max-height: 220px;
-    margin-top: 8px;
+    gap: 7px;
+    max-height: 260px;
+    margin-top: 9px;
     overflow-y: auto;
 }
 
 .chat-search-result {
-    padding: 10px;
+    padding: 11px 13px;
     border: 1px solid var(--border);
-    border-radius: 10px;
-    background: var(--surface-2);
+    border-radius: 11px;
+    background: var(--surface-raised);
     cursor: pointer;
 }
 
 .chat-search-result:hover {
-    background: var(--surface-3);
+    background: var(--surface-hover);
 }
 
 .chat-search-result mark,
 .search-highlight {
     border-radius: 3px;
-    background: rgba(255, 202, 115, 0.23);
-    color: var(--warning);
+    background: rgba(248, 206, 122, 0.2);
+    color: var(--yellow);
 }
 
-/* ===================== 10. MESSAGES ===================== */
+/* ----------------------------------------------------------
+   11. MESSAGE TIMELINE
+   ---------------------------------------------------------- */
 
 .chat-messages,
 #chatMessages,
@@ -1003,16 +1109,21 @@ label {
     display: flex;
     flex: 1 1 auto;
     flex-direction: column;
-    gap: 14px;
+    gap: 17px;
     width: 100%;
     min-width: 0;
     min-height: 0;
-    padding: 22px 18px;
+    padding: 27px clamp(18px, 4vw, 52px);
     overflow-x: hidden;
     overflow-y: auto;
     background:
-        radial-gradient(ellipse at 50% 0%, rgba(139, 124, 255, 0.035), transparent 45%);
+        radial-gradient(
+            ellipse at 50% 0%,
+            rgba(161, 138, 255, 0.035),
+            transparent 42%
+        );
     overscroll-behavior: contain;
+    scrollbar-gutter: stable;
 }
 
 .message-date,
@@ -1020,10 +1131,10 @@ label {
 .chat-date-divider {
     align-self: center;
     margin: 8px 0;
-    padding: 5px 11px;
+    padding: 6px 12px;
     border: 1px solid var(--border);
-    border-radius: 99px;
-    background: rgba(21, 27, 43, 0.92);
+    border-radius: var(--radius-pill);
+    background: rgba(22, 27, 41, 0.88);
     color: var(--text-muted);
     font-size: 10px;
     font-weight: 650;
@@ -1036,10 +1147,10 @@ label {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    gap: 4px;
     width: 100%;
     min-width: 0;
     max-width: 100%;
-    gap: 4px;
 }
 
 .message-row.sent,
@@ -1055,16 +1166,16 @@ label {
 .message-bubble {
     position: relative;
     width: fit-content;
-    max-width: 85%;
+    max-width: min(75%, 650px);
     min-width: 0;
-    padding: 11px 13px;
+    padding: 12px 15px;
     overflow-wrap: anywhere;
-    word-break: normal;
     border: 1px solid var(--border);
-    border-radius: 15px 15px 15px 5px;
-    background: var(--surface-2);
+    border-radius: 17px 17px 17px 5px;
+    background: #171d2b;
     color: var(--text);
-    line-height: 1.6;
+    line-height: 1.65;
+    word-break: normal;
 }
 
 .message-row.sent .message,
@@ -1074,11 +1185,14 @@ label {
 .chat-message.sent .message,
 .chat-message.sent .message-bubble,
 .message-row.own .message,
+.message-row.own .message-bubble,
 .message-wrapper.own .message,
-.chat-message.own .message {
-    border-color: rgba(139, 124, 255, 0.19);
-    border-radius: 15px 15px 5px 15px;
-    background: linear-gradient(145deg, #39335f, #292747);
+.message-wrapper.own .message-bubble,
+.chat-message.own .message,
+.chat-message.own .message-bubble {
+    border-color: rgba(161, 138, 255, 0.17);
+    border-radius: 17px 17px 5px 17px;
+    background: linear-gradient(145deg, #332d50, #25243b);
 }
 
 .message-content,
@@ -1093,7 +1207,7 @@ label {
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    gap: 5px;
+    gap: 6px;
     margin-top: 5px;
     color: var(--text-muted);
     font-size: 10px;
@@ -1101,23 +1215,24 @@ label {
 
 .message-status,
 .read-status {
-    color: var(--secondary);
+    color: var(--teal);
 }
 
 .message-sender {
-    margin: 0 0 3px;
-    color: var(--primary-hover);
+    margin: 0 0 4px;
+    color: var(--primary);
     font-size: 11px;
-    font-weight: 700;
+    font-weight: 750;
 }
 
 .message-system,
 .system-message {
     align-self: center;
     max-width: 90%;
-    padding: 7px 12px;
-    border-radius: 10px;
-    background: rgba(255, 255, 255, 0.035);
+    padding: 7px 13px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-pill);
+    background: rgba(255, 255, 255, 0.025);
     color: var(--text-muted);
     font-size: 11px;
     text-align: center;
@@ -1134,15 +1249,17 @@ label {
     font-style: italic;
 }
 
-/* ===================== 11. MESSAGE REPLIES ===================== */
+/* ----------------------------------------------------------
+   12. REPLIES
+   ---------------------------------------------------------- */
 
 .reply-preview,
 .message-reply,
 .reply-quote {
     margin-bottom: 8px;
-    padding: 8px 10px;
+    padding: 9px 11px;
     border-left: 3px solid var(--primary);
-    border-radius: 0 8px 8px 0;
+    border-radius: 0 9px 9px 0;
     background: rgba(7, 10, 19, 0.35);
 }
 
@@ -1151,7 +1268,7 @@ label {
 .reply-quote strong {
     display: block;
     margin-bottom: 3px;
-    color: var(--primary-hover);
+    color: var(--primary);
     font-size: 11px;
 }
 
@@ -1170,8 +1287,8 @@ label {
 #replyPreview {
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 10px 15px;
+    gap: 12px;
+    padding: 11px 23px;
     border-top: 1px solid var(--border);
     background: var(--surface);
 }
@@ -1190,7 +1307,7 @@ label {
 }
 
 .replying-to-content strong {
-    color: var(--primary-hover);
+    color: var(--primary);
     font-size: 11px;
 }
 
@@ -1199,16 +1316,18 @@ label {
     font-size: 12px;
 }
 
-/* ===================== 12. MESSAGE ACTIONS ===================== */
+/* ----------------------------------------------------------
+   13. MESSAGE ACTIONS
+   ---------------------------------------------------------- */
 
 .message-actions,
 .message-tools {
     display: flex;
     align-items: center;
     gap: 4px;
-    margin-top: 3px;
+    margin-top: 4px;
     opacity: 0;
-    transition: opacity var(--transition);
+    transition: opacity var(--ease);
 }
 
 .message-row:hover .message-actions,
@@ -1224,9 +1343,9 @@ label {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-width: 28px;
-    height: 27px;
-    padding: 0 6px;
+    min-width: 29px;
+    height: 28px;
+    padding: 0 7px;
     border: 1px solid var(--border);
     border-radius: 8px;
     background: var(--surface);
@@ -1243,22 +1362,22 @@ label {
 .message-menu,
 .message-context-menu {
     position: absolute;
-    z-index: 20;
+    z-index: 30;
     top: 100%;
     right: 0;
     display: flex;
     flex-direction: column;
-    min-width: 155px;
+    min-width: 165px;
     padding: 6px;
-    border: 1px solid var(--border-strong);
+    border: 1px solid var(--border-hover);
     border-radius: 13px;
-    background: #151a2a;
-    box-shadow: var(--shadow);
+    background: #171c2b;
+    box-shadow: var(--shadow-md);
 }
 
 .message-menu button,
 .message-context-menu button {
-    padding: 9px 10px;
+    padding: 10px;
     border: 0;
     border-radius: 8px;
     background: transparent;
@@ -1272,23 +1391,25 @@ label {
     color: var(--text);
 }
 
-/* ===================== 13. EMOJI REACTIONS ===================== */
+/* ----------------------------------------------------------
+   14. EMOJI REACTIONS
+   ---------------------------------------------------------- */
 
 .reaction-picker,
 .taara-reaction-picker {
     position: absolute;
-    z-index: 30;
-    bottom: calc(100% + 7px);
+    z-index: 35;
+    bottom: calc(100% + 8px);
     left: 0;
     display: flex;
     flex-wrap: wrap;
     gap: 5px;
-    max-width: min(260px, 90vw);
+    max-width: min(280px, 90vw);
     padding: 8px;
-    border: 1px solid var(--border-strong);
-    border-radius: 13px;
-    background: #151a2a;
-    box-shadow: var(--shadow);
+    border: 1px solid var(--border-hover);
+    border-radius: 14px;
+    background: #171c2b;
+    box-shadow: var(--shadow-md);
 }
 
 .reaction-picker button,
@@ -1296,8 +1417,8 @@ label {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 34px;
-    height: 34px;
+    width: 35px;
+    height: 35px;
     padding: 0;
     border: 0;
     border-radius: 9px;
@@ -1308,7 +1429,6 @@ label {
 .reaction-picker button:hover,
 .taara-reaction-picker button:hover {
     background: var(--surface-hover);
-    transform: scale(1.1);
 }
 
 .message-reactions,
@@ -1316,7 +1436,7 @@ label {
     display: flex;
     flex-wrap: wrap;
     gap: 5px;
-    margin-top: 5px;
+    margin-top: 6px;
 }
 
 .message-reaction,
@@ -1324,41 +1444,43 @@ label {
     display: inline-flex;
     align-items: center;
     gap: 5px;
-    min-height: 26px;
-    padding: 2px 8px;
+    min-height: 27px;
+    padding: 2px 9px;
     border: 1px solid var(--border);
-    border-radius: 99px;
+    border-radius: var(--radius-pill);
     background: var(--surface);
     font-size: 12px;
 }
 
 .message-reaction.active,
 .reaction-chip.active {
-    border-color: rgba(139, 124, 255, 0.5);
+    border-color: rgba(161, 138, 255, 0.48);
     background: var(--primary-soft);
 }
 
-/* ===================== 14. MEDIA MESSAGES ===================== */
+/* ----------------------------------------------------------
+   15. IMAGE, VIDEO AND FILE MESSAGES
+   ---------------------------------------------------------- */
 
 .message img.message-image,
 .message .message-image,
 .message-image {
     display: block;
     width: auto;
-    max-width: min(100%, 320px);
-    max-height: 280px;
-    border-radius: 11px;
-    cursor: pointer;
+    max-width: min(100%, 380px);
+    max-height: 340px;
+    border-radius: 12px;
     object-fit: contain;
+    cursor: pointer;
 }
 
 .message video,
 .message-video {
     display: block;
     width: 100%;
-    max-width: 320px;
-    max-height: 300px;
-    border-radius: 11px;
+    max-width: 400px;
+    max-height: 350px;
+    border-radius: 12px;
     background: #05070c;
 }
 
@@ -1366,7 +1488,7 @@ label {
 .message-audio {
     display: block;
     width: 100%;
-    max-width: 290px;
+    max-width: 320px;
     min-width: 0;
 }
 
@@ -1374,26 +1496,26 @@ label {
 .message-file {
     display: flex;
     align-items: center;
-    gap: 11px;
+    gap: 12px;
     min-width: 0;
     max-width: 100%;
-    padding: 10px;
+    padding: 11px;
     border: 1px solid var(--border);
-    border-radius: 11px;
-    background: rgba(8, 11, 20, 0.35);
+    border-radius: 12px;
+    background: rgba(8, 11, 20, 0.4);
 }
 
 .file-icon,
 .attachment-icon {
     display: flex;
-    flex: 0 0 36px;
+    flex: 0 0 39px;
     align-items: center;
     justify-content: center;
-    width: 36px;
-    height: 36px;
-    border-radius: 10px;
+    width: 39px;
+    height: 39px;
+    border-radius: 12px;
     background: var(--primary-soft);
-    color: var(--primary-hover);
+    color: var(--primary);
 }
 
 .file-info,
@@ -1419,7 +1541,7 @@ label {
 
 .file-info span,
 .attachment-info span {
-    margin-top: 3px;
+    margin-top: 4px;
     color: var(--text-muted);
     font-size: 10px;
 }
@@ -1429,10 +1551,12 @@ label {
     flex: 0 0 auto;
     padding: 8px;
     border-radius: 9px;
-    background: var(--surface-3);
+    background: var(--surface-raised);
 }
 
-/* ===================== 15. MESSAGE COMPOSER ===================== */
+/* ----------------------------------------------------------
+   16. MESSAGE COMPOSER
+   ---------------------------------------------------------- */
 
 .message-composer,
 .chat-composer,
@@ -1442,19 +1566,19 @@ label {
     display: flex;
     flex: 0 0 auto;
     flex-direction: column;
-    gap: 9px;
+    gap: 10px;
     width: 100%;
     min-width: 0;
-    padding: 12px 14px 15px;
+    padding: 14px 23px 17px;
     border-top: 1px solid var(--border);
-    background: rgba(14, 19, 31, 0.98);
+    background: rgba(14, 18, 29, 0.98);
 }
 
 .composer-row,
 .message-input-row {
     display: flex;
     align-items: flex-end;
-    gap: 8px;
+    gap: 9px;
     width: 100%;
     min-width: 0;
 }
@@ -1464,21 +1588,21 @@ label {
     display: flex;
     flex: 0 0 auto;
     align-items: center;
-    gap: 5px;
+    gap: 4px;
 }
 
 .composer-actions button,
 .message-composer-actions button {
     display: inline-flex;
-    flex: 0 0 36px;
+    flex: 0 0 39px;
     align-items: center;
     justify-content: center;
-    width: 36px;
-    min-width: 36px;
-    height: 36px;
+    width: 39px;
+    min-width: 39px;
+    height: 39px;
     padding: 0;
     border: 1px solid transparent;
-    border-radius: 11px;
+    border-radius: 12px;
     background: transparent;
     color: var(--text-secondary);
 }
@@ -1486,7 +1610,7 @@ label {
 .composer-actions button:hover,
 .message-composer-actions button:hover {
     border-color: var(--border);
-    background: var(--surface-3);
+    background: var(--surface-raised);
     color: var(--text);
 }
 
@@ -1496,17 +1620,19 @@ label {
     flex: 1 1 auto;
     align-items: flex-end;
     min-width: 0;
-    padding: 3px 5px 3px 13px;
+    padding: 4px 5px 4px 15px;
     border: 1px solid var(--border);
-    border-radius: 15px;
-    background: #090d17;
-    transition: border-color var(--transition), box-shadow var(--transition);
+    border-radius: 16px;
+    background: #0a0e18;
+    transition:
+        border-color var(--ease),
+        box-shadow var(--ease);
 }
 
 .message-input-wrapper:focus-within,
 .composer-input-wrapper:focus-within {
-    border-color: rgba(139, 124, 255, 0.55);
-    box-shadow: 0 0 0 3px rgba(139, 124, 255, 0.07);
+    border-color: rgba(161, 138, 255, 0.5);
+    box-shadow: 0 0 0 3px rgba(161, 138, 255, 0.06);
 }
 
 #messageInput,
@@ -1516,8 +1642,8 @@ label {
     flex: 1 1 auto;
     width: 100%;
     min-width: 0;
-    min-height: 38px;
-    max-height: 130px;
+    min-height: 39px;
+    max-height: 150px;
     padding: 9px 3px;
     resize: none;
     border: 0 !important;
@@ -1525,7 +1651,7 @@ label {
     background: transparent !important;
     box-shadow: none !important;
     color: var(--text);
-    font-size: 13px;
+    font-size: 14px;
     line-height: 1.5;
     outline: none;
 }
@@ -1534,48 +1660,50 @@ label {
 #sendMessageButton,
 #sendButton {
     display: inline-flex;
-    flex: 0 0 38px;
+    flex: 0 0 40px;
     align-items: center;
     justify-content: center;
-    width: 38px;
-    min-width: 38px;
-    height: 38px;
-    margin-left: 4px;
+    width: 40px;
+    min-width: 40px;
+    height: 40px;
+    margin-left: 5px;
     padding: 0;
     border: 0;
-    border-radius: 11px;
-    background: var(--primary);
+    border-radius: 12px;
+    background: var(--primary-strong);
     color: white;
-    font-size: 17px;
+    font-size: 18px;
 }
 
 .send-button:hover,
 #sendMessageButton:hover,
 #sendButton:hover {
-    background: var(--primary-hover);
-    box-shadow: 0 4px 16px rgba(139, 124, 255, 0.22);
+    background: var(--primary);
+    box-shadow: 0 5px 17px var(--primary-glow);
 }
 
 .composer-hint {
-    padding-left: 4px;
+    padding-left: 3px;
     color: var(--text-muted);
     font-size: 10px;
 }
 
-/* ===================== 16. VOICE RECORDING ===================== */
+/* ----------------------------------------------------------
+   17. VOICE RECORDING AND TYPING
+   ---------------------------------------------------------- */
 
 .recording-indicator,
 .voice-recording,
 #recordingIndicator {
     display: flex;
     align-items: center;
-    gap: 9px;
+    gap: 10px;
     min-width: 0;
-    padding: 10px 12px;
-    border: 1px solid rgba(255, 102, 125, 0.22);
+    padding: 10px 13px;
+    border: 1px solid rgba(255, 114, 133, 0.23);
     border-radius: 12px;
-    background: rgba(255, 102, 125, 0.07);
-    color: var(--danger);
+    background: rgba(255, 114, 133, 0.07);
+    color: var(--red);
     font-size: 12px;
 }
 
@@ -1583,24 +1711,22 @@ label {
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    background: var(--danger);
+    background: var(--red);
     animation: taara-pulse 1.2s infinite;
 }
 
 .voice-message-player {
     display: flex;
     align-items: center;
-    gap: 9px;
+    gap: 10px;
     max-width: 100%;
 }
-
-/* ===================== 17. TYPING INDICATOR ===================== */
 
 .typing-indicator,
 #typingIndicator {
     flex: 0 0 auto;
     min-height: 0;
-    padding: 0 18px 8px;
+    padding: 0 23px 9px;
     color: var(--text-muted);
     font-size: 11px;
 }
@@ -1627,30 +1753,32 @@ label {
     animation-delay: 240ms;
 }
 
-/* ===================== 18. DISAPPEARING MESSAGES ===================== */
+/* ----------------------------------------------------------
+   18. CHAT SETTINGS AND DISAPPEARING MESSAGES
+   ---------------------------------------------------------- */
 
 .disappearing-panel,
 #disappearingPanel,
 .chat-settings-panel {
     position: absolute;
     z-index: 40;
-    top: 66px;
-    right: 12px;
-    width: min(300px, calc(100% - 24px));
-    max-height: calc(100% - 90px);
-    padding: 17px;
+    top: 74px;
+    right: 15px;
+    width: min(330px, calc(100% - 30px));
+    max-height: calc(100% - 95px);
+    padding: 19px;
     overflow-y: auto;
-    border: 1px solid var(--border-strong);
-    border-radius: 17px;
-    background: #121827;
-    box-shadow: var(--shadow);
+    border: 1px solid var(--border-hover);
+    border-radius: 18px;
+    background: #151a29;
+    box-shadow: var(--shadow-md);
 }
 
 .disappearing-panel h3,
 #disappearingPanel h3,
 .chat-settings-panel h3 {
-    margin: 0 0 12px;
-    font-size: 14px;
+    margin: 0 0 13px;
+    font-size: 15px;
 }
 
 .disappearing-option,
@@ -1659,7 +1787,7 @@ label {
     align-items: center;
     justify-content: space-between;
     gap: 12px;
-    padding: 11px 0;
+    padding: 12px 0;
     border-bottom: 1px solid var(--border);
     color: var(--text-secondary);
     font-size: 12px;
@@ -1670,12 +1798,9 @@ label {
     border-bottom: 0;
 }
 
-.disappearing-option input,
-.chat-setting-option input {
-    flex: 0 0 auto;
-}
-
-/* ===================== 19. USER SEARCH RESULTS ===================== */
+/* ----------------------------------------------------------
+   19. USER SEARCH
+   ---------------------------------------------------------- */
 
 .user-search-results,
 #userSearchResults,
@@ -1685,7 +1810,7 @@ label {
     display: flex;
     flex-direction: column;
     gap: 5px;
-    max-height: 280px;
+    max-height: 300px;
     overflow-x: hidden;
     overflow-y: auto;
 }
@@ -1694,12 +1819,12 @@ label {
 .search-result-item {
     display: flex;
     align-items: center;
-    gap: 11px;
+    gap: 12px;
     width: 100%;
     min-width: 0;
-    padding: 11px;
+    padding: 12px;
     border: 1px solid transparent;
-    border-radius: 12px;
+    border-radius: 13px;
     background: transparent;
     text-align: left;
 }
@@ -1707,7 +1832,7 @@ label {
 .user-search-result:hover,
 .search-result-item:hover {
     border-color: var(--border);
-    background: var(--surface-2);
+    background: var(--surface-raised);
 }
 
 .user-search-result .user-details,
@@ -1726,29 +1851,37 @@ label {
     white-space: nowrap;
 }
 
+.user-search-result strong,
+.search-result-item strong {
+    font-size: 13px;
+}
+
 .user-search-result span,
 .search-result-item span {
+    margin-top: 3px;
     color: var(--text-muted);
     font-size: 11px;
 }
 
-/* ===================== 20. PROFILE PANEL ===================== */
+/* ----------------------------------------------------------
+   20. PROFILE AND SETTINGS PANELS
+   ---------------------------------------------------------- */
 
 .profile-panel,
 #profilePanel,
 .settings-panel {
     position: absolute;
     z-index: 60;
-    top: 65px;
-    right: 12px;
-    width: min(340px, calc(100vw - 24px));
-    max-height: calc(100vh - 90px);
-    padding: 20px;
+    top: 70px;
+    right: 16px;
+    width: min(360px, calc(100vw - 30px));
+    max-height: calc(100dvh - 90px);
+    padding: 21px;
     overflow-y: auto;
-    border: 1px solid var(--border-strong);
-    border-radius: 19px;
-    background: #111727;
-    box-shadow: var(--shadow);
+    border: 1px solid var(--border-hover);
+    border-radius: 20px;
+    background: #151a29;
+    box-shadow: var(--shadow-lg);
 }
 
 .profile-panel-header,
@@ -1757,7 +1890,7 @@ label {
     align-items: center;
     justify-content: space-between;
     gap: 10px;
-    margin-bottom: 18px;
+    margin-bottom: 19px;
 }
 
 .profile-panel-header h2,
@@ -1770,15 +1903,15 @@ label {
     display: flex;
     align-items: center;
     gap: 13px;
-    padding-bottom: 18px;
+    padding-bottom: 19px;
     border-bottom: 1px solid var(--border);
 }
 
 .profile-summary .avatar,
 .profile-summary .profile-avatar {
-    width: 55px;
-    height: 55px;
-    flex-basis: 55px;
+    flex: 0 0 58px;
+    width: 58px;
+    height: 58px;
     border-radius: 18px;
 }
 
@@ -1788,7 +1921,7 @@ label {
 }
 
 .profile-summary p {
-    margin: 3px 0 0;
+    margin: 4px 0 0;
     color: var(--text-muted);
     font-size: 12px;
     overflow-wrap: anywhere;
@@ -1799,13 +1932,13 @@ label {
     display: flex;
     flex-direction: column;
     gap: 7px;
-    margin-top: 16px;
+    margin-top: 17px;
 }
 
 .profile-setting label,
 .settings-row label {
     font-size: 12px;
-    font-weight: 600;
+    font-weight: 650;
 }
 
 .profile-actions,
@@ -1813,7 +1946,7 @@ label {
     display: flex;
     flex-direction: column;
     gap: 9px;
-    margin-top: 19px;
+    margin-top: 20px;
 }
 
 .profile-actions button,
@@ -1821,7 +1954,9 @@ label {
     width: 100%;
 }
 
-/* ===================== 21. IMAGE VIEWER ===================== */
+/* ----------------------------------------------------------
+   21. IMAGE VIEWER
+   ---------------------------------------------------------- */
 
 .image-viewer,
 #imageViewer,
@@ -1832,7 +1967,7 @@ label {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 25px;
+    padding: 24px;
     background: rgba(3, 5, 12, 0.96);
     backdrop-filter: blur(12px);
 }
@@ -1843,7 +1978,7 @@ label {
     display: block;
     max-width: 95%;
     max-height: 90vh;
-    border-radius: 9px;
+    border-radius: 10px;
     object-fit: contain;
 }
 
@@ -1853,15 +1988,17 @@ label {
     position: absolute;
     top: 18px;
     right: 18px;
-    width: 42px;
-    height: 42px;
+    width: 43px;
+    height: 43px;
     border: 1px solid var(--border);
     border-radius: 50%;
-    background: var(--surface-2);
+    background: var(--surface-raised);
     font-size: 20px;
 }
 
-/* ===================== 22. NOTIFICATIONS ===================== */
+/* ----------------------------------------------------------
+   22. TOASTS AND NOTIFICATIONS
+   ---------------------------------------------------------- */
 
 .toast,
 .toast-message,
@@ -1871,24 +2008,24 @@ label {
     display: flex;
     align-items: center;
     gap: 10px;
-    max-width: min(380px, calc(100vw - 32px));
-    padding: 12px 15px;
-    border: 1px solid var(--border-strong);
-    border-radius: 13px;
-    background: #171e30;
+    max-width: min(390px, calc(100vw - 32px));
+    padding: 13px 16px;
+    border: 1px solid var(--border-hover);
+    border-radius: 14px;
+    background: #191e2d;
     color: var(--text);
-    box-shadow: var(--shadow);
+    box-shadow: var(--shadow-md);
     font-size: 12px;
 }
 
 .toast.success,
 .notification.success {
-    border-color: rgba(71, 223, 160, 0.3);
+    border-color: rgba(99, 230, 168, 0.28);
 }
 
 .toast.error,
 .notification.error {
-    border-color: rgba(255, 102, 125, 0.3);
+    border-color: rgba(255, 114, 133, 0.28);
 }
 
 .toast-container,
@@ -1911,7 +2048,9 @@ label {
     pointer-events: auto;
 }
 
-/* ===================== 23. CALL OVERLAY ===================== */
+/* ----------------------------------------------------------
+   23. VOICE AND VIDEO CALL OVERLAY
+   ---------------------------------------------------------- */
 
 #taaraCallOverlay,
 .taara-call-overlay {
@@ -1925,9 +2064,9 @@ label {
     height: 100%;
     padding: 20px;
     overflow-y: auto;
-    background: rgba(4, 7, 16, 0.96);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    background: rgba(4, 6, 14, 0.96);
+    backdrop-filter: blur(22px);
+    -webkit-backdrop-filter: blur(22px);
 }
 
 #taaraCallOverlay.hidden,
@@ -1948,25 +2087,30 @@ label {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 18px;
+    gap: 19px;
     width: 100%;
-    max-width: 430px;
+    max-width: 460px;
     max-height: 92vh;
-    padding: 30px 24px;
+    max-height: 92dvh;
+    padding: 32px 27px;
     overflow-x: hidden;
     overflow-y: auto;
-    border: 1px solid var(--border-strong);
-    border-radius: 27px;
+    border: 1px solid var(--border-hover);
+    border-radius: 28px;
     background:
-        radial-gradient(circle at 50% 0%, rgba(139, 124, 255, 0.14), transparent 50%),
-        #111727;
-    box-shadow: 0 30px 100px rgba(0, 0, 0, 0.45);
+        radial-gradient(
+            circle at 50% 0%,
+            rgba(161, 138, 255, 0.15),
+            transparent 49%
+        ),
+        #141927;
+    box-shadow: var(--shadow-lg);
 }
 
 .taara-call-card h2 {
     margin: 0;
-    font-size: 23px;
-    letter-spacing: -0.6px;
+    font-size: 24px;
+    letter-spacing: -0.7px;
     text-align: center;
 }
 
@@ -1978,11 +2122,11 @@ label {
 
 .taara-call-avatar,
 .taara-call-card .avatar {
-    width: 86px;
-    height: 86px;
-    flex-basis: 86px;
-    border-radius: 28px;
-    font-size: 26px;
+    flex: 0 0 88px;
+    width: 88px;
+    height: 88px;
+    border-radius: 27px;
+    font-size: 27px;
 }
 
 .taara-call-status,
@@ -1998,7 +2142,7 @@ label {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 16px;
+    gap: 15px;
     width: 100%;
     margin-top: 12px;
 }
@@ -2009,12 +2153,12 @@ label {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 52px;
-    height: 52px;
+    width: 53px;
+    height: 53px;
     padding: 0;
     border: 1px solid var(--border);
     border-radius: 18px;
-    background: var(--surface-3);
+    background: var(--surface-raised);
     color: var(--text);
     font-size: 19px;
 }
@@ -2030,7 +2174,7 @@ label {
 #taaraCallControls .end-call,
 #endCallButton {
     border-color: transparent;
-    background: var(--danger);
+    background: var(--red);
     color: white;
 }
 
@@ -2038,7 +2182,7 @@ label {
 .call-controls .end-call:hover,
 #taaraCallControls .end-call:hover,
 #endCallButton:hover {
-    background: #ff8294;
+    background: #ff8b9b;
 }
 
 .taara-video-container,
@@ -2059,14 +2203,15 @@ label {
     display: block;
     width: 100%;
     max-width: 100%;
-    max-height: 50vh;
+    max-height: 48vh;
+    max-height: 48dvh;
     background: #03050a;
     object-fit: cover;
 }
 
 #taaraLocalVideo,
 .taara-local-video {
-    max-height: 180px;
+    max-height: 170px;
     border-radius: 12px;
 }
 
@@ -2087,12 +2232,14 @@ label {
 }
 
 .call-timer {
-    color: var(--secondary);
+    color: var(--teal);
     font-size: 13px;
     font-variant-numeric: tabular-nums;
 }
 
-/* ===================== 24. ONLINE STATUS ===================== */
+/* ----------------------------------------------------------
+   24. ONLINE STATUS AND LOADING
+   ---------------------------------------------------------- */
 
 .status-dot,
 .online-dot {
@@ -2106,16 +2253,14 @@ label {
 
 .status-dot.online,
 .online-dot.online {
-    background: var(--success);
-    box-shadow: 0 0 9px rgba(71, 223, 160, 0.25);
+    background: var(--green);
+    box-shadow: 0 0 9px rgba(99, 230, 168, 0.24);
 }
 
 .status-dot.offline,
 .online-dot.offline {
     background: var(--text-muted);
 }
-
-/* ===================== 25. LOADING STATES ===================== */
 
 .loading,
 .loading-state,
@@ -2133,7 +2278,7 @@ label {
 .loading-spinner {
     width: 22px;
     height: 22px;
-    border: 2px solid var(--border-strong);
+    border: 2px solid var(--border-hover);
     border-top-color: var(--primary);
     border-radius: 50%;
     animation: taara-spin 750ms linear infinite;
@@ -2144,14 +2289,16 @@ label {
     background: linear-gradient(
         90deg,
         var(--surface) 25%,
-        var(--surface-3) 50%,
+        var(--surface-hover) 50%,
         var(--surface) 75%
     );
     background-size: 200% 100%;
     animation: taara-skeleton 1.5s infinite;
 }
 
-/* ===================== 26. ANIMATIONS ===================== */
+/* ----------------------------------------------------------
+   25. ANIMATIONS
+   ---------------------------------------------------------- */
 
 @keyframes taara-spin {
     to {
@@ -2164,6 +2311,7 @@ label {
         opacity: 1;
         transform: scale(1);
     }
+
     50% {
         opacity: 0.45;
         transform: scale(0.82);
@@ -2175,6 +2323,7 @@ label {
         opacity: 0.4;
         transform: translateY(0);
     }
+
     30% {
         opacity: 1;
         transform: translateY(-4px);
@@ -2185,6 +2334,7 @@ label {
     from {
         background-position: 200% 0;
     }
+
     to {
         background-position: -200% 0;
     }
@@ -2195,6 +2345,7 @@ label {
         opacity: 0;
         transform: translateY(5px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -2208,78 +2359,84 @@ label {
     animation: taara-fade-in 160ms ease both;
 }
 
-/* ===================== 27. TABLET ===================== */
+/* ----------------------------------------------------------
+   26. TABLET LAYOUT
+   ---------------------------------------------------------- */
 
 @media (min-width: 601px) and (max-width: 1000px) {
     :root {
-        --sidebar-width: 250px;
-        --chat-width: 50vw;
+        --sidebar-width: 260px;
     }
 
     .sidebar-header,
     .chat-sidebar-header {
-        padding-right: 13px;
-        padding-left: 13px;
+        padding-right: 14px;
+        padding-left: 14px;
     }
 
     .current-chat-header,
     .chat-main-header,
     .chat-header {
-        padding: 12px;
+        padding: 13px 16px;
     }
 
     .chat-header-actions {
-        gap: 4px;
+        gap: 5px;
     }
 
     .call-button,
     .chat-settings-button,
     #voiceCallButton,
     #videoCallButton {
-        flex-basis: 33px;
-        width: 33px;
-        min-width: 33px;
-        max-width: 33px;
-        height: 33px;
+        flex-basis: 36px;
+        width: 36px;
+        min-width: 36px;
+        max-width: 36px;
+        height: 36px;
     }
 
     .chat-messages,
     #chatMessages,
     .messages-container {
-        padding: 17px 13px;
+        padding: 20px 20px;
     }
 
     .message-composer,
     .chat-composer,
     .composer-container {
-        padding: 10px;
+        padding: 12px 15px;
+    }
+
+    .message,
+    .message-bubble {
+        max-width: 82%;
     }
 }
 
-/* ===================== 28. MOBILE ===================== */
+/* ----------------------------------------------------------
+   27. MOBILE LAYOUT
+   ---------------------------------------------------------- */
 
 @media (max-width: 600px) {
     :root {
         --sidebar-width: 100%;
-        --chat-width: 100%;
     }
 
     html,
     body {
         width: 100%;
+        min-width: 0;
         min-height: 100%;
         overflow-x: hidden;
     }
 
     #mainApp,
-    .main-app {
-        min-height: 100dvh;
-    }
-
+    .main-app,
     .app-frame,
     .app-shell,
     .app-container {
         width: 100%;
+        min-width: 0;
         min-height: 100dvh;
     }
 
@@ -2289,15 +2446,21 @@ label {
         flex: 0 0 100%;
         width: 100%;
         max-width: 100%;
-        min-height: 100dvh;
+        height: 100dvh;
+        min-height: 0;
         border-right: 0;
     }
+
+    /*
+       Active-chat visibility should continue to be managed
+       by the existing app logic, not by this stylesheet.
+    */
 
     .current-chat,
     #currentChat,
     .chat-main,
     .chat-container {
-        flex: 0 0 100%;
+        flex: 1 1 0%;
         width: 100%;
         max-width: 100%;
         height: 100dvh;
@@ -2305,10 +2468,30 @@ label {
         border-right: 0;
     }
 
-    /*
-       JS may switch between the conversation list and active chat.
-       The stylesheet does not force either view to disappear.
-    */
+    .sidebar-header,
+    .chat-sidebar-header {
+        min-height: 65px;
+        padding: 13px 16px;
+    }
+
+    .sidebar-search,
+    .user-search,
+    .search-container {
+        margin: 13px 13px 15px;
+    }
+
+    .conversation-list,
+    #conversationList,
+    .chats-list {
+        padding-right: 8px;
+        padding-left: 8px;
+    }
+
+    .conversation-item,
+    .chat-list-item,
+    .conversation {
+        padding: 11px 9px;
+    }
 
     .current-chat-header,
     .chat-main-header,
@@ -2317,7 +2500,7 @@ label {
     }
 
     .current-chat-top {
-        gap: 5px;
+        gap: 6px;
     }
 
     .current-chat-identity,
@@ -2327,9 +2510,9 @@ label {
 
     .current-chat-identity .avatar,
     .chat-user-identity .avatar {
-        flex-basis: 38px;
-        width: 38px;
-        height: 38px;
+        flex: 0 0 39px;
+        width: 39px;
+        height: 39px;
         border-radius: 12px;
     }
 
@@ -2355,11 +2538,11 @@ label {
     .chat-settings-button,
     #voiceCallButton,
     #videoCallButton {
-        flex-basis: 32px;
-        width: 32px;
-        min-width: 32px;
-        max-width: 32px;
-        height: 32px;
+        flex-basis: 33px;
+        width: 33px;
+        min-width: 33px;
+        max-width: 33px;
+        height: 33px;
         border-radius: 10px;
     }
 
@@ -2371,24 +2554,44 @@ label {
         height: 16px;
     }
 
+    .chat-search-panel,
+    .chat-search-container,
+    #chatSearchPanel {
+        padding: 9px 11px;
+    }
+
     .chat-messages,
     #chatMessages,
     .messages-container {
-        gap: 12px;
+        gap: 13px;
         padding: 15px 10px;
+        scrollbar-gutter: auto;
     }
 
     .message,
     .message-bubble {
         max-width: 88%;
-        padding: 10px 11px;
+        padding: 10px 12px;
         font-size: 13px;
+    }
+
+    .message img.message-image,
+    .message .message-image,
+    .message-image {
+        max-width: min(100%, 270px);
+        max-height: 260px;
+    }
+
+    .message video,
+    .message-video {
+        max-width: 270px;
+        max-height: 240px;
     }
 
     .message-composer,
     .chat-composer,
     .composer-container {
-        gap: 7px;
+        gap: 8px;
         padding: 9px 8px calc(10px + env(safe-area-inset-bottom));
     }
 
@@ -2399,7 +2602,7 @@ label {
 
     .composer-actions,
     .message-composer-actions {
-        gap: 2px;
+        gap: 1px;
     }
 
     .composer-actions button,
@@ -2407,14 +2610,8 @@ label {
         flex-basis: 31px;
         width: 31px;
         min-width: 31px;
-        height: 34px;
-    }
-
-    #messageInput,
-    #messageText,
-    .message-input,
-    .composer-input {
-        font-size: 16px;
+        height: 35px;
+        border-radius: 10px;
     }
 
     .message-input-wrapper,
@@ -2422,13 +2619,27 @@ label {
         padding-left: 9px;
     }
 
+    #messageInput,
+    #messageText,
+    .message-input,
+    .composer-input {
+        min-height: 36px;
+        max-height: 120px;
+        font-size: 16px;
+    }
+
     .send-button,
     #sendMessageButton,
     #sendButton {
-        flex-basis: 34px;
-        width: 34px;
-        min-width: 34px;
-        height: 34px;
+        flex-basis: 35px;
+        width: 35px;
+        min-width: 35px;
+        height: 35px;
+        border-radius: 10px;
+    }
+
+    .composer-hint {
+        display: none;
     }
 
     .message-actions,
@@ -2436,23 +2647,33 @@ label {
         opacity: 1;
     }
 
+    .replying-to,
+    #replyPreview {
+        padding: 9px 11px;
+    }
+
+    .typing-indicator,
+    #typingIndicator {
+        padding-right: 11px;
+        padding-left: 11px;
+    }
+
     .profile-panel,
     #profilePanel,
     .settings-panel {
         position: fixed;
-        top: 12px;
-        right: 12px;
-        width: min(340px, calc(100vw - 24px));
-        max-height: calc(100dvh - 24px);
+        top: 10px;
+        right: 10px;
+        width: min(360px, calc(100vw - 20px));
+        max-height: calc(100dvh - 20px);
     }
 
     .disappearing-panel,
     #disappearingPanel,
     .chat-settings-panel {
-        position: absolute;
-        top: 58px;
-        right: 8px;
-        width: min(300px, calc(100% - 16px));
+        top: 57px;
+        right: 7px;
+        width: min(320px, calc(100% - 14px));
     }
 
     .image-viewer,
@@ -2463,9 +2684,9 @@ label {
 
     .taara-call-card {
         gap: 15px;
-        max-height: 90dvh;
+        max-height: 91dvh;
         padding: 22px 15px;
-        border-radius: 22px;
+        border-radius: 23px;
     }
 
     .taara-call-card h2 {
@@ -2488,7 +2709,7 @@ label {
 
     #taaraLocalVideo,
     .taara-local-video {
-        max-height: 120px;
+        max-height: 110px;
     }
 
     #taaraRemoteVideo,
@@ -2500,12 +2721,30 @@ label {
     .login-card,
     .auth-box,
     .auth-panel {
-        padding: 26px 21px;
+        padding: 27px 21px;
         border-radius: 22px;
+    }
+
+    .toast-container,
+    #toastContainer,
+    #notificationContainer {
+        right: 10px;
+        bottom: calc(10px + env(safe-area-inset-bottom));
+        left: 10px;
+        max-width: none;
+    }
+
+    .toast,
+    .toast-message,
+    .notification,
+    #toastContainer .toast {
+        max-width: 100%;
     }
 }
 
-/* ===================== 29. SMALL PHONES ===================== */
+/* ----------------------------------------------------------
+   28. EXTRA-SMALL PHONES
+   ---------------------------------------------------------- */
 
 @media (max-width: 360px) {
     .current-chat-header,
@@ -2528,6 +2767,13 @@ label {
         flex-basis: 32px;
         width: 32px;
         height: 32px;
+    }
+
+    .current-chat-info h2,
+    .current-chat-info h3,
+    .chat-user-info h2,
+    .chat-user-info h3 {
+        font-size: 12px;
     }
 
     .chat-header-actions {
@@ -2555,7 +2801,7 @@ label {
     .message,
     .message-bubble {
         max-width: 92%;
-        padding: 9px;
+        padding: 9px 10px;
     }
 
     .composer-actions button,
@@ -2565,11 +2811,21 @@ label {
         min-width: 27px;
         height: 32px;
     }
+
+    .composer-row,
+    .message-input-row {
+        gap: 3px;
+    }
 }
 
-/* ===================== 30. LANDSCAPE PHONES ===================== */
+/* ----------------------------------------------------------
+   29. LANDSCAPE PHONES
+   ---------------------------------------------------------- */
 
 @media (max-width: 900px) and (orientation: landscape) {
+    .sidebar,
+    .chat-sidebar,
+    .conversation-sidebar,
     .current-chat,
     #currentChat,
     .chat-main,
@@ -2599,16 +2855,18 @@ label {
 
     #taaraRemoteVideo,
     .taara-remote-video {
-        max-height: 38dvh;
+        max-height: 37dvh;
     }
 
     #taaraLocalVideo,
     .taara-local-video {
-        max-height: 85px;
+        max-height: 80px;
     }
 }
 
-/* ===================== 31. ACCESSIBILITY ===================== */
+/* ----------------------------------------------------------
+   30. REDUCED MOTION
+   ---------------------------------------------------------- */
 
 @media (prefers-reduced-motion: reduce) {
     *,
