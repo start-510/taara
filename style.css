@@ -595,6 +595,7 @@ audio {
     font-size: 10px;
 }
 
+/* Search results created by the existing JavaScript */
 .search-result-card {
     display: flex;
     align-items: center;
@@ -667,21 +668,17 @@ audio {
     align-items: center;
     justify-content: space-between;
     gap: 12px;
-    width: 100%;
     min-width: 0;
 }
 
 .current-chat-identity {
     position: relative;
     min-width: 0;
-    flex: 1 1 0;
-    overflow: hidden;
+    flex: 1 1 auto;
 }
 
 .current-chat-info {
     min-width: 0;
-    max-width: 100%;
-    overflow: hidden;
 }
 
 .current-chat-title {
@@ -701,38 +698,29 @@ audio {
 }
 
 .chat-header-actions {
-    position: relative;
-    z-index: 2;
     display: flex;
     align-items: center;
     justify-content: flex-end;
     gap: 6px;
     flex: 0 0 auto;
-    min-width: max-content;
-    margin-left: auto;
 }
 
 .call-button,
 .chat-settings-button {
-    position: relative;
     display: grid;
     place-items: center;
     width: 38px;
     height: 38px;
-    min-width: 38px;
     flex: 0 0 38px;
     padding: 0;
     border: 1px solid var(--border);
     border-radius: 11px;
     color: #c8cbd7;
     background: var(--surface-2);
-    cursor: pointer;
-    pointer-events: auto;
     transition: background .16s, border-color .16s;
 }
 
 .call-button svg {
-    display: block;
     width: 18px;
     height: 18px;
     fill: none;
@@ -823,7 +811,7 @@ audio {
 }
 
 /* =========================================================
-   MESSAGES
+   MESSAGES — DEDICATED SCROLL REGION
    ========================================================= */
 
 .messages {
@@ -885,6 +873,7 @@ audio {
     line-height: 1.7;
 }
 
+/* Existing JS message structure */
 .message-row {
     position: relative;
     display: flex;
@@ -1236,7 +1225,7 @@ audio {
 }
 
 /* =========================================================
-   COMPOSER
+   COMPOSER — FIXED AT BOTTOM OF CHAT PANEL
    ========================================================= */
 
 .composer-area {
@@ -1905,15 +1894,6 @@ audio {
         gap: 6px;
     }
 
-    .current-chat-identity {
-        flex: 1 1 0;
-        min-width: 0;
-    }
-
-    .current-chat-info {
-        min-width: 0;
-    }
-
     .current-chat-title {
         font-size: 14px;
     }
@@ -1926,16 +1906,13 @@ audio {
 
     .chat-header-actions {
         gap: 4px;
-        flex: 0 0 auto;
-        min-width: max-content;
     }
 
     .call-button,
     .chat-settings-button {
         width: 34px;
         height: 34px;
-        min-width: 34px;
-        flex: 0 0 34px;
+        flex-basis: 34px;
         border-radius: 10px;
     }
 
@@ -2128,20 +2105,11 @@ audio {
         max-width: 95px;
     }
 
-    .current-chat-top {
-        gap: 4px;
-    }
-
-    .chat-header-actions {
-        gap: 3px;
-    }
-
     .call-button,
     .chat-settings-button {
-        width: 30px;
+        width: 31px;
         height: 32px;
-        min-width: 30px;
-        flex: 0 0 30px;
+        flex-basis: 31px;
     }
 
     .conversation-item {
@@ -2219,11 +2187,12 @@ audio {
     }
 }
 
-/* =========================================================
-   TAARA* VOICE / VIDEO CALL OVERLAY
-   ========================================================= */
 
-/* Hidden until a call is started or received */
+/* =========================================
+   TAARA* CALL OVERLAY — CHAT VISIBILITY FIX
+   ========================================= */
+
+/* Keep the call overlay hidden by default */
 #taaraCallOverlay,
 .taara-call-overlay {
     display: none;
@@ -2231,25 +2200,28 @@ audio {
     pointer-events: none;
 }
 
-/* Show the overlay only when its hidden class is removed */
+/* Show only when JavaScript removes the hidden class */
 #taaraCallOverlay:not(.hidden),
 .taara-call-overlay:not(.hidden) {
+    display: flex;
+    visibility: visible;
+    pointer-events: auto;
+
     position: fixed;
     inset: 0;
     z-index: 99999;
-    display: flex;
+
     align-items: center;
     justify-content: center;
     padding: 18px;
+
     overflow-y: auto;
-    visibility: visible;
-    pointer-events: auto;
-    background: rgba(5, 5, 12, .88);
+    background: rgba(5, 5, 12, 0.88);
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
 }
 
-/* Hidden state always takes priority */
+/* Hidden state always wins */
 #taaraCallOverlay.hidden,
 .taara-call-overlay.hidden,
 .taara-call-overlay .hidden {
@@ -2258,114 +2230,87 @@ audio {
     pointer-events: none !important;
 }
 
+/* Call card */
 .taara-call-card {
     position: relative;
     width: min(440px, 100%);
     max-height: 90vh;
     overflow-y: auto;
     padding: 28px;
-    border: 1px solid rgba(148,120,255,.35);
+    border: 1px solid rgba(148, 120, 255, 0.35);
     border-radius: 24px;
     color: #fff;
     background: #171620;
-    box-shadow: 0 20px 80px rgba(0,0,0,.5);
+    box-shadow: 0 20px 80px rgba(0, 0, 0, 0.5);
     text-align: center;
 }
 
-.taara-call-brand {
-    color: #b5a2ff;
-    font-weight: 800;
-    letter-spacing: 3px;
-}
-
-.taara-call-status {
-    margin-top: 24px;
-    color: #c9c3df;
-}
-
-.taara-call-person {
-    margin: 12px 0 24px;
-    font-size: 1.5rem;
-    font-weight: 700;
-    overflow-wrap: anywhere;
-}
-
-.taara-call-actions {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 10px;
-}
-
-.taara-call-actions button {
-    min-height: 42px;
-    padding: 12px 16px;
-    border: 0;
-    border-radius: 14px;
-    background: #9478ff;
-    color: white;
-    font: inherit;
-    font-weight: 650;
-    cursor: pointer;
-}
-
-.taara-call-actions button:hover {
-    filter: brightness(1.1);
-}
-
-.taara-call-actions .taara-end-call,
-#taaraDeclineCall {
-    background: #d9475c;
-}
-
-.taara-call-videos {
-    position: relative;
-    margin-top: 18px;
-    overflow: hidden;
-    border-radius: 16px;
-    background: #08080c;
-}
-
-#taaraRemoteVideo {
-    display: block;
-    width: 100%;
-    max-height: 55vh;
-    object-fit: contain;
-}
-
-#taaraLocalVideo {
-    position: absolute;
-    right: 10px;
-    bottom: 10px;
-    width: 28%;
-    max-height: 150px;
-    border: 1px solid rgba(255,255,255,.5);
-    border-radius: 12px;
-    object-fit: cover;
-    background: #222;
-}
-
-#taaraRemoteAudio {
-    display: none;
-}
-
-/* Call overlay on smaller screens */
 @media (max-width: 480px) {
-    .taara-call-overlay {
-        padding: 12px;
-    }
-
     .taara-call-card {
         padding: 22px 16px;
     }
-
-    .taara-call-actions button {
-        flex: 1 1 40%;
-    }
-
+}
     #taaraLocalVideo {
         width: 32%;
         max-height: 120px;
+    }
+}
+
+/* =========================================
+   TAARA* — FIX CHAT HEADER / CALL BUTTONS
+   ========================================= */
+
+/* Keep chat header items in one horizontal row */
+.chat-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+    position: relative;
+}
+
+/* Allow the contact details to shrink instead of
+   pushing the call buttons underneath */
+.chat-header > :first-child {
+    min-width: 0;
+}
+
+/* Keep the action buttons visible on the right */
+#voiceCallButton,
+#videoCallButton,
+.chat-settings-button {
+    position: relative;
+    z-index: 2;
+    flex-shrink: 0;
+}
+
+/* Prevent long names/details from covering buttons */
+.chat-header .chat-user-info,
+.chat-header .chat-contact-info {
+    min-width: 0;
+    flex: 1 1 auto;
+    overflow: hidden;
+}
+
+/* Keep header buttons clickable */
+#voiceCallButton,
+#videoCallButton {
+    pointer-events: auto;
+    cursor: pointer;
+}
+
+/* Smaller screens */
+@media (max-width: 480px) {
+    .chat-header {
+        gap: 5px;
+    }
+
+    #voiceCallButton,
+    #videoCallButton,
+    .chat-settings-button {
+        width: 34px;
+        height: 34px;
+        min-width: 34px;
+        flex: 0 0 34px;
     }
 }
