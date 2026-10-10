@@ -325,6 +325,32 @@
     </div>
 </section>
 
+<!-- TAARA* Call Interface -->
+<div id="taaraCallOverlay" class="taara-call-overlay hidden" role="dialog" aria-modal="true" aria-label="TAARA call">
+  <div class="taara-call-card">
+    <div class="taara-call-brand">TAARA*</div>
+    <div id="taaraCallStatus" class="taara-call-status">Ready</div>
+    <div id="taaraCallPerson" class="taara-call-person">Contact</div>
+
+    <div id="taaraIncomingActions" class="taara-call-actions hidden">
+      <button id="taaraAcceptCall" type="button">Accept</button>
+      <button id="taaraDeclineCall" type="button">Decline</button>
+    </div>
+
+    <div id="taaraActiveActions" class="taara-call-actions hidden">
+      <button id="taaraMuteCall" type="button">Mute</button>
+      <button id="taaraCameraCall" type="button">Camera off</button>
+      <button id="taaraEndCall" type="button" class="taara-end-call">End call</button>
+    </div>
+
+    <div id="taaraCallVideos" class="taara-call-videos hidden">
+      <video id="taaraRemoteVideo" autoplay playsinline></video>
+      <video id="taaraLocalVideo" autoplay muted playsinline></video>
+    </div>
+    <audio id="taaraRemoteAudio" autoplay></audio>
+  </div>
+</div>
+    
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="script.js"></script>
 </body>
