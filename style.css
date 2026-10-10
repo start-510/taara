@@ -1,62 +1,92 @@
-/* =====================================================
-   TAARA* — PROFESSIONAL CHARCOAL & YELLOW THEME
-   CSS-only override — paste at the END of style.css
-   ===================================================== */
+/* =========================================================
+   TAARA* — FRESH RESPONSIVE STYLESHEET
+   Desktop + Tablet + Mobile
+   Replace the entire existing style.css with this file.
+========================================================= */
 
 :root {
     color-scheme: dark;
 
     --bg: #101116;
-    --bg-glow: #17181e;
-    --surface: #181920;
-    --surface-2: #202129;
-    --surface-3: #292b34;
-    --surface-4: #32343e;
+    --surface: #171920;
+    --surface-2: #1d2029;
+    --surface-3: #252936;
+
+    --text: #f4f5fa;
+    --muted: #9a9eae;
+    --muted-2: #74798b;
 
     --border: rgba(255, 255, 255, 0.09);
-    --border-hover: rgba(245, 197, 66, 0.4);
+    --border-hover: rgba(255, 255, 255, 0.17);
 
-    --text: #f4f4f5;
-    --text-soft: #d4d4d8;
-    --muted: #a1a1aa;
-    --muted-2: #777781;
+    --accent: #a78bfa;
+    --accent-strong: #8b5cf6;
+    --accent-soft: rgba(167, 139, 250, 0.13);
 
-    --accent: #f5c542;
-    --accent-hover: #ffda70;
-    --accent-strong: #d9a91f;
-    --accent-soft: rgba(245, 197, 66, 0.12);
-    --accent-glow: rgba(245, 197, 66, 0.08);
+    --success: #43d9a3;
+    --danger: #ff6b81;
 
-    --green: #65d6a0;
-    --danger: #ff7d86;
-    --warning: #f5c542;
+    --sidebar-width: 340px;
+    --header-height: 76px;
 
-    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.16);
-    --shadow: 0 8px 28px rgba(0, 0, 0, 0.22);
-    --shadow-lg: 0 16px 45px rgba(0, 0, 0, 0.3);
+    --radius-sm: 10px;
+    --radius-md: 16px;
+    --radius-lg: 22px;
+
+    --shadow:
+        0 20px 60px rgba(0, 0, 0, 0.24);
 }
 
-/* ---------- GLOBAL FOUNDATION ---------- */
+/* =========================
+   RESET
+========================= */
 
-*,
-*::before,
-*::after {
+* {
     box-sizing: border-box;
 }
 
-html,
-body {
+html {
     width: 100%;
-    min-width: 320px;
-    margin: 0;
-    overflow-x: hidden;
+    min-height: 100%;
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
 }
 
 body {
+    width: 100%;
+    min-width: 320px;
+    min-height: 100vh;
+    margin: 0;
+
+    overflow-x: hidden;
+
+    background:
+        radial-gradient(
+            ellipse at 10% 0%,
+            rgba(139, 92, 246, 0.10),
+            transparent 35%
+        ),
+        radial-gradient(
+            ellipse at 95% 100%,
+            rgba(59, 130, 246, 0.07),
+            transparent 35%
+        ),
+        var(--bg);
+
     color: var(--text);
-    background: var(--bg);
-    font-family: Inter, -apple-system, BlinkMacSystemFont,
-        "Segoe UI", Roboto, sans-serif;
+
+    font-family:
+        Inter,
+        ui-sans-serif,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
+    font-size: 14px;
+    line-height: 1.5;
+
     -webkit-font-smoothing: antialiased;
 }
 
@@ -64,596 +94,995 @@ button,
 input,
 textarea,
 select {
-    font-family: inherit;
+    font: inherit;
 }
 
 button {
-    -webkit-tap-highlight-color: transparent;
+    color: inherit;
+}
+
+button,
+input,
+textarea,
+select {
+    min-width: 0;
 }
 
 button:focus-visible,
-a:focus-visible,
 input:focus-visible,
 textarea:focus-visible,
 select:focus-visible {
     outline: 2px solid var(--accent);
-    outline-offset: 2px;
+    outline-offset: 3px;
 }
 
-/* ---------- APPLICATION FRAME ---------- */
+img,
+video {
+    max-width: 100%;
+}
+
+.hidden,
+[hidden] {
+    display: none !important;
+}
+
+/* =========================
+   SCROLLBARS
+========================= */
+
+* {
+    scrollbar-width: thin;
+    scrollbar-color: #414353 transparent;
+}
+
+::-webkit-scrollbar {
+    width: 7px;
+    height: 7px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #414353;
+    border-radius: 20px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #62677c;
+}
+
+/* =========================
+   GENERAL SCREEN LAYOUT
+========================= */
+
+.screen {
+    width: 100%;
+    min-height: 100vh;
+}
+
+#loginScreen,
+#createScreen {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    min-height: 100vh;
+    padding: 32px 18px;
+}
 
 #chatScreen {
     width: 100%;
-    height: 100vh;
-    height: 100dvh;
-    min-height: 0;
-    padding: 12px;
-    overflow: hidden;
+    min-height: 100vh;
+    padding: 20px;
 }
 
-.chat-container {
+/* =========================
+   LOGIN / CREATE ACCOUNT
+========================= */
+
+#loginScreen > *,
+#createScreen > * {
+    max-width: 100%;
+}
+
+.auth-container,
+.auth-card,
+.login-card,
+.create-card {
     width: 100%;
-    max-width: 1600px;
-    height: 100%;
-    min-height: 0;
-    margin: 0 auto;
-    padding: 0 22px 16px;
-    overflow: hidden;
-    background: var(--surface);
+    max-width: 440px;
+    margin-inline: auto;
+}
+
+.auth-card,
+.login-card,
+.create-card {
+    padding: clamp(24px, 5vw, 38px);
+
+    background: rgba(23, 25, 32, 0.92);
     border: 1px solid var(--border);
-    border-radius: 16px;
+    border-radius: 26px;
+
     box-shadow: var(--shadow);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
 }
 
-.chat-container::before {
-    display: none;
+.auth-card h1,
+.login-card h1,
+.create-card h1 {
+    margin: 0 0 10px;
+    font-size: clamp(26px, 5vw, 34px);
+    letter-spacing: -1px;
 }
 
-/* ---------- MAIN HEADER ---------- */
-
-.chat-header {
-    min-height: 72px;
-    gap: 12px;
-    border-bottom: 1px solid var(--border);
-}
-
-.chat-logo {
-    color: var(--text);
-    font-size: 21px;
-    font-weight: 800;
-    letter-spacing: -0.7px;
-}
-
-.logo span,
-.chat-logo span {
-    color: var(--accent);
-}
-
-.profile-button {
-    background: var(--surface-2);
-    border: 1px solid var(--border);
-    border-radius: 11px;
-}
-
-.profile-button:hover {
-    background: var(--surface-3);
-    border-color: var(--border-hover);
-    transform: none;
-}
-
-.header-actions {
-    gap: 10px;
-}
-
-.private-label {
-    color: var(--muted);
-    font-size: 12px;
-}
-
-.logout-button {
-    min-height: 37px;
-    background: var(--surface-2);
-    border-color: var(--border);
-    border-radius: 9px;
-}
-
-.logout-button:hover {
-    background: var(--surface-3);
-}
-
-/* ---------- SIDEBAR AND WORKSPACE ---------- */
-
-.app-workspace {
-    display: grid;
-    grid-template-columns: minmax(260px, 310px) minmax(0, 1fr);
-    flex: 1 1 0;
-    min-width: 0;
-    min-height: 0;
-    overflow: hidden;
-}
-
-.sidebar {
-    min-width: 0;
-    min-height: 0;
-    padding: 22px 16px 12px 0;
-    border-right: 1px solid var(--border);
-}
-
-.sidebar-heading {
-    margin-bottom: 18px;
-}
-
-.sidebar-heading h1 {
-    font-size: 23px;
-    letter-spacing: -0.5px;
-}
-
-.eyebrow {
-    letter-spacing: 0.1em;
-}
-
-.sidebar-mark {
-    color: var(--accent);
-    background: var(--surface-2);
-    border-color: var(--border);
-}
-
-.search-form {
-    gap: 8px;
-}
-
-.search-form input,
-#userSearchForm input {
-    min-height: 43px;
-    padding: 0 12px;
-    background: #131419;
-    border-color: var(--border);
-    border-radius: 9px;
-}
-
-.search-form button {
-    min-height: 43px;
-    min-width: 66px;
-    padding: 0 14px;
-    color: #191919;
-    background: var(--accent);
-    border-radius: 9px;
-    font-weight: 750;
-}
-
-.search-form button:hover:not(:disabled) {
-    background: var(--accent-hover);
-}
-
-.section-heading {
-    margin: 22px 0 12px;
-    color: var(--text-soft);
-}
-
-.conversation-list {
-    min-height: 100px;
-    gap: 5px;
-    padding-right: 4px;
-}
-
-.conversation-item {
-    min-height: 65px;
-    padding: 11px;
-    border-radius: 10px;
-}
-
-.conversation-item:hover {
-    background: rgba(255, 255, 255, 0.035);
-}
-
-.conversation-item.active,
-.conversation-item[aria-current="true"] {
-    background: rgba(245, 197, 66, 0.08);
-    border-color: rgba(245, 197, 66, 0.2);
-}
-
-.conversation-item.active::before,
-.conversation-item[aria-current="true"]::before {
-    background: var(--accent);
-}
-
-.unread-badge {
-    color: #191919;
-    background: var(--accent);
-    box-shadow: none;
-}
-
-.sidebar-footer {
-    padding-top: 12px;
-    border-color: var(--border);
-}
-
-/* ---------- CHAT PANEL ---------- */
-
-.chat-panel {
-    min-width: 0;
-    min-height: 0;
-    overflow: hidden;
-}
-
-.current-chat-header {
-    flex: 0 0 auto;
-    padding: 16px 0 12px 20px;
-    border-bottom: 1px solid var(--border);
-}
-
-.current-chat-title {
-    font-size: 15px;
-    font-weight: 700;
-}
-
-.chat-header-actions {
-    gap: 8px;
-}
-
-.call-button,
-.chat-settings-button {
-    width: 39px;
-    height: 39px;
-    flex-basis: 39px;
-    color: var(--text-soft);
-    background: var(--surface-2);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-}
-
-.call-button:hover:not(:disabled),
-.chat-settings-button:hover:not(:disabled) {
-    color: var(--accent);
-    background: var(--surface-3);
-    border-color: var(--border-hover);
-}
-
-/* ---------- CHAT MESSAGES ---------- */
-
-.messages-container,
-.message-list,
-#messagesContainer {
-    min-width: 0;
-    min-height: 0;
-    overscroll-behavior: contain;
-}
-
-.message-bubble {
-    overflow-wrap: anywhere;
-    box-shadow: none;
-}
-
-.taara-pinned-message .message-bubble {
-    box-shadow: inset 0 0 0 1px rgba(245, 197, 66, 0.3);
-}
-
-.taara-pinned-badge {
-    color: var(--accent);
-    background: rgba(245, 197, 66, 0.1);
-}
-
-/* ---------- MESSAGE COMPOSER ---------- */
-
-.composer-area {
-    flex: 0 0 auto;
-    min-width: 0;
-    padding: 10px 0 0 20px;
-    background: var(--surface);
-}
-
-.message-form {
-    display: flex;
-    align-items: center;
-    gap: 7px;
-    width: 100%;
-    min-width: 0;
-    min-height: 58px;
-    padding: 7px;
-    background: #131419;
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    box-shadow: none;
-}
-
-.message-form:focus-within {
-    border-color: rgba(245, 197, 66, 0.45);
-    box-shadow: 0 0 0 2px rgba(245, 197, 66, 0.06);
-}
-
-.message-form input {
-    flex: 1 1 0;
-    width: 0;
-    min-width: 0;
-    height: 42px;
-    min-height: 42px;
-    margin: 0;
-    padding: 0 10px;
-    background: transparent;
-    border: 0;
-    box-shadow: none;
-}
-
-.message-form input:focus {
-    background: transparent;
-    border: 0;
-    box-shadow: none;
-}
-
-.composer-icon-button {
-    flex: 0 0 40px;
-    width: 40px;
-    height: 40px;
-    border-radius: 9px;
-    background: var(--surface-2);
-    border: 1px solid var(--border);
-}
-
-.composer-icon-button:hover {
-    color: var(--accent);
-    background: var(--surface-3);
-}
-
-.send-button {
-    min-height: 40px;
-    height: 40px;
-    padding: 0 15px;
-    color: #191919;
-    background: var(--accent);
-    border-radius: 9px;
-    font-weight: 750;
-}
-
-.send-button:hover:not(:disabled) {
-    background: var(--accent-hover);
-}
-
-.upload-status,
-.composer-footnote {
+.auth-card p,
+.login-card p,
+.create-card p {
     color: var(--muted);
 }
 
-/* ---------- SEARCH, SETTINGS AND POPUPS ---------- */
-
-.chat-search-bar,
-#disappearingPanel,
-.profile-panel,
-.taara-action-menu {
-    border: 1px solid var(--border);
-    background: #202129;
-    box-shadow: var(--shadow);
-}
-
-.chat-search-bar input {
-    min-width: 0;
+label {
+    display: block;
+    margin-bottom: 7px;
+    color: #d7d9e4;
+    font-size: 13px;
+    font-weight: 600;
 }
 
 input,
 textarea,
 select {
+    width: 100%;
+    padding: 13px 14px;
+
     color: var(--text);
-    background-color: #131419;
-    border-color: var(--border);
+    background: #12141b;
+
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+
+    transition:
+        border-color 0.2s ease,
+        background 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+input::placeholder,
+textarea::placeholder {
+    color: var(--muted-2);
+}
+
+input:hover,
+textarea:hover,
+select:hover {
+    border-color: var(--border-hover);
 }
 
 input:focus,
 textarea:focus,
 select:focus {
-    border-color: rgba(245, 197, 66, 0.6);
-    box-shadow: 0 0 0 3px rgba(245, 197, 66, 0.08);
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.10);
 }
 
-/* ---------- LOGIN AND ACCOUNT CREATION ---------- */
-
-.auth-screen {
-    background: var(--bg);
+button {
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
 }
 
-.auth-card {
-    background: var(--surface);
+.auth-card button,
+.login-card button,
+.create-card button {
+    min-height: 44px;
+}
+
+/* =========================
+   BUTTONS
+========================= */
+
+button,
+.button {
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        transform 0.2s ease,
+        opacity 0.2s ease;
+}
+
+button:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.primary-button,
+button.primary-button {
+    color: #fff;
+    background: linear-gradient(
+        135deg,
+        #9b7af7,
+        #7652e8
+    );
+
+    border: 1px solid transparent;
+    border-radius: 12px;
+    font-weight: 650;
+}
+
+.primary-button:hover,
+button.primary-button:hover {
+    filter: brightness(1.08);
+}
+
+.secondary-button,
+button.secondary-button {
+    background: var(--surface-2);
     border: 1px solid var(--border);
-    border-radius: 16px;
+    border-radius: 12px;
+}
+
+.secondary-button:hover,
+button.secondary-button:hover {
+    background: var(--surface-3);
+    border-color: var(--border-hover);
+}
+
+/* =========================
+   MAIN CHAT APPLICATION
+========================= */
+
+.chat-container {
+    position: relative;
+
+    display: grid;
+    grid-template-columns:
+        minmax(280px, var(--sidebar-width))
+        minmax(0, 1fr);
+
+    width: 100%;
+    max-width: 1700px;
+    height: calc(100vh - 40px);
+    min-height: 520px;
+
+    margin: 0 auto;
+    overflow: hidden;
+
+    background: rgba(20, 22, 29, 0.94);
+
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+
+    box-shadow: var(--shadow);
+
+    isolation: isolate;
+}
+
+/*
+  Existing HTML places several chat elements directly
+  inside .chat-container rather than inside a sidebar.
+  These rules use the existing element order to create
+  a real sidebar without requiring JavaScript changes.
+*/
+
+.chat-header {
+    grid-column: 1;
+    grid-row: 1;
+
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    min-width: 0;
+    min-height: var(--header-height);
+
+    padding: 16px;
+
+    background: rgba(26, 28, 37, 0.98);
+    border-bottom: 1px solid var(--border);
+}
+
+.chat-header-user {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    gap: 11px;
+
+    min-width: 0;
+}
+
+.chat-header-user > div,
+.chat-header-user > span {
+    min-width: 0;
+}
+
+.chat-header-user strong,
+.chat-header-user h1,
+.chat-header-user h2,
+.chat-header-user h3 {
+    display: block;
+    overflow: hidden;
+
+    margin: 0;
+
+    font-size: 15px;
+    font-weight: 700;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+#profileButton {
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+
+    width: 42px;
+    height: 42px;
+    padding: 0;
+
+    background: var(--surface-3);
+    border: 1px solid var(--border);
+    border-radius: 50%;
+}
+
+#profileButton:hover {
+    background: #323647;
+}
+
+/* =========================
+   PROFILE PANEL
+========================= */
+
+#profilePanel {
+    position: absolute;
+    z-index: 50;
+
+    top: calc(var(--header-height) - 2px);
+    left: 12px;
+
+    width: min(320px, calc(100% - 24px));
+    max-height: calc(100% - 100px);
+    overflow-y: auto;
+
+    padding: 20px;
+
+    background: #1b1e28;
+    border: 1px solid var(--border-hover);
+    border-radius: 17px;
+
+    box-shadow: 0 18px 50px rgba(0, 0, 0, 0.48);
+}
+
+#profilePanel input,
+#profilePanel button,
+#profilePanel select {
+    margin-top: 8px;
+}
+
+#profilePanel button {
+    max-width: 100%;
+}
+
+/* =========================
+   YOUR SPACE / SIDEBAR
+========================= */
+
+/*
+  Keep the conversation and user-search sections
+  comfortably sized. The first section title is the
+  start of the sidebar content in the existing HTML.
+*/
+
+.chat-container > .section-title,
+.chat-container > #userSearchForm,
+.chat-container > #userSearchMessage,
+.chat-container > #userSearchResult,
+.chat-container > .conversation-list {
+    grid-column: 1;
+    min-width: 0;
+}
+
+.chat-container > .section-title {
+    align-self: end;
+
+    margin: 0;
+    padding: 17px 18px 8px;
+
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 750;
+    letter-spacing: 0.7px;
+    text-transform: uppercase;
+}
+
+/* Sidebar divider and background */
+#conversationList {
+    min-width: 0;
+    min-height: 0;
+
+    padding: 8px 10px 18px;
+
+    overflow-x: hidden;
+    overflow-y: auto;
+
+    background: rgba(23, 25, 32, 0.98);
+}
+
+/* Conversation rows created by JavaScript */
+.taara-conversation-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    width: 100%;
+    min-width: 0;
+    min-height: 72px;
+
+    margin: 0 0 5px;
+    padding: 11px 12px;
+
+    color: var(--text);
+    background: transparent;
+
+    border: 1px solid transparent;
+    border-radius: 13px;
+
+    cursor: pointer;
+    transition:
+        background 0.18s ease,
+        border-color 0.18s ease;
+}
+
+.taara-conversation-item:hover {
+    background: rgba(255, 255, 255, 0.045);
+    border-color: var(--border);
+}
+
+.taara-conversation-item.active,
+.taara-conversation-item.selected {
+    background: var(--accent-soft);
+    border-color: rgba(167, 139, 250, 0.24);
+}
+
+.taara-conversation-main {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+}
+
+.taara-conversation-main strong,
+.taara-conversation-main .name,
+.taara-conversation-main .username {
+    display: block;
+    overflow: hidden;
+
+    font-size: 14px;
+    font-weight: 650;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.taara-conversation-main p,
+.taara-conversation-main .preview,
+.taara-conversation-main .last-message {
+    overflow: hidden;
+
+    margin: 4px 0 0;
+
+    color: var(--muted);
+    font-size: 12px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.taara-unread-badge {
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+
+    min-width: 21px;
+    min-height: 21px;
+    padding: 2px 6px;
+
+    color: #fff;
+    background: var(--accent-strong);
+    border-radius: 20px;
+
+    font-size: 11px;
+    font-weight: 750;
+}
+
+/* Search for users */
+#userSearchForm {
+    display: flex;
+    align-items: stretch;
+    gap: 8px;
+
+    min-width: 0;
+    padding: 8px 16px 12px;
+}
+
+#userSearchForm input {
+    flex: 1;
+    width: 100%;
+    min-width: 0;
+    min-height: 43px;
+}
+
+#userSearchForm button {
+    flex: 0 0 auto;
+    min-height: 43px;
+    padding: 0 13px;
+
+    border: 1px solid var(--border);
+    border-radius: 11px;
+}
+
+#userSearchMessage,
+#userSearchResult {
+    min-width: 0;
+    padding: 0 16px 10px;
+
+    overflow-wrap: anywhere;
+}
+
+#userSearchResult > * {
+    max-width: 100%;
+}
+
+/* =========================
+   CHAT AREA
+========================= */
+
+/*
+  Existing HTML has the active conversation header,
+  messages and message form after the sidebar elements.
+  Their grid rows are defined here.
+*/
+
+#currentChatHeader {
+    grid-column: 2;
+    grid-row: 1;
+
+    display: flex;
+    align-items: center;
+
+    min-width: 0;
+    min-height: var(--header-height);
+
+    padding: 16px 22px;
+
+    background: rgba(26, 28, 37, 0.97);
+    border-bottom: 1px solid var(--border);
+}
+
+.current-chat-header > * {
+    min-width: 0;
+    max-width: 100%;
+}
+
+#currentChatHeader h1,
+#currentChatHeader h2,
+#currentChatHeader h3,
+#currentChatHeader strong {
+    overflow: hidden;
+
+    margin: 0;
+
+    font-size: 16px;
+    font-weight: 700;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Messages */
+#messages {
+    grid-column: 2;
+    grid-row: 2;
+
+    min-width: 0;
+    min-height: 0;
+
+    padding: 24px clamp(14px, 3vw, 34px);
+
+    overflow-x: hidden;
+    overflow-y: auto;
+
+    overscroll-behavior: contain;
+
+    background:
+        radial-gradient(
+            ellipse at 50% 0%,
+            rgba(167, 139, 250, 0.035),
+            transparent 55%
+        ),
+        #13151c;
+}
+
+/* JavaScript-generated message wrappers */
+#messages > * {
+    max-width: 100%;
+}
+
+#messages img,
+#messages video {
+    display: block;
+    height: auto;
+    max-width: 100%;
+    border-radius: 12px;
+}
+
+#messages audio {
+    width: min(100%, 320px);
+    max-width: 100%;
+}
+
+#messages pre {
+    max-width: 100%;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+#messages a {
+    overflow-wrap: anywhere;
+}
+
+/* Message composer */
+#messageForm {
+    grid-column: 2;
+    grid-row: 3;
+
+    display: flex;
+    align-items: flex-end;
+    gap: 10px;
+
+    min-width: 0;
+    padding: 15px 20px;
+
+    background: #191b24;
+    border-top: 1px solid var(--border);
+}
+
+#messageForm input,
+#messageForm textarea {
+    flex: 1;
+    min-width: 0;
+    max-width: 100%;
+}
+
+#messageForm textarea {
+    min-height: 46px;
+    max-height: 140px;
+    resize: vertical;
+}
+
+#messageForm button {
+    flex: 0 0 auto;
+    min-height: 44px;
+    padding: 0 16px;
+
+    border: 1px solid var(--border);
+    border-radius: 12px;
+}
+
+/* =========================
+   DYNAMIC CHAT SEARCH
+========================= */
+
+.taara-chat-search,
+.chat-search-bar,
+#chatSearchForm {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    min-width: 0;
+    padding: 10px 20px;
+
+    background: #191b24;
+    border-bottom: 1px solid var(--border);
+}
+
+.taara-chat-search input,
+.chat-search-bar input,
+#chatSearchForm input {
+    flex: 1;
+    min-width: 0;
+}
+
+/* =========================
+   EMPTY STATES
+========================= */
+
+.empty-state,
+.no-conversations,
+.no-messages {
+    padding: 24px 14px;
+    color: var(--muted);
+    text-align: center;
+    overflow-wrap: anywhere;
+}
+
+.empty-state p,
+.no-conversations p,
+.no-messages p {
+    margin: 6px 0;
+}
+
+/* =========================
+   GENERAL DIALOGS / PANELS
+========================= */
+
+dialog {
+    max-width: calc(100vw - 28px);
+    max-height: calc(100dvh - 28px);
+
+    overflow: auto;
+
+    color: var(--text);
+    background: var(--surface);
+
+    border: 1px solid var(--border);
+    border-radius: 18px;
+
     box-shadow: var(--shadow);
 }
 
-.auth-card::before {
-    display: none;
+dialog::backdrop {
+    background: rgba(0, 0, 0, 0.65);
+    backdrop-filter: blur(5px);
 }
 
-.primary-button {
-    color: #191919;
-    background: var(--accent);
-    box-shadow: none;
+#disappearingPanel,
+.disappearing-panel,
+.chat-settings-panel {
+    max-width: 100%;
+    overflow-wrap: anywhere;
 }
 
-.primary-button:hover:not(:disabled) {
-    color: #191919;
-    background: var(--accent-hover);
-    box-shadow: none;
-    transform: none;
+#disappearingPanel button,
+.disappearing-panel button,
+.chat-settings-panel button {
+    max-width: 100%;
 }
 
-.secondary-button {
-    color: var(--accent);
-    background: rgba(245, 197, 66, 0.07);
-    border-color: rgba(245, 197, 66, 0.2);
-}
+/* =========================
+   TABLET
+========================= */
 
-.secondary-button:hover:not(:disabled) {
-    background: rgba(245, 197, 66, 0.13);
-}
+@media (max-width: 1000px) {
+    :root {
+        --sidebar-width: 290px;
+    }
 
-/* ---------- RESPONSIVE LAYOUT ---------- */
-
-@media (min-width: 761px) {
     #chatScreen {
         padding: 12px;
     }
 
     .chat-container {
-        padding-right: 20px;
-        padding-left: 20px;
-    }
-
-    .app-workspace {
-        grid-template-columns: minmax(260px, 310px) minmax(0, 1fr);
-    }
-}
-
-@media (max-width: 760px) {
-    #chatScreen {
-        padding: 0;
-    }
-
-    .chat-container {
-        border: 0;
-        border-radius: 0;
-        padding: 0 14px 10px;
+        height: calc(100vh - 24px);
+        height: calc(100dvh - 24px);
+        min-height: 480px;
     }
 
     .chat-header {
+        padding: 12px;
+    }
+
+    #currentChatHeader {
+        padding: 12px 16px;
+    }
+
+    #messages {
+        padding: 18px 16px;
+    }
+
+    #messageForm {
+        padding: 12px;
+    }
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 700px) {
+    #chatScreen {
+        padding: 0;
+        min-height: 100vh;
+        min-height: 100dvh;
+    }
+
+    .chat-container {
+        display: flex;
+        flex-direction: column;
+
+        width: 100%;
+        height: 100vh;
+        height: 100dvh;
+        min-height: 0;
+
+        overflow: hidden;
+
+        border: 0;
+        border-radius: 0;
+        box-shadow: none;
+    }
+
+    .chat-header {
+        flex: 0 0 auto;
         min-height: 64px;
+
+        padding:
+            max(10px, env(safe-area-inset-top))
+            14px
+            10px;
+
+        border-bottom: 1px solid var(--border);
+    }
+
+    #profilePanel {
+        position: absolute;
+        top: 60px;
+        left: 10px;
+
+        width: min(340px, calc(100% - 20px));
+        max-height: calc(100% - 80px);
+    }
+
+    .chat-container > .section-title {
+        flex: 0 0 auto;
+        padding: 12px 16px 6px;
+    }
+
+    #userSearchForm {
+        flex: 0 0 auto;
+        padding: 7px 14px 10px;
+    }
+
+    #userSearchMessage,
+    #userSearchResult {
+        flex: 0 0 auto;
+        padding-inline: 14px;
+    }
+
+    #conversationList {
+        flex: 0 1 35%;
+        min-height: 100px;
+        max-height: 35%;
+        padding: 6px 10px 12px;
+
+        border-bottom: 1px solid var(--border);
+    }
+
+    #currentChatHeader {
+        flex: 0 0 auto;
+        min-height: 58px;
+        padding: 10px 15px;
+    }
+
+    #messages {
+        flex: 1 1 0;
+        min-height: 0;
+        padding: 16px 13px;
+    }
+
+    #messageForm {
+        flex: 0 0 auto;
         gap: 8px;
+
+        padding:
+            10px
+            12px
+            max(10px, env(safe-area-inset-bottom));
+
+        border-top: 1px solid var(--border);
+    }
+
+    #messageForm button {
+        min-height: 42px;
+        padding-inline: 12px;
+    }
+
+    #messageForm textarea {
+        min-height: 42px;
+        max-height: 110px;
+    }
+
+    .taara-chat-search,
+    .chat-search-bar,
+    #chatSearchForm {
+        flex: 0 0 auto;
+        padding: 9px 12px;
+    }
+}
+
+/* =========================
+   SMALL MOBILE
+========================= */
+
+@media (max-width: 420px) {
+    .chat-header {
+        gap: 8px;
+        padding-inline: 10px;
     }
 
     .chat-header-user {
         gap: 8px;
     }
 
-    .profile-button {
-        width: 38px;
-        height: 38px;
-        flex-basis: 38px;
+    .chat-header-user strong,
+    .chat-header-user h1,
+    .chat-header-user h2,
+    .chat-header-user h3 {
+        font-size: 14px;
     }
 
-    .chat-logo {
-        font-size: 19px;
+    #conversationList {
+        flex-basis: 32%;
+        max-height: 32%;
     }
 
-    .logged-in-user {
-        max-width: 115px;
-        font-size: 11px;
+    .taara-conversation-item {
+        min-height: 64px;
+        gap: 8px;
+        padding: 9px;
     }
 
-    .header-actions {
-        gap: 6px;
+    #currentChatHeader {
+        padding-inline: 12px;
     }
 
-    .private-label {
-        gap: 5px;
-        font-size: 10px;
+    #messages {
+        padding-inline: 10px;
     }
 
-    .logout-button {
-        min-height: 34px;
-        padding: 0 9px;
-        font-size: 11px;
-    }
-
-    .app-workspace {
-        grid-template-columns: minmax(0, 1fr);
-    }
-
-    .app-workspace:not(.chat-open) .sidebar {
-        display: flex;
-        width: 100%;
-        padding: 17px 0 10px;
-        border-right: 0;
-    }
-
-    .app-workspace.chat-open .sidebar {
-        display: none;
-    }
-
-    .app-workspace:not(.chat-open) .chat-panel {
-        display: none;
-    }
-
-    .app-workspace.chat-open .chat-panel {
-        display: flex;
-        width: 100%;
-    }
-
-    .current-chat-header {
-        padding: 12px 0;
-    }
-
-    .chat-header-actions {
-        gap: 5px;
-    }
-
-    .call-button,
-    .chat-settings-button {
-        width: 35px;
-        height: 35px;
-        flex-basis: 35px;
-    }
-
-    .composer-area {
-        padding: 8px 0 0;
-    }
-
-    .message-form {
-        min-height: 51px;
-        gap: 5px;
-        padding: 5px;
-    }
-
-    .composer-icon-button {
-        flex-basis: 34px;
-        width: 34px;
-        height: 36px;
-    }
-
-    .message-form input {
-        height: 38px;
-        min-height: 38px;
-        padding: 0 5px;
-        font-size: 13px;
-    }
-
-    .send-button {
-        height: 36px;
-        min-height: 36px;
-        padding: 0 10px;
-        font-size: 12px;
-    }
-
-    .auth-card {
-        max-width: 420px;
-        padding: 26px 21px;
+    #messageForm {
+        padding-inline: 8px;
     }
 }
 
-@media (max-width: 380px) {
+/* =========================
+   SHORT SCREENS
+========================= */
+
+@media (max-height: 600px) and (min-width: 701px) {
+    #chatScreen {
+        padding: 8px;
+    }
+
     .chat-container {
-        padding-right: 9px;
-        padding-left: 9px;
+        height: calc(100vh - 16px);
+        min-height: 0;
     }
 
-    .private-label {
-        font-size: 9px;
+    :root {
+        --header-height: 58px;
     }
 
-    .logout-button {
-        padding: 0 7px;
+    .chat-header,
+    #currentChatHeader {
+        min-height: var(--header-height);
+        padding-block: 8px;
     }
 
-    .chat-header-actions {
-        gap: 4px;
+    #messages {
+        padding-block: 12px;
     }
 
-    .composer-icon-button {
-        flex-basis: 30px;
-        width: 30px;
-    }
-
-    .send-button {
-        padding: 0 8px;
+    #messageForm {
+        padding-block: 8px;
     }
 }
 
-/* ---------- ACCESSIBILITY AND MOTION ---------- */
+/* =========================
+   ACCESSIBILITY / MOTION
+========================= */
 
 @media (prefers-reduced-motion: reduce) {
     *,
@@ -661,6 +1090,7 @@ select:focus {
     *::after {
         scroll-behavior: auto !important;
         animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
     }
 }
