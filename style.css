@@ -2641,3 +2641,80 @@ audio {
         scroll-behavior: auto !important;
     }
 }
+/* =========================================
+   TAARA* — FIX CHAT OVERLAPPING CONVERSATIONS
+   ========================================= */
+
+#chatScreen {
+    display: flex;
+    width: 100%;
+    min-width: 0;
+    min-height: 0;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+#chatScreen > * {
+    min-width: 0;
+    box-sizing: border-box;
+}
+
+/* Conversations sidebar */
+#chatScreen .sidebar,
+#chatScreen .conversations-sidebar,
+#chatScreen .chat-sidebar {
+    flex: 0 0 320px;
+    width: 320px;
+    max-width: 40%;
+    min-width: 240px;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+/* Main chat area */
+#chatScreen .chat-panel,
+#chatScreen .chat-main,
+#chatScreen .conversation-panel {
+    flex: 1 1 0;
+    width: 0;
+    min-width: 0;
+    max-width: 100%;
+    overflow: hidden;
+}
+
+/* Prevent long messages from expanding the chat */
+#chatScreen .messages,
+#chatScreen .messages-container,
+#chatScreen #messagesContainer {
+    min-width: 0;
+    max-width: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overflow-wrap: anywhere;
+}
+
+/* Smaller screens */
+@media (max-width: 700px) {
+    #chatScreen {
+        position: relative;
+        width: 100%;
+    }
+
+    #chatScreen .sidebar,
+    #chatScreen .conversations-sidebar,
+    #chatScreen .chat-sidebar {
+        flex: 0 0 100%;
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+    }
+
+    #chatScreen .chat-panel,
+    #chatScreen .chat-main,
+    #chatScreen .conversation-panel {
+        flex: 1 1 100%;
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+    }
+}
