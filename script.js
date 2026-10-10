@@ -3665,34 +3665,43 @@ function refreshProfilePanel() {
 }
 
 
-// ============================================================
-// PROFILE PANEL BUTTONS
+
+/ ============================================================
+// PROFILE PANEL EVENTS — SINGLE HANDLERS
 // ============================================================
 
 if (profileButton) {
+    profileButton.addEventListener("click", (event) => {
+        event.stopPropagation();
 
-    profileButton.addEventListener(
-        "click",
-        () => {
-
+        if (
+            profilePanel &&
+            !profilePanel.classList.contains("hidden")
+        ) {
+            closeProfilePanel();
+        } else {
             openProfilePanel();
         }
-    );
+    });
 }
-
 
 if (closeProfileButton) {
-
-    closeProfileButton.addEventListener(
-        "click",
-        () => {
-
-            closeProfilePanel();
-        }
-    );
+    closeProfileButton.addEventListener("click", (event) => {
+        event.stopPropagation();
+        closeProfilePanel();
+    });
 }
 
+if (settingsLogoutButton) {
+    settingsLogoutButton.addEventListener("click", (event) => {
+        event.stopPropagation();
+        closeProfilePanel();
 
+        if (logoutButton) {
+            logoutButton.click();
+        }
+    });
+}
 // ============================================================
 // SETTINGS BUTTONS
 // ============================================================
