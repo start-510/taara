@@ -1,0 +1,330 @@
+/* TAARA* UI refinement patch — appended after the existing stylesheet.
+   This is intentionally CSS-only: existing HTML IDs, classes and JS hooks stay intact. */
+
+:root {
+    --taara-panel: rgba(20, 21, 32, .98);
+    --taara-line: rgba(210, 198, 255, .12);
+}
+
+html, body {
+    min-width: 320px;
+    overflow-x: clip;
+}
+
+button, input, textarea, select {
+    max-width: 100%;
+}
+
+button:focus-visible, a:focus-visible, input:focus-visible,
+textarea:focus-visible, select:focus-visible {
+    outline: 2px solid var(--accent-hover);
+    outline-offset: 2px;
+}
+
+/* Login and create-account screens */
+.auth-screen {
+    min-height: 100svh;
+    padding: clamp(16px, 4vw, 36px) 16px;
+}
+
+.auth-card {
+    max-height: calc(100svh - 32px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: clamp(22px, 4vw, 36px);
+    border-color: rgba(198, 183, 255, .15);
+    backdrop-filter: blur(18px);
+}
+
+/* Main application frame: header remains fixed while content fits the viewport. */
+#chatScreen {
+    height: 100svh;
+    min-height: 0;
+    padding: clamp(8px, 1.5vw, 20px);
+}
+
+#chatScreen .chat-container {
+    height: 100%;
+    min-height: 0;
+    padding: 0 clamp(12px, 2vw, 25px) clamp(10px, 1.4vw, 20px);
+    border-radius: clamp(14px, 2vw, 25px);
+}
+
+#chatScreen .chat-header {
+    min-height: 68px;
+    gap: 10px;
+}
+
+#chatScreen .app-workspace {
+    grid-template-columns: minmax(245px, 300px) minmax(0, 1fr);
+    gap: 0;
+    min-height: 0;
+}
+
+#chatScreen .sidebar {
+    padding: 18px 16px 12px 0;
+    overflow: hidden;
+}
+
+#chatScreen .sidebar-heading,
+#chatScreen .search-form,
+#chatScreen #userSearchMessage,
+#chatScreen #userSearchResult,
+#chatScreen .section-heading,
+#chatScreen .sidebar-footer {
+    flex-shrink: 0;
+}
+
+#chatScreen .conversation-list {
+    min-height: 0;
+    padding: 4px 4px 8px 0;
+    scrollbar-gutter: stable;
+}
+
+#chatScreen .chat-panel {
+    min-height: 0;
+    padding-left: clamp(12px, 1.8vw, 24px);
+    overflow: hidden;
+}
+
+#chatScreen .current-chat-header {
+    padding-top: 14px;
+    padding-bottom: 12px;
+}
+
+#chatScreen .messages {
+    flex: 1 1 0;
+    min-height: 0;
+    padding: 18px 4px 16px;
+    scrollbar-gutter: stable;
+    overscroll-behavior: contain;
+}
+
+#chatScreen .empty-chat {
+    width: min(100%, 440px);
+    margin: auto;
+}
+
+#chatScreen .composer-area {
+    padding-top: 10px;
+    padding-bottom: 2px;
+}
+
+#chatScreen .message-form {
+    min-height: 58px;
+    padding: 7px;
+    border-radius: 17px;
+}
+
+#chatScreen #messageInput {
+    min-height: 42px;
+}
+
+/* Settings are a scrollable overlay rather than content that gets cut off. */
+#chatScreen .profile-panel {
+    position: absolute;
+    inset: 82px auto 18px 18px;
+    width: min(430px, calc(100% - 36px));
+    max-width: calc(100% - 36px);
+    max-height: none;
+    height: auto;
+    padding: clamp(18px, 2.5vw, 28px);
+    overflow-x: hidden;
+    overflow-y: auto;
+    border: 1px solid var(--taara-line);
+    border-radius: 20px;
+    background: var(--taara-panel);
+    box-shadow: 0 24px 80px rgba(0, 0, 0, .48);
+    scrollbar-gutter: stable;
+}
+
+#chatScreen .profile-panel-header {
+    position: sticky;
+    top: -1px;
+    z-index: 2;
+    padding: 2px 0 12px;
+    background: var(--taara-panel);
+}
+
+#chatScreen .settings-section {
+    margin-top: 20px;
+}
+
+#chatScreen .settings-item,
+#chatScreen .settings-logout-item {
+    min-height: 62px;
+}
+
+/* Keep scrollbars quiet and avoid horizontal scrollbar artifacts. */
+#chatScreen .sidebar,
+#chatScreen .chat-panel,
+#chatScreen .messages,
+#chatScreen .conversation-list,
+#chatScreen .profile-panel {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(166, 147, 235, .34) transparent;
+}
+
+#chatScreen .sidebar::-webkit-scrollbar,
+#chatScreen .chat-panel::-webkit-scrollbar,
+#chatScreen .messages::-webkit-scrollbar,
+#chatScreen .conversation-list::-webkit-scrollbar,
+#chatScreen .profile-panel::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+#chatScreen .sidebar::-webkit-scrollbar-thumb,
+#chatScreen .messages::-webkit-scrollbar-thumb,
+#chatScreen .conversation-list::-webkit-scrollbar-thumb,
+#chatScreen .profile-panel::-webkit-scrollbar-thumb {
+    border-radius: 99px;
+    background: rgba(166, 147, 235, .25);
+}
+
+/* Tablet */
+@media (max-width: 1000px) {
+    #chatScreen .app-workspace {
+        grid-template-columns: minmax(220px, 265px) minmax(0, 1fr);
+    }
+
+    #chatScreen .sidebar {
+        padding-right: 12px;
+    }
+
+    #chatScreen .chat-panel {
+        padding-left: 14px;
+    }
+
+    #chatScreen .private-label {
+        display: none;
+    }
+}
+
+/* Mobile: single-screen conversation list / active chat navigation. */
+@media (max-width: 760px) {
+    #chatScreen {
+        padding: 0;
+    }
+
+    #chatScreen .chat-container {
+        padding: 0 14px 12px;
+        border-radius: 0;
+        border-left: 0;
+        border-right: 0;
+    }
+
+    #chatScreen .chat-header {
+        min-height: 62px;
+    }
+
+    #chatScreen .app-workspace {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    #chatScreen .app-workspace:not(.chat-open) .sidebar {
+        display: flex;
+        width: 100%;
+        min-height: 0;
+        padding: 14px 0 8px;
+        border-right: 0;
+    }
+
+    #chatScreen .app-workspace:not(.chat-open) .chat-panel {
+        display: none;
+    }
+
+    #chatScreen .app-workspace.chat-open .sidebar {
+        display: none;
+    }
+
+    #chatScreen .app-workspace.chat-open .chat-panel {
+        display: flex;
+        width: 100%;
+        padding-left: 0;
+    }
+
+    #chatScreen .current-chat-header {
+        padding-top: 9px;
+        padding-bottom: 9px;
+    }
+
+    #chatScreen .current-chat-top {
+        gap: 7px;
+    }
+
+    #chatScreen .chat-header-actions {
+        gap: 5px;
+    }
+
+    #chatScreen .call-button,
+    #chatScreen .chat-settings-button,
+    #chatScreen #voiceCallButton,
+    #chatScreen #videoCallButton {
+        width: 36px;
+        height: 36px;
+        min-width: 36px;
+        flex-basis: 36px;
+    }
+
+    #chatScreen .messages {
+        padding: 12px 1px;
+    }
+
+    #chatScreen .message-bubble {
+        max-width: 88%;
+    }
+
+    #chatScreen .composer-area {
+        padding-top: 7px;
+    }
+
+    #chatScreen .message-form {
+        gap: 5px;
+        min-height: 52px;
+        padding: 5px;
+    }
+
+    #chatScreen .profile-panel {
+        inset: 70px 10px 10px;
+        width: auto;
+        max-width: none;
+        padding: 18px;
+        border-radius: 17px;
+    }
+}
+
+@media (max-width: 420px) {
+    .auth-card {
+        padding: 22px 18px;
+        border-radius: 20px;
+    }
+
+    #chatScreen .chat-container {
+        padding-right: 10px;
+        padding-left: 10px;
+    }
+
+    #chatScreen .chat-logo {
+        font-size: 19px;
+    }
+
+    #chatScreen .profile-button {
+        width: 38px;
+        height: 38px;
+        flex-basis: 38px;
+    }
+
+    #chatScreen .message-form {
+        gap: 4px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
