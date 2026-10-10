@@ -3602,68 +3602,64 @@ function createActionMenu(
 }
 
 
+```js
 // ============================================================
 // PROFILE & SETTINGS PANEL
 // ============================================================
 
 function openProfilePanel() {
+    if (!profilePanel) return;
 
-    if (!profilePanel)
-        return;
-
-    profilePanel.classList.remove(
-        "hidden"
-    );
-
+    profilePanel.classList.remove("hidden");
     refreshProfilePanel();
 }
 
-
 function closeProfilePanel() {
+    if (!profilePanel) return;
 
-    if (!profilePanel)
-        return;
-
-    profilePanel.classList.add(
-        "hidden"
-    );
+    profilePanel.classList.add("hidden");
 }
 
-
 function refreshProfilePanel() {
-
-    if (!currentUserId)
-        return;
+    if (!currentUserId) return;
 
     const username =
-    loggedInUsername?.textContent ||
-    "User";
+        loggedInUsername?.textContent || "User";
 
-    const cleanUsername =
-        username.replace(
-            /^@/,
-            ""
-        );
+    const cleanUsername = username.replace(/^@/, "");
 
     if (profileUsername) {
-
-        profileUsername.textContent =
-            `@${cleanUsername}`;
+        profileUsername.textContent = `@${cleanUsername}`;
     }
 
     if (profileLargeAvatar) {
-
-        profileLargeAvatar.textContent =
-            "👤";
+        profileLargeAvatar.textContent = "👤";
     }
 
     if (profileAvatar) {
-
-        profileAvatar.textContent =
-            "👤";
+        profileAvatar.textContent = "👤";
     }
 }
 
+
+// ============================================================
+// SETTINGS BUTTON ELEMENTS
+// ============================================================
+
+const profileSettingsBtn =
+    document.getElementById("profileSettingsButton");
+
+const privacySettingsBtn =
+    document.getElementById("privacySettingsButton");
+
+const securitySettingsBtn =
+    document.getElementById("securitySettingsButton");
+
+const notificationSettingsBtn =
+    document.getElementById("notificationSettingsButton");
+
+const appearanceSettingsBtn =
+    document.getElementById("appearanceSettingsButton");
 
 
 // ============================================================
@@ -3674,13 +3670,12 @@ if (profileButton) {
     profileButton.addEventListener("click", (event) => {
         event.stopPropagation();
 
-        if (
-            profilePanel &&
-            !profilePanel.classList.contains("hidden")
-        ) {
-            closeProfilePanel();
-        } else {
+        if (!profilePanel) return;
+
+        if (profilePanel.classList.contains("hidden")) {
             openProfilePanel();
+        } else {
+            closeProfilePanel();
         }
     });
 }
@@ -3692,6 +3687,66 @@ if (closeProfileButton) {
     });
 }
 
+
+// ============================================================
+// PROFILE SETTINGS
+// ============================================================
+
+if (profileSettingsBtn) {
+    profileSettingsBtn.addEventListener("click", () => {
+        alert("Profile settings clicked");
+    });
+}
+
+
+// ============================================================
+// PRIVACY SETTINGS
+// ============================================================
+
+if (privacySettingsBtn) {
+    privacySettingsBtn.addEventListener("click", () => {
+        alert("Privacy settings clicked");
+    });
+}
+
+
+// ============================================================
+// SECURITY SETTINGS
+// ============================================================
+
+if (securitySettingsBtn) {
+    securitySettingsBtn.addEventListener("click", () => {
+        alert("Security settings clicked");
+    });
+}
+
+
+// ============================================================
+// NOTIFICATION SETTINGS
+// ============================================================
+
+if (notificationSettingsBtn) {
+    notificationSettingsBtn.addEventListener("click", () => {
+        alert("Notification settings clicked");
+    });
+}
+
+
+// ============================================================
+// APPEARANCE SETTINGS
+// ============================================================
+
+if (appearanceSettingsBtn) {
+    appearanceSettingsBtn.addEventListener("click", () => {
+        alert("Appearance settings clicked");
+    });
+}
+
+
+// ============================================================
+// SETTINGS LOGOUT — SINGLE HANDLER
+// ============================================================
+
 if (settingsLogoutButton) {
     settingsLogoutButton.addEventListener("click", (event) => {
         event.stopPropagation();
@@ -3699,223 +3754,13 @@ if (settingsLogoutButton) {
 
         if (logoutButton) {
             logoutButton.click();
+        } else {
+            console.error("Logout button not found.");
         }
     });
 }
-// ============================================================
-// SETTINGS BUTTONS
-// ============================================================
+```
 
-const profileSettingsBtn =
-    document.getElementById(
-        "profileSettingsButton"
-    );
-
-const privacySettingsBtn =
-    document.getElementById(
-        "privacySettingsButton"
-    );
-
-const securitySettingsBtn =
-    document.getElementById(
-        "securitySettingsButton"
-    );
-
-const notificationSettingsBtn =
-    document.getElementById(
-        "notificationSettingsButton"
-    );
-
-const appearanceSettingsBtn =
-    document.getElementById(
-        "appearanceSettingsButton"
-    );
-
-const settingsLogoutBtn =
-    document.getElementById(
-        "settingsLogoutButton"
-    );
-
-
-// ============================================================
-// PROFILE
-// ============================================================
-
-if (profileSettingsBtn) {
-
-    profileSettingsBtn.addEventListener(
-        "click",
-        () => {
-
-            alert(
-                "Profile settings clicked"
-            );
-
-        }
-    );
-}
-
-
-// ============================================================
-// PRIVACY
-// ============================================================
-
-if (privacySettingsBtn) {
-
-    privacySettingsBtn.addEventListener(
-        "click",
-        () => {
-
-            alert(
-                "Privacy settings clicked"
-            );
-
-        }
-    );
-}
-
-
-// ============================================================
-// SECURITY
-// ============================================================
-
-if (securitySettingsBtn) {
-
-    securitySettingsBtn.addEventListener(
-        "click",
-        () => {
-
-            alert(
-                "Security settings clicked"
-            );
-
-        }
-    );
-}
-
-
-// ============================================================
-// NOTIFICATIONS
-// ============================================================
-
-if (notificationSettingsBtn) {
-
-    notificationSettingsBtn.addEventListener(
-        "click",
-        () => {
-
-            alert(
-                "Notification settings clicked"
-            );
-
-        }
-    );
-}
-
-
-// ============================================================
-// APPEARANCE
-// ============================================================
-
-if (appearanceSettingsBtn) {
-
-    appearanceSettingsBtn.addEventListener(
-        "click",
-        () => {
-
-            alert(
-                "Appearance settings clicked"
-            );
-
-        }
-    );
-}
-
-
-// ============================================================
-// SETTINGS LOGOUT
-// ============================================================
-
-if (settingsLogoutBtn) {
-
-    settingsLogoutBtn.addEventListener(
-        "click",
-        () => {
-
-            if (logoutButton) {
-
-                logoutButton.click();
-
-                return;
-            }
-
-            console.error(
-                "Logout button not found."
-            );
-        }
-    );
-}
-
-// ============================================================
-// PROFILE EVENTS
-// ============================================================
-
-if (profileButton) {
-
-    profileButton.addEventListener(
-        "click",
-        event => {
-
-            event.stopPropagation();
-
-            if (
-                profilePanel &&
-                !profilePanel.classList.contains(
-                    "hidden"
-                )
-            ) {
-
-                closeProfilePanel();
-
-            } else {
-
-                openProfilePanel();
-            }
-        }
-    );
-}
-
-if (closeProfileButton) {
-
-    closeProfileButton.addEventListener(
-        "click",
-        event => {
-
-            event.stopPropagation();
-
-            closeProfilePanel();
-        }
-    );
-
-}
-
-if (settingsLogoutButton) {
-
-    settingsLogoutButton.addEventListener(
-        "click",
-        async event => {
-
-            event.stopPropagation();
-
-            closeProfilePanel();
-
-            if (logoutButton) {
-                logoutButton.click();
-            }
-        }
-    );
-
-}
 
 // ============================================================
 // DISAPPEARING MESSAGE SETTINGS UI
