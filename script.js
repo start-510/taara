@@ -226,6 +226,10 @@ document.getElementById("profileAvatar");
 const settingsLogoutButton =
 document.getElementById("settingsLogoutButton");
 
+console.log("Profile button:", profileButton);
+console.log("Profile panel:", profilePanel);
+console.log("Close button:", closeProfileButton);
+
 // ============================================================
 // STATE
 // ============================================================
