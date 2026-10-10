@@ -2293,35 +2293,42 @@ audio {
 
 
 /* TAARA* call buttons — force visible, clickable styling */
-#voiceCallButton,
-#videoCallButton {
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    opacity: 1 !important;
-    visibility: visible !important;
-    pointer-events: auto !important;
-    cursor: pointer !important;
-    filter: none !important;
-    color: #ffffff !important;
-    background: rgba(148, 120, 255, 0.18) !important;
-    border: 1px solid rgba(181, 162, 255, 0.65) !important;
+
+.call-button,
+.chat-settings-button {
+    display: grid;
+    place-items: center;
+    width: 38px;
+    height: 38px;
+    flex: 0 0 38px;
+    padding: 0;
+    border: 1px solid var(--border);
+    border-radius: 11px;
+    color: #c8cbd7;
+    background: var(--surface-2);
+    transition: background .16s, border-color .16s;
 }
 
-#voiceCallButton svg,
-#videoCallButton svg {
-    display: block !important;
-    width: 22px;
-    height: 22px;
-    opacity: 1 !important;
-    visibility: visible !important;
-    stroke: currentColor;
+.call-button svg {
+    width: 18px;
+    height: 18px;
     fill: none;
+    stroke: currentColor;
     stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
 }
 
-#voiceCallButton:disabled,
-#videoCallButton:disabled {
-    opacity: 1 !important;
-    cursor: pointer !important;
+.call-button:hover:not(:disabled),
+.chat-settings-button:hover:not(:disabled) {
+    border-color: rgba(148,120,255,.3);
+    background: var(--accent-soft);
+}
+
+.call-button:disabled {
+    opacity: .62;
+}
+
+.chat-settings-button {
+    font-size: 19px;
 }
