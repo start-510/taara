@@ -2255,3 +2255,62 @@ audio {
         max-height: 120px;
     }
 }
+
+/* =========================================
+   TAARA* — FIX CHAT HEADER / CALL BUTTONS
+   ========================================= */
+
+/* Keep chat header items in one horizontal row */
+.chat-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+    position: relative;
+}
+
+/* Allow the contact details to shrink instead of
+   pushing the call buttons underneath */
+.chat-header > :first-child {
+    min-width: 0;
+}
+
+/* Keep the action buttons visible on the right */
+#voiceCallButton,
+#videoCallButton,
+.chat-settings-button {
+    position: relative;
+    z-index: 2;
+    flex-shrink: 0;
+}
+
+/* Prevent long names/details from covering buttons */
+.chat-header .chat-user-info,
+.chat-header .chat-contact-info {
+    min-width: 0;
+    flex: 1 1 auto;
+    overflow: hidden;
+}
+
+/* Keep header buttons clickable */
+#voiceCallButton,
+#videoCallButton {
+    pointer-events: auto;
+    cursor: pointer;
+}
+
+/* Smaller screens */
+@media (max-width: 480px) {
+    .chat-header {
+        gap: 5px;
+    }
+
+    #voiceCallButton,
+    #videoCallButton,
+    .chat-settings-button {
+        width: 34px;
+        height: 34px;
+        min-width: 34px;
+        flex: 0 0 34px;
+    }
+}
