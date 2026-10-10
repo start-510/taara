@@ -2289,3 +2289,39 @@ audio {
   .taara-call-card { padding: 22px 16px; }
   .taara-call-actions button { flex: 1 1 40%; }
 }
+
+
+
+/* TAARA* call buttons — force visible, clickable styling */
+#voiceCallButton,
+#videoCallButton {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+    cursor: pointer !important;
+    filter: none !important;
+    color: #ffffff !important;
+    background: rgba(148, 120, 255, 0.18) !important;
+    border: 1px solid rgba(181, 162, 255, 0.65) !important;
+}
+
+#voiceCallButton svg,
+#videoCallButton svg {
+    display: block !important;
+    width: 22px;
+    height: 22px;
+    opacity: 1 !important;
+    visibility: visible !important;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 1.8;
+}
+
+#voiceCallButton:disabled,
+#videoCallButton:disabled {
+    opacity: 1 !important;
+    cursor: pointer !important;
+}
