@@ -3259,3 +3259,190 @@ audio {
         width: 100%;
     }
 }
+
+
+/* ==========================================
+   TAARA* — FINAL SIDEBAR SPACE FIX
+   Keep YOUR SPACE visible and prevent compression
+   ========================================== */
+
+#chatScreen,
+#chatScreen .chat-container {
+    min-width: 0;
+    min-height: 0;
+}
+
+#chatScreen .chat-container {
+    display: flex;
+    flex-direction: column;
+}
+
+#chatScreen .app-workspace {
+    display: grid;
+    grid-template-columns: minmax(270px, 320px) minmax(0, 1fr);
+    flex: 1 1 0;
+    min-width: 0;
+    min-height: 0;
+    overflow: hidden;
+}
+
+#chatScreen .sidebar {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    min-height: 0;
+    padding: 20px 16px 12px;
+    overflow: hidden;
+}
+
+#chatScreen .sidebar-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex: 0 0 auto;
+    min-height: 76px;
+    width: 100%;
+    margin: 0 0 12px;
+    padding: 8px 4px;
+}
+
+#chatScreen .sidebar-heading > div {
+    min-width: 0;
+}
+
+#chatScreen .sidebar-heading .eyebrow,
+#chatScreen .sidebar-heading h1 {
+    display: block;
+    visibility: visible;
+    opacity: 1;
+}
+
+#chatScreen .sidebar-heading .eyebrow {
+    margin-bottom: 7px;
+    line-height: 1.5;
+}
+
+#chatScreen .sidebar-heading h1 {
+    margin: 0;
+    font-size: clamp(22px, 2vw, 28px);
+    line-height: 1.25;
+}
+
+#chatScreen .sidebar-mark {
+    flex: 0 0 37px;
+}
+
+#chatScreen .search-form {
+    display: flex;
+    flex: 0 0 auto;
+    width: 100%;
+    min-width: 0;
+    margin: 0 0 10px;
+}
+
+#chatScreen .search-form input {
+    flex: 1 1 0;
+    width: 0;
+    min-width: 0;
+}
+
+#chatScreen #userSearchMessage,
+#chatScreen #userSearchResult {
+    flex: 0 0 auto;
+    min-width: 0;
+    max-width: 100%;
+}
+
+#chatScreen .section-heading {
+    display: flex;
+    align-items: center;
+    flex: 0 0 auto;
+    min-height: 36px;
+    margin: 10px 0 8px;
+}
+
+#chatScreen .conversation-list {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 0;
+    min-width: 0;
+    min-height: 0;
+    gap: 6px;
+    padding: 2px 5px 10px 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+}
+
+#chatScreen .conversation-item {
+    flex: 0 0 auto;
+    width: 100%;
+    min-width: 0;
+    min-height: 64px;
+}
+
+#chatScreen .sidebar-footer {
+    display: flex;
+    flex: 0 0 auto;
+    min-height: 35px;
+    margin-top: 8px;
+}
+
+/* Keep the main chat in its own column */
+#chatScreen .chat-panel {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    min-height: 0;
+    overflow: hidden;
+}
+
+/* Mobile: switch between the sidebar and active chat */
+@media (max-width: 760px) {
+    #chatScreen .app-workspace {
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-rows: minmax(0, 1fr);
+    }
+
+    #chatScreen .app-workspace:not(.chat-open) .sidebar {
+        display: flex;
+        width: 100%;
+        min-height: 0;
+        padding: 12px 10px;
+        border-right: 0;
+    }
+
+    #chatScreen .app-workspace:not(.chat-open) .chat-panel {
+        display: none;
+    }
+
+    #chatScreen .app-workspace.chat-open .sidebar {
+        display: none;
+    }
+
+    #chatScreen .app-workspace.chat-open .chat-panel {
+        display: flex;
+        width: 100%;
+        min-height: 0;
+    }
+
+    #chatScreen .conversation-list {
+        min-height: 0;
+    }
+
+    #chatScreen .sidebar-footer {
+        display: none;
+    }
+}
+
+/* Small screens: prevent controls from overflowing */
+@media (max-width: 400px) {
+    #chatScreen .sidebar {
+        padding-right: 6px;
+        padding-left: 6px;
+    }
+
+    #chatScreen .sidebar-heading h1 {
+        font-size: 22px;
+    }
+}
