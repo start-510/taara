@@ -6815,6 +6815,19 @@ document.addEventListener(
     }
 );
 
+// ============================================================
+// INIT
+// ============================================================
+
+injectFeatureStyles();
+
+ensureReplyBar();
+
+updateVoiceButton();
+
+disableDisappearingSettings();
+
+checkExistingSession();
 
 
 /* =========================================================
@@ -7286,16 +7299,3 @@ document.addEventListener(
   });
 })();
 
-// ============================================================
-// INIT
-// ============================================================
-
-injectFeatureStyles();
-
-ensureReplyBar();
-
-updateVoiceButton();
-
-disableDisappearingSettings();
-
-checkExistingSession();
