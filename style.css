@@ -2718,3 +2718,324 @@ audio {
         min-width: 0;
     }
 }
+
+
+
+/* ==========================================
+   TAARA* — MIDNIGHT LAVENDER LAYOUT FIX
+   Prevent chat from covering sidebar/header
+   ========================================== */
+
+#chatScreen {
+    width: 100%;
+    height: 100vh;
+    height: 100dvh;
+    min-width: 0;
+    min-height: 0;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+#chatScreen *,
+#chatScreen *::before,
+#chatScreen *::after {
+    box-sizing: border-box;
+}
+
+#chatScreen .chat-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    min-width: 0;
+    min-height: 0;
+    overflow: hidden;
+}
+
+#chatScreen .chat-header {
+    position: relative;
+    z-index: 20;
+    flex: 0 0 auto;
+    width: 100%;
+    min-width: 0;
+}
+
+#chatScreen .app-workspace {
+    display: grid;
+    grid-template-columns: 290px minmax(0, 1fr);
+    flex: 1 1 auto;
+    width: 100%;
+    min-width: 0;
+    min-height: 0;
+    overflow: hidden;
+}
+
+/* LEFT: conversation list */
+#chatScreen .sidebar {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: auto;
+    min-width: 0;
+    min-height: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    border-right: 1px solid rgba(190, 165, 255, 0.16);
+}
+
+/* Let the conversation list scroll inside the sidebar */
+#chatScreen .conversation-list {
+    flex: 1 1 auto;
+    min-width: 0;
+    min-height: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+#chatScreen #userSearchResult {
+    min-width: 0;
+    max-width: 100%;
+    overflow-wrap: anywhere;
+}
+
+/* RIGHT: active conversation */
+#chatScreen .chat-panel {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    width: auto;
+    min-width: 0;
+    min-height: 0;
+    max-width: 100%;
+    overflow: hidden;
+}
+
+#chatScreen .current-chat-header {
+    position: relative;
+    z-index: 5;
+    flex: 0 0 auto;
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+}
+
+#chatScreen .current-chat-top {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+}
+
+#chatScreen .current-chat-identity {
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow: hidden;
+}
+
+#chatScreen .current-chat-info {
+    min-width: 0;
+    overflow: hidden;
+}
+
+#chatScreen .current-chat-title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Keep call and settings buttons visible */
+#chatScreen .chat-header-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex: 0 0 auto;
+    gap: 8px;
+    min-width: max-content;
+}
+
+#chatScreen .call-button,
+#chatScreen .chat-settings-button {
+    flex: 0 0 auto;
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#chatScreen .call-button svg {
+    width: 20px;
+    height: 20px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+/* Messages occupy only the space between header and composer */
+#chatScreen #messages,
+#chatScreen .messages {
+    flex: 1 1 0;
+    width: 100%;
+    min-width: 0;
+    min-height: 0;
+    max-width: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overflow-wrap: anywhere;
+    overscroll-behavior: contain;
+}
+
+#chatScreen .message,
+#chatScreen .message-bubble {
+    max-width: min(78%, 650px);
+    min-width: 0;
+    overflow-wrap: anywhere;
+    word-break: normal;
+}
+
+#chatScreen img,
+#chatScreen video,
+#chatScreen audio {
+    max-width: 100%;
+}
+
+/* Composer must never push the sidebar or chat wider */
+#chatScreen .composer-area {
+    position: relative;
+    flex: 0 0 auto;
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    overflow: visible;
+}
+
+#chatScreen .message-form {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+}
+
+#chatScreen #messageInput {
+    flex: 1 1 0;
+    width: 0;
+    min-width: 0;
+    max-width: 100%;
+}
+
+#chatScreen .composer-icon-button,
+#chatScreen .send-button {
+    flex: 0 0 auto;
+}
+
+#chatScreen .upload-status,
+#chatScreen .composer-footnote {
+    max-width: 100%;
+    overflow-wrap: anywhere;
+}
+
+/* Keep profile/settings above the app content */
+#chatScreen .profile-panel {
+    position: absolute;
+    z-index: 100;
+    top: 76px;
+    left: 16px;
+    max-width: calc(100% - 32px);
+    max-height: calc(100% - 92px);
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+/* Keep disappearing-message controls within the chat */
+#chatScreen .disappearing-panel {
+    position: absolute;
+    z-index: 15;
+    top: 100%;
+    right: 12px;
+    width: min(340px, calc(100% - 24px));
+    max-width: calc(100% - 24px);
+    max-height: 65vh;
+    overflow-y: auto;
+}
+
+/* ==========================================
+   TABLET AND MOBILE
+   ========================================== */
+
+@media (max-width: 760px) {
+    #chatScreen .app-workspace {
+        grid-template-columns: minmax(0, 1fr);
+        position: relative;
+    }
+
+    #chatScreen .sidebar {
+        width: 100%;
+        min-width: 0;
+        border-right: 0;
+    }
+
+    #chatScreen .chat-panel {
+        width: 100%;
+        min-width: 0;
+    }
+
+    /*
+      If your JS adds .active to the open chat/sidebar,
+      these rules support a one-panel-at-a-time layout.
+    */
+    #chatScreen .app-workspace.chat-open .sidebar {
+        display: none;
+    }
+
+    #chatScreen .app-workspace.chat-open .chat-panel {
+        display: flex;
+    }
+
+    #chatScreen .app-workspace:not(.chat-open) .chat-panel {
+        display: none;
+    }
+}
+
+@media (max-width: 480px) {
+    #chatScreen .current-chat-top {
+        gap: 5px;
+    }
+
+    #chatScreen .chat-header-actions {
+        gap: 4px;
+    }
+
+    #chatScreen .call-button,
+    #chatScreen .chat-settings-button {
+        width: 34px;
+        height: 34px;
+        min-width: 34px;
+    }
+
+    #chatScreen .call-button svg {
+        width: 17px;
+        height: 17px;
+    }
+
+    #chatScreen .message-form {
+        gap: 5px;
+    }
+
+    #chatScreen .composer-icon-button,
+    #chatScreen .send-button {
+        padding-left: 9px;
+        padding-right: 9px;
+    }
+
+    #chatScreen .profile-panel {
+        left: 8px;
+        max-width: calc(100% - 16px);
+    }
+}
