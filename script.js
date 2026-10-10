@@ -6816,6 +6816,476 @@ document.addEventListener(
 );
 
 
+
+/* =========================================================
+   TAARA* CALLING — INITIAL WEBRTC IMPLEMENTATION
+   Requires private Realtime channels and HTTPS.
+   ========================================================= */
+
+(() => {
+  const $ = (id) => document.getElementById(id);
+
+  const voiceButton = $("voiceCallButton");
+  const videoButton = $("videoCallButton");
+  const overlay = $("taaraCallOverlay");
+  const statusEl = $("taaraCallStatus");
+  const personEl = $("taaraCallPerson");
+  const incomingActions = $("taaraIncomingActions");
+  const activeActions = $("taaraActiveActions");
+  const acceptButton = $("taaraAcceptCall");
+  const declineButton = $("taaraDeclineCall");
+  const muteButton = $("taaraMuteCall");
+  const cameraButton = $("taaraCameraCall");
+  const endButton = $("taaraEndCall");
+  const videos = $("taaraCallVideos");
+  const localVideo = $("taaraLocalVideo");
+  const remoteVideo = $("taaraRemoteVideo");
+  const remoteAudio = $("taaraRemoteAudio");
+
+  if (!voiceButton || !videoButton || !overlay) {
+    console.error("TAARA calling: call buttons or call interface missing.");
+    return;
+  }
+
+  // The original HTML buttons are disabled placeholders.
+  voiceButton.disabled = false;
+  videoButton.disabled = false;
+  voiceButton.title = "Start voice call";
+  videoButton.title = "Start video call";
+
+  let signalChannel = null;
+  let signalConversationId = null;
+  let pc = null;
+  let localStream = null;
+  let call = null;
+  let pendingCandidates = [];
+  let subscribed = false;
+  let handlingOffer = false;
+
+  const rtcConfig = {
+    iceServers: [
+      { urls: "stun:stun.l.google.com:19302" }
+    ]
+  };
+
+  function showOverlay() {
+    overlay.classList.remove("hidden");
+  }
+
+  function hideOverlay() {
+    overlay.classList.add("hidden");
+    incomingActions.classList.add("hidden");
+    activeActions.classList.add("hidden");
+    videos.classList.add("hidden");
+  }
+
+  function setStatus(text) {
+    statusEl.textContent = text;
+  }
+
+  function sendSignal(event, extra = {}) {
+    if (!signalChannel || !subscribed || !call) {
+      return Promise.reject(new Error("Call signaling is not connected."));
+    }
+
+    return signalChannel.send({
+      type: "broadcast",
+      event: "call-signal",
+      payload: {
+        event,
+        conversation_id: call.conversationId,
+        from: currentUserId,
+        to: call.peerId,
+        call_type: call.type,
+        ...extra
+      }
+    });
+  }
+
+  async function ensureSignalChannel(conversationId) {
+    if (
+      signalChannel &&
+      signalConversationId === conversationId &&
+      subscribed
+    ) {
+      return;
+    }
+
+    if (signalChannel) {
+      const old = signalChannel;
+      signalChannel = null;
+      subscribed = false;
+      await supabaseClient.removeChannel(old);
+    }
+
+    signalConversationId = conversationId;
+    subscribed = false;
+
+    const channel = supabaseClient.channel(
+      `call:${conversationId}`,
+      { config: { private: true } }
+    );
+
+    channel.on("broadcast", { event: "call-signal" }, ({ payload }) => {
+      void handleSignal(payload);
+    });
+
+    signalChannel = channel;
+
+    await new Promise((resolve, reject) => {
+      const timeout = setTimeout(() => {
+        reject(new Error("Call signaling subscription timed out."));
+      }, 12000);
+
+      channel.subscribe((state) => {
+        if (state === "SUBSCRIBED") {
+          clearTimeout(timeout);
+          subscribed = true;
+          resolve();
+        } else if (state === "CHANNEL_ERROR" || state === "TIMED_OUT") {
+          clearTimeout(timeout);
+          reject(new Error("Unable to connect to the private call channel."));
+        }
+      });
+    });
+  }
+
+  async function createPeerConnection() {
+    pc = new RTCPeerConnection(rtcConfig);
+
+    pc.onicecandidate = (event) => {
+      if (event.candidate && call) {
+        void sendSignal("ice", {
+          candidate: event.candidate.toJSON()
+        }).catch((error) => console.warn("ICE signaling:", error));
+      }
+    };
+
+    pc.ontrack = (event) => {
+      const [stream] = event.streams;
+      if (!stream) return;
+
+      if (call?.type === "video") {
+        remoteVideo.srcObject = stream;
+        videos.classList.remove("hidden");
+      } else {
+        remoteAudio.srcObject = stream;
+      }
+
+      const playResult = call?.type === "video"
+        ? remoteVideo.play()
+        : remoteAudio.play();
+
+      if (playResult?.catch) {
+        playResult.catch(() => {
+          setStatus("Connected — tap the media if sound is blocked.");
+        });
+      }
+    };
+
+    pc.onconnectionstatechange = () => {
+      if (!pc || !call) return;
+
+      if (pc.connectionState === "connected") {
+        setStatus("Connected");
+      } else if (pc.connectionState === "connecting") {
+        setStatus("Connecting…");
+      } else if (
+        pc.connectionState === "failed" ||
+        pc.connectionState === "disconnected"
+      ) {
+        setStatus("Connection interrupted. Try ending and calling again.");
+      } else if (pc.connectionState === "closed") {
+        setStatus("Call ended");
+      }
+    };
+
+    localStream.getTracks().forEach((track) => {
+      pc.addTrack(track, localStream);
+    });
+  }
+
+  async function acquireMedia(type) {
+    if (!navigator.mediaDevices?.getUserMedia) {
+      throw new Error("Microphone/camera access requires HTTPS and a supported browser.");
+    }
+
+    localStream = await navigator.mediaDevices.getUserMedia({
+      audio: true,
+      video: type === "video"
+    });
+
+    if (type === "video") {
+      localVideo.srcObject = localStream;
+      videos.classList.remove("hidden");
+      await localVideo.play().catch(() => {});
+    }
+  }
+
+  async function startCall(type) {
+    if (!currentConversationId || !currentChatUserId) {
+      alert("Open a conversation first.");
+      return;
+    }
+
+    if (call) {
+      alert("A call is already active.");
+      return;
+    }
+
+    call = {
+      type,
+      conversationId: currentConversationId,
+      peerId: currentChatUserId,
+      peerName: currentChatUsername || "Contact",
+      role: "caller"
+    };
+
+    personEl.textContent = call.peerName;
+    setStatus(type === "video" ? "Starting video call…" : "Starting voice call…");
+    showOverlay();
+
+    try {
+      await ensureSignalChannel(call.conversationId);
+      await acquireMedia(type);
+      await createPeerConnection();
+
+      const offer = await pc.createOffer();
+      await pc.setLocalDescription(offer);
+
+      await sendSignal("offer", {
+        description: pc.localDescription.toJSON(),
+        from_name: loggedInUsername?.textContent?.replace(/^@/, "") || "User"
+      });
+
+      setStatus("Calling… waiting for answer");
+      activeActions.classList.remove("hidden");
+      incomingActions.classList.add("hidden");
+    } catch (error) {
+      console.error("Start call failed:", error);
+      alert(`Couldn't start the call: ${error.message}`);
+      await finishCall(false);
+    }
+  }
+
+  async function handleSignal(payload) {
+    if (
+      !payload ||
+      payload.conversation_id !== currentConversationId ||
+      payload.from === currentUserId ||
+      payload.to !== currentUserId
+    ) {
+      return;
+    }
+
+    if (payload.event === "offer") {
+      if (call || handlingOffer) {
+        // Busy: decline the second incoming call.
+        return;
+      }
+
+      handlingOffer = true;
+      try {
+        await ensureSignalChannel(payload.conversation_id);
+
+        call = {
+          type: payload.call_type === "video" ? "video" : "voice",
+          conversationId: payload.conversation_id,
+          peerId: payload.from,
+          peerName: payload.from_name || currentChatUsername || "Contact",
+          role: "receiver",
+          offer: payload.description
+        };
+
+        personEl.textContent = call.peerName;
+        setStatus(
+          call.type === "video"
+            ? "Incoming video call"
+            : "Incoming voice call"
+        );
+        incomingActions.classList.remove("hidden");
+        activeActions.classList.add("hidden");
+        showOverlay();
+      } catch (error) {
+        console.error("Incoming call setup failed:", error);
+      } finally {
+        handlingOffer = false;
+      }
+
+      return;
+    }
+
+    if (!call || payload.conversation_id !== call.conversationId) {
+      return;
+    }
+
+    try {
+      if (payload.event === "answer" && pc && call.role === "caller") {
+        await pc.setRemoteDescription(payload.description);
+        for (const candidate of pendingCandidates) {
+          await pc.addIceCandidate(candidate).catch(console.warn);
+        }
+        pendingCandidates = [];
+        setStatus("Connecting…");
+      } else if (payload.event === "ice" && payload.candidate) {
+        const candidate = new RTCIceCandidate(payload.candidate);
+        if (pc?.remoteDescription) {
+          await pc.addIceCandidate(candidate);
+        } else {
+          pendingCandidates.push(candidate);
+        }
+      } else if (payload.event === "accepted" && call.role === "caller") {
+        setStatus("Connecting…");
+      } else if (payload.event === "declined") {
+        setStatus("Call declined");
+        await finishCall(false);
+      } else if (payload.event === "ended") {
+        setStatus("Call ended");
+        await finishCall(false);
+      }
+    } catch (error) {
+      console.error("Call signal handling failed:", error);
+      setStatus("Call setup failed. Please try again.");
+    }
+  }
+
+  async function acceptCall() {
+    if (!call || call.role !== "receiver") return;
+
+    try {
+      setStatus("Connecting…");
+      incomingActions.classList.add("hidden");
+
+      await acquireMedia(call.type);
+      await createPeerConnection();
+      await pc.setRemoteDescription(call.offer);
+
+      for (const candidate of pendingCandidates) {
+        await pc.addIceCandidate(candidate).catch(console.warn);
+      }
+      pendingCandidates = [];
+
+      const answer = await pc.createAnswer();
+      await pc.setLocalDescription(answer);
+
+      await sendSignal("answer", {
+        description: pc.localDescription.toJSON()
+      });
+      await sendSignal("accepted");
+
+      activeActions.classList.remove("hidden");
+    } catch (error) {
+      console.error("Accept call failed:", error);
+      alert(`Couldn't accept the call: ${error.message}`);
+      await finishCall(true, "declined");
+    }
+  }
+
+  async function finishCall(notifyPeer = true, signalEvent = "ended") {
+    const oldCall = call;
+
+    // Send the end signal before clearing call state.
+    if (notifyPeer && oldCall && signalChannel && subscribed) {
+      try {
+        await sendSignal(signalEvent);
+      } catch (error) {
+        console.warn("Unable to notify the other caller:", error);
+      }
+    }
+
+    if (pc) {
+      pc.ontrack = null;
+      pc.onicecandidate = null;
+      pc.close();
+      pc = null;
+    }
+
+    if (localStream) {
+      localStream.getTracks().forEach((track) => track.stop());
+      localStream = null;
+    }
+
+    if (remoteVideo) remoteVideo.srcObject = null;
+    if (localVideo) localVideo.srcObject = null;
+    if (remoteAudio) remoteAudio.srcObject = null;
+
+    pendingCandidates = [];
+    call = null;
+    hideOverlay();
+  }
+
+  voiceButton.addEventListener("click", () => void startCall("voice"));
+  videoButton.addEventListener("click", () => void startCall("video"));
+
+  acceptButton.addEventListener("click", () => void acceptCall());
+
+  declineButton.addEventListener("click", () => {
+    void finishCall(true, "declined");
+  });
+
+  endButton.addEventListener("click", () => {
+    void finishCall(true, "ended");
+  });
+
+  muteButton.addEventListener("click", () => {
+    if (!localStream) return;
+    const tracks = localStream.getAudioTracks();
+    if (!tracks.length) return;
+
+    const shouldMute = tracks.some((track) => track.enabled);
+    tracks.forEach((track) => {
+      track.enabled = !shouldMute;
+    });
+    muteButton.textContent = shouldMute ? "Unmute" : "Mute";
+  });
+
+  cameraButton.addEventListener("click", () => {
+    if (!localStream || call?.type !== "video") return;
+    const tracks = localStream.getVideoTracks();
+    if (!tracks.length) return;
+
+    const shouldDisable = tracks.some((track) => track.enabled);
+    tracks.forEach((track) => {
+      track.enabled = !shouldDisable;
+    });
+    cameraButton.textContent = shouldDisable ? "Camera on" : "Camera off";
+  });
+
+  // Prepare signaling whenever a conversation opens, so the other
+  // user can receive calls while viewing that same conversation.
+  if (typeof openConversation === "function") {
+    const originalOpenConversation = openConversation;
+
+    openConversation = async function (...args) {
+      const result = await originalOpenConversation.apply(this, args);
+
+      if (currentConversationId && currentUserId) {
+        try {
+          await ensureSignalChannel(currentConversationId);
+        } catch (error) {
+          console.error("Call signaling unavailable:", error);
+        }
+      }
+
+      return result;
+    };
+  }
+
+  // Ensure active media is released on logout.
+  if (logoutButton) {
+    logoutButton.addEventListener("click", () => {
+      void finishCall(false);
+    });
+  }
+
+  window.addEventListener("pagehide", () => {
+    if (localStream) {
+      localStream.getTracks().forEach((track) => track.stop());
+    }
+    if (pc) pc.close();
+  });
+})();
+
 // ============================================================
 // INIT
 // ============================================================
