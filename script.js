@@ -6977,27 +6977,42 @@ checkExistingSession();
       }
     };
 
-    pc.ontrack = (event) => {
-      const [stream] = event.streams;
-      if (!stream) return;
+    
+pc.ontrack = async (event) => {
+  if (!call) return;
 
-      if (call?.type === "video") {
-        remoteVideo.srcObject = stream;
-        videos.classList.remove("hidden");
-      } else {
-        remoteAudio.srcObject = stream;
-      }
+  const stream = event.streams?.[0];
 
-      const playResult = call?.type === "video"
-        ? remoteVideo.play()
-        : remoteAudio.play();
+  if (!stream) {
+    console.warn("TAARA: Remote track arrived without a stream.");
+    return;
+  }
 
-      if (playResult?.catch) {
-        playResult.catch(() => {
-          setStatus("Connected — tap the media if sound is blocked.");
-        });
-      }
-    };
+  if (call.type === "video") {
+    remoteVideo.srcObject = stream;
+    remoteVideo.autoplay = true;
+    remoteVideo.playsInline = true;
+    remoteVideo.muted = false;
+
+    videos.classList.remove("hidden");
+
+    try {
+      await remoteVideo.play();
+    } catch (error) {
+      console.warn("Remote video playback needs user interaction:", error);
+      setStatus("Call connected. Tap the video to start playback.");
+    }
+  } else {
+    remoteAudio.srcObject = stream;
+    remoteAudio.autoplay = true;
+
+    try {
+      await remoteAudio.play();
+    } catch (error) {
+      console.warn("Remote audio playback blocked:", error);
+    }
+  }
+};
 
     pc.onconnectionstatechange = () => {
       if (!pc || !call) return;
