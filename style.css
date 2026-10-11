@@ -1730,3 +1730,119 @@ button:focus:not(:focus-visible) {
         display: flex;
     }
 }
+
+/* ==================================================
+   TAARA* — FINAL CHAT OVERFLOW / OVERLAP FIX
+   Paste at the VERY END of style.css
+   ================================================== */
+
+html,
+body {
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    overflow-x: clip;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+#chatScreen,
+.app-workspace,
+.chat-container {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+}
+
+.app-workspace {
+    display: grid;
+    grid-template-columns: minmax(220px, 280px) minmax(0, 1fr);
+    align-items: stretch;
+    gap: 0;
+    overflow: hidden;
+}
+
+.sidebar {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+.chat-panel {
+    position: relative !important;
+    inset: auto !important;
+    transform: none;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    height: 100%;
+    margin: 0 !important;
+    overflow: hidden;
+}
+
+.current-chat-header,
+#currentChatHeader,
+#messages,
+#messageForm,
+.chat-messages,
+.chat-composer,
+.composer-area {
+    min-width: 0;
+    max-width: 100%;
+}
+
+#messages,
+.chat-messages {
+    width: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overflow-wrap: anywhere;
+}
+
+#messageForm,
+.chat-composer,
+.composer-area {
+    width: 100%;
+}
+
+#messageForm textarea,
+#messageForm input,
+.chat-composer textarea,
+.chat-composer input {
+    min-width: 0;
+    max-width: 100%;
+}
+
+img,
+video,
+audio,
+iframe {
+    max-width: 100%;
+}
+
+/* Tablet and mobile */
+@media (max-width: 760px) {
+    .app-workspace {
+        display: block;
+        width: 100%;
+        max-width: 100%;
+        overflow: hidden;
+    }
+
+    .sidebar,
+    .chat-panel {
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
+    }
+
+    .chat-panel {
+        padding-left: 0;
+        padding-right: 0;
+    }
+}
