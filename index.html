@@ -292,10 +292,11 @@
                                     title="Close search" aria-label="Close search">×</button>
                         </div>
 
-                        <!-- DISAPPEARING MESSAGES -->
+                                              <!-- DISAPPEARING MESSAGES -->
                         <section id="disappearingPanel"
                                  class="disappearing-panel hidden"
-                                 aria-label="Disappearing message settings">
+                                 aria-label="Disappearing message settings"
+                                 hidden>
                             <div class="disappearing-panel-header">
                                 <div>
                                     <strong>Disappearing messages</strong>
@@ -313,77 +314,64 @@
                             </p>
 
                             <div id="disappearingOptions" class="disappearing-options">
-                                <button type="button" class="disappearing-option"
-                                        data-seconds="0" aria-pressed="false">
+                                <button type="button" class="disappearing-option" data-seconds="0" aria-pressed="false">
                                     <span>Off</span><span class="disappearing-check">✓</span>
                                 </button>
-                                <button type="button" class="disappearing-option"
-                                        data-seconds="30" aria-pressed="false">
+                                <button type="button" class="disappearing-option" data-seconds="30" aria-pressed="false">
                                     <span>30 seconds</span><span class="disappearing-check">✓</span>
                                 </button>
-                                <button type="button" class="disappearing-option"
-                                        data-seconds="60" aria-pressed="false">
+                                <button type="button" class="disappearing-option" data-seconds="60" aria-pressed="false">
                                     <span>1 minute</span><span class="disappearing-check">✓</span>
                                 </button>
-                                <button type="button" class="disappearing-option"
-                                        data-seconds="300" aria-pressed="false">
+                                <button type="button" class="disappearing-option" data-seconds="300" aria-pressed="false">
                                     <span>5 minutes</span><span class="disappearing-check">✓</span>
                                 </button>
-                                <button type="button" class="disappearing-option"
-                                        data-seconds="3600" aria-pressed="false">
+                                <button type="button" class="disappearing-option" data-seconds="3600" aria-pressed="false">
                                     <span>1 hour</span><span class="disappearing-check">✓</span>
                                 </button>
-                                <button type="button" class="disappearing-option"
-                                        data-seconds="86400" aria-pressed="false">
+                                <button type="button" class="disappearing-option" data-seconds="86400" aria-pressed="false">
                                     <span>1 day</span><span class="disappearing-check">✓</span>
                                 </button>
-                                <button type="button" class="disappearing-option"
-                                        data-seconds="604800" aria-pressed="false">
+                                <button type="button" class="disappearing-option" data-seconds="604800" aria-pressed="false">
                                     <span>7 days</span><span class="disappearing-check">✓</span>
                                 </button>
                             </div>
 
-                            <p id="disappearingStatus" class="disappearing-status"
-                               role="status"></p>
-                            
-<!-- CHAT SETTINGS PANEL -->
-<section
-    id="chatSettingsPanel"
-    class="chat-settings-panel hidden"
-    hidden
-    aria-label="Chat settings"
->
-    <div class="chat-settings-header">
-        <h3>Chat Settings</h3>
-        <button
-            id="closeChatSettingsButton"
-            type="button"
-            aria-label="Close chat settings"
-        >×</button>
-    </div>
+                            <p id="disappearingStatus" class="disappearing-status" role="status"></p>
+                        </section>
 
-    <button id="clearChatButton"
-            class="chat-settings-option"
-            type="button">
-        <span>Clear Chat</span>
-        <small>Remove messages from this conversation</small>
-    </button>
+                        <!-- CHAT SETTINGS -->
+                        <section id="chatSettingsPanel"
+                                 class="chat-settings-panel hidden"
+                                 hidden
+                                 aria-label="Chat settings">
+                            <div class="chat-settings-header">
+                                <h3>Chat Settings</h3>
+                                <button id="closeChatSettingsButton"
+                                        type="button"
+                                        aria-label="Close chat settings">×</button>
+                            </div>
 
-    <button id="sharedMediaButton"
-            class="chat-settings-option"
-            type="button">
-        <span>Shared Media</span>
-        <small>View shared images and videos</small>
-    </button>
+                            <button id="clearChatButton"
+                                    class="chat-settings-option"
+                                    type="button">
+                                <span>Clear Chat</span>
+                                <small>Remove messages from this conversation</small>
+                            </button>
 
-    <button id="disappearingMessagesButton"
-            class="chat-settings-option"
-            type="button">
-        <span>Disappearing Messages</span>
-        <small>Manage message expiration</small>
-    </button>
-</section>
+                            <button id="sharedMediaButton"
+                                    class="chat-settings-option"
+                                    type="button">
+                                <span>Shared Media</span>
+                                <small>View shared images and videos</small>
+                            </button>
 
+                            <button id="disappearingMessagesButton"
+                                    class="chat-settings-option"
+                                    type="button">
+                                <span>Disappearing Messages</span>
+                                <small>Manage message expiration</small>
+                            </button>
                         </section>
                     </header>
 
@@ -462,62 +450,6 @@
 
             <audio id="taaraRemoteAudio" autoplay></audio>
         </div>
-
-        <!-- TAARA* Chat Settings -->
-<button
-    id="chatSettingsButton"
-    class="icon-button"
-    type="button"
-    aria-label="Chat settings"
-    title="Chat settings"
-    disabled
->
-    ⚙
-</button>
-
-<!-- Chat Settings Panel -->
-<div
-    id="chatSettingsPanel"
-    class="chat-settings-panel hidden"
-    hidden
->
-    <div class="chat-settings-header">
-        <h3>Chat Settings</h3>
-        <button
-            id="closeChatSettingsButton"
-            type="button"
-            aria-label="Close chat settings"
-        >×</button>
-    </div>
-
-    <button
-        id="clearChatButton"
-        class="chat-settings-option"
-        type="button"
-    >
-        <span>Clear Chat</span>
-        <small>Remove messages from this conversation</small>
-    </button>
-
-    <button
-        id="sharedMediaButton"
-        class="chat-settings-option"
-        type="button"
-    >
-        <span>Shared Media</span>
-        <small>View shared images and videos</small>
-    </button>
-
-    <button
-        id="disappearingMessagesButton"
-        class="chat-settings-option"
-        type="button"
-    >
-        <span>Disappearing Messages</span>
-        <small>Manage message expiration</small>
-    </button>
-</div>
-
     </div>
 
 
