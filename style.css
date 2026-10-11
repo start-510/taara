@@ -3738,3 +3738,512 @@ body { background: var(--bg); }
     #chatScreen .composer-icon-button { flex-basis:33px; width:33px; height:36px; }
     #chatScreen .send-button { min-width:56px; padding:0 7px; }
 }
+
+
+
+/* =====================================================
+   TAARA* — FINAL LAYOUT REPAIR
+   Fix: compressed sidebar, oversized gaps, chat and composer
+   Preserve existing HTML, JavaScript and yellow theme
+   ===================================================== */
+
+#chatScreen,
+#chatScreen * {
+    box-sizing: border-box;
+}
+
+#chatScreen {
+    width: 100%;
+    height: 100vh;
+    height: 100dvh;
+    min-width: 0;
+    min-height: 0;
+    padding: 0 12px;
+    overflow: hidden;
+}
+
+#chatScreen .chat-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: none;
+    height: 100%;
+    min-width: 0;
+    min-height: 0;
+    margin: 0 auto;
+    padding: 0 12px 10px;
+    overflow: hidden;
+    border-radius: 0;
+}
+
+/* Top application header */
+#chatScreen .chat-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex: 0 0 82px;
+    min-height: 68px;
+    width: 100%;
+    min-width: 0;
+    gap: 12px;
+}
+
+/* Main two-column layout */
+#chatScreen .app-workspace {
+    display: grid;
+    grid-template-columns: 280px minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr);
+    flex: 1 1 0;
+    width: 100%;
+    min-width: 0;
+    min-height: 0;
+    gap: 0;
+    overflow: hidden;
+}
+
+/* Sidebar: restore normal width and vertical content */
+#chatScreen .sidebar {
+    display: flex;
+    flex-direction: column;
+    width: auto;
+    min-width: 0;
+    min-height: 0;
+    padding: 22px 16px 12px 4px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    border-right: 1px solid #2b2c34;
+}
+
+#chatScreen .sidebar-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex: 0 0 auto;
+    width: 100%;
+    min-height: 80px;
+    margin: 0 0 16px;
+    padding: 4px 0 12px;
+    gap: 10px;
+}
+
+#chatScreen .sidebar-heading > div {
+    min-width: 0;
+}
+
+#chatScreen .sidebar-heading .eyebrow {
+    margin: 0 0 7px;
+    font-size: 11px;
+    line-height: 1.5;
+    letter-spacing: 2px;
+}
+
+#chatScreen .sidebar-heading h1 {
+    margin: 0;
+    font-size: 27px;
+    line-height: 1.2;
+    white-space: normal;
+}
+
+#chatScreen .sidebar-mark {
+    flex: 0 0 44px;
+    width: 44px;
+    height: 44px;
+}
+
+/* User search */
+#chatScreen .search-form {
+    display: flex;
+    align-items: center;
+    flex: 0 0 auto;
+    width: 100%;
+    min-width: 0;
+    gap: 7px;
+    margin: 0 0 8px;
+}
+
+#chatScreen .search-form input {
+    flex: 1 1 0;
+    width: 0;
+    min-width: 0;
+}
+
+#chatScreen .search-form button {
+    flex: 0 0 auto;
+    min-width: 62px;
+    padding: 0 9px;
+}
+
+#chatScreen #userSearchMessage,
+#chatScreen #userSearchResult {
+    flex: 0 0 auto;
+    min-width: 0;
+    max-width: 100%;
+    overflow-wrap: anywhere;
+}
+
+#chatScreen .section-heading {
+    display: flex;
+    align-items: center;
+    flex: 0 0 auto;
+    min-width: 0;
+    min-height: 38px;
+    margin: 14px 0 7px;
+    gap: 8px;
+}
+
+#chatScreen .conversation-list {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    min-width: 0;
+    min-height: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding: 2px 4px 8px 0;
+}
+
+#chatScreen .sidebar-footer {
+    flex: 0 0 auto;
+    margin-top: 10px;
+}
+
+/* Main conversation panel */
+#chatScreen .chat-panel {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    width: auto;
+    min-width: 0;
+    min-height: 0;
+    padding: 0 0 0 20px;
+    overflow: hidden;
+}
+
+#chatScreen .current-chat-header {
+    position: relative;
+    z-index: 5;
+    flex: 0 0 auto;
+    width: 100%;
+    min-width: 0;
+    padding: 14px 0 12px;
+}
+
+#chatScreen .current-chat-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    min-width: 0;
+    gap: 12px;
+}
+
+#chatScreen .current-chat-identity {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+#chatScreen .current-chat-info {
+    min-width: 0;
+}
+
+#chatScreen .current-chat-title {
+    overflow: hidden;
+    font-size: 17px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+#chatScreen .chat-header-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex: 0 0 auto;
+    min-width: 0;
+    gap: 8px;
+}
+
+#chatScreen .call-button,
+#chatScreen .chat-settings-button {
+    flex: 0 0 44px;
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+}
+
+/* Messages use the available middle space */
+#chatScreen #messages,
+#chatScreen .messages {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 0;
+    width: 100%;
+    min-width: 0;
+    min-height: 0;
+    margin: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding: 16px 6px;
+    overscroll-behavior: contain;
+}
+
+#chatScreen .empty-chat {
+    width: min(100%, 440px);
+    max-width: 100%;
+    margin: auto;
+}
+
+#chatScreen .message,
+#chatScreen .message-bubble {
+    min-width: 0;
+    max-width: min(78%, 650px);
+    overflow-wrap: anywhere;
+}
+
+/* Composer stays at the bottom without squeezing messages */
+#chatScreen .composer-area {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    flex: 0 0 auto;
+    width: 100%;
+    min-width: 0;
+    padding: 10px 0 0;
+    overflow: visible;
+    background: transparent;
+}
+
+#chatScreen .message-form {
+    display: flex;
+    align-items: center;
+    flex: 0 0 auto;
+    width: 100%;
+    min-width: 0;
+    min-height: 62px;
+    gap: 8px;
+    padding: 7px;
+}
+
+#chatScreen .message-form > * {
+    min-width: 0;
+}
+
+#chatScreen #messageInput {
+    flex: 1 1 0;
+    width: 0;
+    min-width: 0;
+    height: 44px;
+    min-height: 44px;
+}
+
+#chatScreen .composer-icon-button {
+    flex: 0 0 42px;
+    width: 42px;
+    height: 42px;
+}
+
+#chatScreen .send-button {
+    flex: 0 0 auto;
+    min-width: 88px;
+    min-height: 42px;
+    height: 42px;
+}
+
+#chatScreen .upload-status {
+    flex: 0 0 auto;
+    min-height: 0;
+    overflow-wrap: anywhere;
+}
+
+#chatScreen .composer-footnote {
+    flex: 0 0 auto;
+    padding-top: 5px;
+}
+
+/* Hide a reply bar only when its reply text is empty */
+#chatScreen .taara-reply-bar:has(.taara-reply-bar-text:empty) {
+    display: none !important;
+}
+
+/* Prevent long media from expanding the chat */
+#chatScreen img,
+#chatScreen video,
+#chatScreen audio {
+    max-width: 100%;
+}
+
+/* Keep settings panels scrollable */
+#chatScreen .profile-panel {
+    z-index: 100;
+    max-width: calc(100% - 24px);
+    max-height: calc(100% - 100px);
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+/* Tablet */
+@media (max-width: 1000px) and (min-width: 761px) {
+    #chatScreen .app-workspace {
+        grid-template-columns: 240px minmax(0, 1fr);
+    }
+
+    #chatScreen .sidebar {
+        padding-right: 12px;
+    }
+
+    #chatScreen .chat-panel {
+        padding-left: 14px;
+    }
+
+    #chatScreen .private-label {
+        display: none;
+    }
+}
+
+/* Mobile: preserve the existing list/chat navigation */
+@media (max-width: 760px) {
+    #chatScreen {
+        padding: 0;
+    }
+
+    #chatScreen .chat-container {
+        padding: 0 12px 8px;
+    }
+
+    #chatScreen .chat-header {
+        flex-basis: 64px;
+        min-height: 60px;
+    }
+
+    #chatScreen .app-workspace {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    #chatScreen .app-workspace:not(.chat-open) .sidebar {
+        display: flex;
+        width: 100%;
+        min-height: 0;
+        padding: 12px 2px;
+        border-right: 0;
+    }
+
+    #chatScreen .app-workspace:not(.chat-open) .chat-panel {
+        display: none;
+    }
+
+    #chatScreen .app-workspace.chat-open .sidebar {
+        display: none;
+    }
+
+    #chatScreen .app-workspace.chat-open .chat-panel {
+        display: flex;
+        width: 100%;
+        padding-left: 0;
+    }
+
+    #chatScreen .sidebar-heading {
+        min-height: 65px;
+        margin-bottom: 10px;
+    }
+
+    #chatScreen .sidebar-heading h1 {
+        font-size: 23px;
+    }
+
+    #chatScreen .conversation-list {
+        min-height: 0;
+    }
+
+    #chatScreen .current-chat-header {
+        padding: 9px 0;
+    }
+
+    #chatScreen .current-chat-title {
+        font-size: 14px;
+    }
+
+    #chatScreen .chat-header-actions {
+        gap: 5px;
+    }
+
+    #chatScreen .call-button,
+    #chatScreen .chat-settings-button {
+        flex-basis: 36px;
+        width: 36px;
+        height: 36px;
+        min-width: 36px;
+    }
+
+    #chatScreen .messages {
+        padding: 12px 2px;
+    }
+
+    #chatScreen .composer-area {
+        padding-top: 7px;
+    }
+
+    #chatScreen .message-form {
+        min-height: 53px;
+        gap: 5px;
+        padding: 5px;
+    }
+
+    #chatScreen .composer-icon-button {
+        flex-basis: 36px;
+        width: 36px;
+        height: 37px;
+    }
+
+    #chatScreen #messageInput {
+        height: 40px;
+        min-height: 40px;
+        padding: 0 5px;
+        font-size: 13px;
+    }
+
+    #chatScreen .send-button {
+        min-width: 60px;
+        height: 38px;
+        min-height: 38px;
+        padding: 0 8px;
+        font-size: 11px;
+    }
+
+    #chatScreen .composer-footnote {
+        padding-top: 3px;
+        font-size: 9px;
+    }
+
+    #chatScreen .profile-panel {
+        inset: 68px 8px 8px;
+        width: auto;
+        max-width: none;
+        max-height: none;
+        padding: 16px;
+    }
+}
+
+@media (max-width: 420px) {
+    #chatScreen .chat-container {
+        padding-right: 8px;
+        padding-left: 8px;
+    }
+
+    #chatScreen .logged-in-user {
+        max-width: 100px;
+    }
+
+    #chatScreen .message-form {
+        gap: 4px;
+    }
+
+    #chatScreen .composer-icon-button {
+        flex-basis: 32px;
+        width: 32px;
+    }
+
+    #chatScreen .send-button {
+        min-width: 53px;
+        padding: 0 6px;
+    }
+}
