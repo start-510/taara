@@ -1,414 +1,431 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="theme-color" content="#101116">
+    <meta name="description" content="TAARA* — your private conversations.">
     <title>TAARA*</title>
-    <link rel="stylesheet" href="style.css?v=20261011-3">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<!-- LOGIN -->
-<section id="loginScreen" class="screen auth-screen">
-    <div class="auth-card">
-        <div class="logo">TAARA<span>*</span></div>
-        <p class="subtitle">Your space. Your conversations.</p>
+    <!-- LOGIN SCREEN -->
+    <section id="loginScreen" class="screen auth-screen">
+        <div class="auth-card">
+            <div class="logo">TAARA<span>*</span></div>
+            <p class="subtitle">Your space. Your conversations.</p>
 
-        <form id="loginForm" class="auth-form">
-            <label for="loginUsername">Username</label>
-            <input id="loginUsername" type="text" placeholder="Enter username"
-                   autocomplete="username" required>
+            <form id="loginForm" class="auth-form">
+                <label for="loginUsername">Username</label>
+                <input id="loginUsername" type="text" placeholder="Enter username"
+                       autocomplete="username" required>
 
-            <label for="loginPin">PIN</label>
-            <input id="loginPin" type="password" placeholder="Enter your PIN"
-                   autocomplete="current-password" required>
+                <label for="loginPin">PIN</label>
+                <input id="loginPin" type="password" placeholder="Enter your PIN"
+                       autocomplete="current-password" required>
 
-            <button class="primary-button" type="submit">Unlock TAARA*</button>
-        </form>
+                <button class="primary-button" type="submit">Unlock TAARA*</button>
+            </form>
 
-        <p id="loginMessage" class="form-message" role="status"></p>
-        <div class="auth-divider"><span>New here?</span></div>
-        <button id="showCreateButton" class="secondary-button" type="button">
-            Create an account
-        </button>
-    </div>
-</section>
+            <p id="loginMessage" class="form-message" role="status"></p>
 
-<!-- CREATE ACCOUNT -->
-<section id="createScreen" class="screen auth-screen hidden">
-    <div class="auth-card">
-        <div class="logo">TAARA<span>*</span></div>
-        <p class="subtitle">Create your private account.</p>
+            <div class="auth-divider"><span>New here?</span></div>
 
-        <form id="createForm" class="auth-form">
-            <label for="createUsername">Username</label>
-            <input id="createUsername" type="text" placeholder="Choose a username"
-                   autocomplete="username" required>
-
-            <label for="createPin">Create PIN</label>
-            <input id="createPin" type="password" placeholder="Choose a PIN"
-                   autocomplete="new-password" required>
-
-            <label for="confirmPin">Confirm PIN</label>
-            <input id="confirmPin" type="password" placeholder="Enter PIN again"
-                   autocomplete="new-password" required>
-
-            <button class="primary-button" type="submit">Create account</button>
-        </form>
-
-        <p id="createMessage" class="form-message" role="status"></p>
-        <button id="backToLoginButton" class="secondary-button" type="button">
-            Back to login
-        </button>
-    </div>
-</section>
-
-<!-- MAIN CHAT -->
-<section id="chatScreen" class="screen hidden">
-    <div class="chat-container">
-
-        <!-- TOP BAR -->
-        <header class="chat-header">
-            <div class="chat-header-user">
-                <button id="profileButton" class="profile-button"
-                        type="button" title="Profile & Settings"
-                        aria-label="Profile & Settings">
-                    <span id="profileAvatar" class="profile-avatar">👤</span>
-                </button>
-
-                <div class="brand-user">
-                    <div class="chat-logo">TAARA<span>*</span></div>
-                    <div id="loggedInUsername" class="logged-in-user"></div>
-                </div>
-            </div>
-
-            <div class="header-actions">
-                <span class="private-label"><span class="status-dot"></span> Private space</span>
-                <button id="logoutButton" class="logout-button" type="button">
-                    Lock
-                </button>
-            </div>
-        </header>
-
-        <!-- PROFILE / SETTINGS PANEL -->
-        <div id="profilePanel" class="profile-panel hidden">
-            <div class="profile-panel-header">
-                <div>
-                    <div class="profile-panel-title">Profile & Settings</div>
-                    <div class="profile-panel-subtitle">Your TAARA* account</div>
-                </div>
-                <button id="closeProfileButton" class="profile-close-button"
-                        type="button" aria-label="Close settings">×</button>
-            </div>
-
-            <div class="profile-card">
-                <div class="profile-card-avatar">
-                    <span id="profileLargeAvatar">👤</span>
-                </div>
-                <div class="profile-card-info">
-                    <div id="profileUsername" class="profile-username">@username</div>
-                    <div class="profile-online-status">
-                        <span class="profile-status-dot"></span> Your account
-                    </div>
-                </div>
-            </div>
-
-            <div class="settings-section">
-                <div class="settings-section-title">Preferences</div>
-
-                <button id="profileSettingsButton" class="settings-item" type="button">
-                    <span class="settings-item-icon">👤</span>
-                    <span class="settings-item-content"><strong>Profile</strong>
-                    <small>Username and profile information</small></span>
-                    <span class="settings-item-arrow">›</span>
-                </button>
-
-                <button id="privacySettingsButton" class="settings-item" type="button">
-                    <span class="settings-item-icon">🔐</span>
-                    <span class="settings-item-content"><strong>Privacy</strong>
-                    <small>Presence and visibility</small></span>
-                    <span class="settings-item-arrow">›</span>
-                </button>
-
-                <button id="securitySettingsButton" class="settings-item" type="button">
-                    <span class="settings-item-icon">🛡️</span>
-                    <span class="settings-item-content"><strong>Security</strong>
-                    <small>Account protection</small></span>
-                    <span class="settings-item-arrow">›</span>
-                </button>
-
-                <button id="notificationSettingsButton" class="settings-item" type="button">
-                    <span class="settings-item-icon">🔔</span>
-                    <span class="settings-item-content"><strong>Notifications</strong>
-                    <small>Message notifications</small></span>
-                    <span class="settings-item-arrow">›</span>
-                </button>
-
-                <button id="appearanceSettingsButton" class="settings-item" type="button">
-                    <span class="settings-item-icon">✨</span>
-                    <span class="settings-item-content"><strong>Appearance</strong>
-                    <small>Customize your experience</small></span>
-                    <span class="settings-item-arrow">›</span>
-                </button>
-            </div>
-
-            <div class="settings-section">
-                <div class="settings-section-title">Account</div>
-                <button id="settingsLogoutButton" class="settings-logout-item" type="button">
-                    <span class="settings-item-icon">↪</span>
-                    <span class="settings-item-content"><strong>Lock session</strong>
-                    <small>Return to the login screen</small></span>
-                </button>
-            </div>
+            <button id="showCreateButton" class="secondary-button" type="button">
+                Create an account
+            </button>
         </div>
+    </section>
 
-        <!-- APP WORKSPACE -->
-        <div class="app-workspace">
+    <!-- CREATE ACCOUNT SCREEN -->
+    <section id="createScreen" class="screen auth-screen hidden">
+        <div class="auth-card">
+            <div class="logo">TAARA<span>*</span></div>
+            <p class="subtitle">Create your private account.</p>
 
-            <!-- LEFT SIDEBAR -->
-            <aside class="sidebar">
-                <div class="sidebar-heading">
+            <form id="createForm" class="auth-form">
+                <label for="createUsername">Username</label>
+                <input id="createUsername" type="text" placeholder="Choose a username"
+                       autocomplete="username" required>
+
+                <label for="createPin">Create PIN</label>
+                <input id="createPin" type="password" placeholder="Choose a PIN"
+                       autocomplete="new-password" required>
+
+                <label for="confirmPin">Confirm PIN</label>
+                <input id="confirmPin" type="password" placeholder="Enter PIN again"
+                       autocomplete="new-password" required>
+
+                <button class="primary-button" type="submit">Create account</button>
+            </form>
+
+            <p id="createMessage" class="form-message" role="status"></p>
+
+            <button id="backToLoginButton" class="secondary-button" type="button">
+                Back to login
+            </button>
+        </div>
+    </section>
+
+    <!-- MAIN CHAT SCREEN -->
+    <section id="chatScreen" class="screen hidden">
+        <div class="chat-container">
+
+            <!-- GLOBAL HEADER -->
+            <header class="chat-header">
+                <div class="chat-header-user">
+                    <button id="profileButton" class="profile-button"
+                            type="button" title="Profile and settings"
+                            aria-label="Profile and settings">
+                        <span id="profileAvatar" class="profile-avatar">👤</span>
+                    </button>
+
+                    <div class="brand-user">
+                        <div class="chat-logo">TAARA<span>*</span></div>
+                        <div id="loggedInUsername" class="logged-in-user"></div>
+                    </div>
+                </div>
+
+                <div class="header-actions">
+                    <span class="private-label">
+                        <span class="status-dot"></span>
+                        Private space
+                    </span>
+                    <button id="logoutButton" class="logout-button" type="button">
+                        Lock
+                    </button>
+                </div>
+            </header>
+
+            <!-- PROFILE AND SETTINGS PANEL -->
+            <section id="profilePanel" class="profile-panel hidden"
+                     aria-label="Profile and settings">
+                <div class="profile-panel-header">
                     <div>
-                        <p class="eyebrow">YOUR SPACE</p>
-                        <h1>Messages</h1>
+                        <div class="profile-panel-title">Profile &amp; Settings</div>
+                        <div class="profile-panel-subtitle">Your TAARA* account</div>
                     </div>
-                    <span class="sidebar-mark">✳</span>
+                    <button id="closeProfileButton" class="profile-close-button"
+                            type="button" aria-label="Close settings">×</button>
                 </div>
 
-                <form id="userSearchForm" class="search-form">
-                    <input id="userSearchInput" type="text"
-                           placeholder="Find a username" autocomplete="off"
-                           aria-label="Find a username">
-                    <button type="submit" aria-label="Search users">Search</button>
-                </form>
-
-                <p id="userSearchMessage" class="form-message" role="status"></p>
-                <div id="userSearchResult"></div>
-
-                <div class="section-heading">
-                    <span>Conversations</span>
-                    <span class="section-heading-line"></span>
-                </div>
-
-                <div id="conversationList" class="conversation-list"></div>
-
-                <div class="sidebar-footer">
-                    <span class="status-dot"></span>
-                    <span>Private conversations</span>
-                </div>
-            </aside>
-
-            <!-- CHAT PANEL -->
-            <main class="chat-panel">
-                <header id="currentChatHeader" class="current-chat-header">
-                    <div class="current-chat-top">
-                        <div class="current-chat-identity">
-                            <div class="current-chat-info">
-                                <div id="currentChatTitle" class="current-chat-title">
-                                    Select a conversation
-                                </div>
-
-                                <div id="chatPresence" class="chat-presence"></div>
-                            </div>
-
-                            <div id="chatSearchBar" class="chat-search-bar hidden">
-                                <input id="chatSearchInput" type="search"
-                                       placeholder="Search messages..." autocomplete="off">
-                                <span id="chatSearchCount" class="chat-search-count"></span>
-                                <button id="chatSearchPrev" type="button"
-                                        class="chat-search-nav" title="Previous result"
-                                        aria-label="Previous result">↑</button>
-                                <button id="chatSearchNext" type="button"
-                                        class="chat-search-nav" title="Next result"
-                                        aria-label="Next result">↓</button>
-                                <button id="chatSearchClose" type="button"
-                                        class="chat-search-close" title="Close search"
-                                        aria-label="Close search">×</button>
-                            </div>
-                        </div>
-
-                       
-<div class="chat-header-actions">
-    <button
-        id="voiceCallButton"
-        class="call-button"
-        type="button"
-        title="Start voice call"
-        aria-label="Voice call">
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M22 16.9v3a2 2 0 0 1-2.2 2A19.8 19.8 0 0 1 11.2 19a19.4 19.4 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 2 .7 2.9a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.2-1.3a2 2 0 0 1 2.1-.5c.9.3 1.9.6 2.9.7a2 2 0 0 1 1.8 2.1Z"/>
-        </svg>
-    </button>
-
-    <button
-        id="videoCallButton"
-        class="call-button"
-        type="button"
-        title="Start video call"
-        aria-label="Video call">
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-            <rect x="3" y="6" width="13" height="12" rx="2"/>
-            <path d="m16 10 5-3v10l-5-3z"/>
-        </svg>
-    </button>
-</div>
-
-                            <button id="chatSettingsButton" class="chat-settings-button"
-                                    type="button" disabled title="Chat settings"
-                                    aria-label="Chat settings">⚙</button>
-                        </div>
+                <div class="profile-card">
+                    <div class="profile-card-avatar">
+                        <span id="profileLargeAvatar">👤</span>
                     </div>
-
-                    <div id="typingIndicator" class="typing-indicator"></div>
-
-                    <div id="disappearingPanel" class="disappearing-panel hidden">
-                        <div class="disappearing-panel-header">
-                            <div>
-                                <strong>Disappearing messages</strong>
-                                <span id="disappearingCurrentTimer"
-                                      class="disappearing-current-timer">Off</span>
-                            </div>
-                            <button id="closeDisappearingButton"
-                                    type="button" class="disappearing-close-button"
-                                    aria-label="Close">×</button>
+                    <div class="profile-card-info">
+                        <div id="profileUsername" class="profile-username">@username</div>
+                        <div class="profile-online-status">
+                            <span class="profile-status-dot"></span>
+                            Your account
                         </div>
-
-                        <p class="disappearing-description">
-                            New messages disappear after the selected time.
-                        </p>
-
-                        <div id="disappearingOptions" class="disappearing-options">
-                            <button type="button" class="disappearing-option" data-seconds="0"><span>Off</span><span class="disappearing-check">✓</span></button>
-                            <button type="button" class="disappearing-option" data-seconds="30"><span>30 seconds</span><span class="disappearing-check">✓</span></button>
-                            <button type="button" class="disappearing-option" data-seconds="60"><span>1 minute</span><span class="disappearing-check">✓</span></button>
-                            <button type="button" class="disappearing-option" data-seconds="300"><span>5 minutes</span><span class="disappearing-check">✓</span></button>
-                            <button type="button" class="disappearing-option" data-seconds="3600"><span>1 hour</span><span class="disappearing-check">✓</span></button>
-                            <button type="button" class="disappearing-option" data-seconds="86400"><span>1 day</span><span class="disappearing-check">✓</span></button>
-                            <button type="button" class="disappearing-option" data-seconds="604800"><span>7 days</span><span class="disappearing-check">✓</span></button>
-                        </div>
-                        <p id="disappearingStatus" class="disappearing-status"></p>
-                    </div>
-                </header>
-
-                <div id="messages" class="messages" aria-live="polite">
-                    <div class="empty-chat">
-                        <div class="empty-chat-icon">✳</div>
-                        <h2>Your conversations, in one place.</h2>
-                        <p>Choose a conversation from the sidebar or find someone to start chatting.</p>
                     </div>
                 </div>
 
-                <div class="composer-area">
-                    <form id="messageForm" class="message-form">
-                        <button id="attachButton" class="composer-icon-button"
-                                type="button" disabled title="Attach file"
-                                aria-label="Attach file">＋</button>
+                <div class="settings-section">
+                    <div class="settings-section-title">Preferences</div>
 
-                        <input id="fileInput" type="file" hidden>
+                    <button id="profileSettingsButton" class="settings-item" type="button">
+                        <span class="settings-item-icon">👤</span>
+                        <span class="settings-item-content">
+                            <strong>Profile</strong>
+                            <small>Username and profile information</small>
+                        </span>
+                        <span class="settings-item-arrow">›</span>
+                    </button>
 
-                        <button id="voiceButton" class="composer-icon-button"
-                                type="button" disabled title="Record voice message"
-                                aria-label="Record voice message">🎙</button>
+                    <button id="privacySettingsButton" class="settings-item" type="button">
+                        <span class="settings-item-icon">🔐</span>
+                        <span class="settings-item-content">
+                            <strong>Privacy</strong>
+                            <small>Presence and visibility</small>
+                        </span>
+                        <span class="settings-item-arrow">›</span>
+                    </button>
 
-                        <input id="messageInput" type="text"
-                               placeholder="Write a message..."
-                               autocomplete="off" disabled>
+                    <button id="securitySettingsButton" class="settings-item" type="button">
+                        <span class="settings-item-icon">🛡️</span>
+                        <span class="settings-item-content">
+                            <strong>Security</strong>
+                            <small>Account protection</small>
+                        </span>
+                        <span class="settings-item-arrow">›</span>
+                    </button>
 
-                        <button id="sendButton" class="send-button"
-                                type="submit" disabled>
-                            <span>Send</span>
-                            <span aria-hidden="true">↗</span>
-                        </button>
+                    <button id="notificationSettingsButton" class="settings-item" type="button">
+                        <span class="settings-item-icon">🔔</span>
+                        <span class="settings-item-content">
+                            <strong>Notifications</strong>
+                            <small>Message notifications</small>
+                        </span>
+                        <span class="settings-item-arrow">›</span>
+                    </button>
+
+                    <button id="appearanceSettingsButton" class="settings-item" type="button">
+                        <span class="settings-item-icon">✨</span>
+                        <span class="settings-item-content">
+                            <strong>Appearance</strong>
+                            <small>Customize your experience</small>
+                        </span>
+                        <span class="settings-item-arrow">›</span>
+                    </button>
+                </div>
+
+                <div class="settings-section">
+                    <div class="settings-section-title">Account</div>
+                    <button id="settingsLogoutButton" class="settings-logout-item"
+                            type="button">
+                        <span class="settings-item-icon">↪</span>
+                        <span class="settings-item-content">
+                            <strong>Lock session</strong>
+                            <small>Return to the login screen</small>
+                        </span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- APP WORKSPACE -->
+            <div class="app-workspace">
+
+                <!-- SIDEBAR -->
+                <aside class="sidebar">
+                    <div class="sidebar-heading">
+                        <div>
+                            <p class="eyebrow">YOUR SPACE</p>
+                            <h1>Messages</h1>
+                        </div>
+                        <span class="sidebar-mark" aria-hidden="true">✳</span>
+                    </div>
+
+                    <form id="userSearchForm" class="search-form">
+                        <input id="userSearchInput" type="text"
+                               placeholder="Find a username" autocomplete="off"
+                               aria-label="Find a username">
+                        <button type="submit" aria-label="Search users">Search</button>
                     </form>
 
-                    <div id="uploadStatus" class="upload-status"></div>
-                    <div class="composer-footnote">Keep your conversations private.</div>
-                </div>
-            </main>
+                    <p id="userSearchMessage" class="form-message" role="status"></p>
+                    <div id="userSearchResult"></div>
+
+                    <div class="section-heading">
+                        <span>Conversations</span>
+                        <span class="section-heading-line"></span>
+                    </div>
+
+                    <div id="conversationList" class="conversation-list">
+                        <p class="sidebar-empty">Your conversations will appear here.</p>
+                    </div>
+
+                    <div class="sidebar-footer">
+                        <span class="status-dot"></span>
+                        <span>Private conversations</span>
+                    </div>
+                </aside>
+
+                <!-- CHAT PANEL -->
+                <main class="chat-panel">
+                    <header id="currentChatHeader" class="current-chat-header">
+                        <div class="current-chat-top">
+
+                            <div class="current-chat-identity">
+                                <div class="current-chat-info">
+                                    <div id="currentChatTitle" class="current-chat-title">
+                                        Select a conversation
+                                    </div>
+                                    <div id="chatPresence" class="chat-presence"></div>
+                                </div>
+                            </div>
+
+                            <div class="chat-header-actions">
+                                <button id="chatSearchButton" class="chat-icon-button"
+                                        type="button" disabled
+                                        title="Search messages"
+                                        aria-label="Search messages">
+                                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                                        <circle cx="10.8" cy="10.8" r="6.8"></circle>
+                                        <path d="m16 16 5 5"></path>
+                                    </svg>
+                                </button>
+
+                                <button id="voiceCallButton" class="call-button"
+                                        type="button" disabled
+                                        title="Start voice call" aria-label="Voice call">
+                                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                                        <path d="M22 16.9v3a2 2 0 0 1-2.2 2A19.8 19.8 0 0 1 11.2 19a19.4 19.4 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 2 .7 2.9a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.2-1.3a2 2 0 0 1 2.1-.5c.9.3 1.9.6 2.9.7a2 2 0 0 1 1.8 2.1Z"></path>
+                                    </svg>
+                                </button>
+
+                                <button id="videoCallButton" class="call-button"
+                                        type="button" disabled
+                                        title="Start video call" aria-label="Video call">
+                                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                                        <rect x="3" y="6" width="13" height="12" rx="2"></rect>
+                                        <path d="m16 10 5-3v10l-5-3z"></path>
+                                    </svg>
+                                </button>
+
+                                <button id="chatSettingsButton"
+                                        class="chat-settings-button"
+                                        type="button" disabled
+                                        title="Chat settings"
+                                        aria-label="Chat settings">⚙</button>
+                            </div>
+                        </div>
+
+                        <div id="typingIndicator" class="typing-indicator"></div>
+
+                        <!-- MESSAGE SEARCH -->
+                        <div id="chatSearchBar" class="chat-search-bar hidden">
+                            <input id="chatSearchInput" type="search"
+                                   placeholder="Search messages..." autocomplete="off"
+                                   aria-label="Search messages">
+                            <span id="chatSearchCount" class="chat-search-count"></span>
+                            <button id="chatSearchPrev" type="button"
+                                    class="chat-search-nav"
+                                    title="Previous result" aria-label="Previous result">↑</button>
+                            <button id="chatSearchNext" type="button"
+                                    class="chat-search-nav"
+                                    title="Next result" aria-label="Next result">↓</button>
+                            <button id="chatSearchClose" type="button"
+                                    class="chat-search-close"
+                                    title="Close search" aria-label="Close search">×</button>
+                        </div>
+
+                        <!-- DISAPPEARING MESSAGES -->
+                        <section id="disappearingPanel"
+                                 class="disappearing-panel hidden"
+                                 aria-label="Disappearing message settings">
+                            <div class="disappearing-panel-header">
+                                <div>
+                                    <strong>Disappearing messages</strong>
+                                    <span id="disappearingCurrentTimer"
+                                          class="disappearing-current-timer">Off</span>
+                                </div>
+                                <button id="closeDisappearingButton"
+                                        type="button"
+                                        class="disappearing-close-button"
+                                        aria-label="Close">×</button>
+                            </div>
+
+                            <p class="disappearing-description">
+                                New messages disappear after the selected time.
+                            </p>
+
+                            <div id="disappearingOptions" class="disappearing-options">
+                                <button type="button" class="disappearing-option"
+                                        data-seconds="0" aria-pressed="false">
+                                    <span>Off</span><span class="disappearing-check">✓</span>
+                                </button>
+                                <button type="button" class="disappearing-option"
+                                        data-seconds="30" aria-pressed="false">
+                                    <span>30 seconds</span><span class="disappearing-check">✓</span>
+                                </button>
+                                <button type="button" class="disappearing-option"
+                                        data-seconds="60" aria-pressed="false">
+                                    <span>1 minute</span><span class="disappearing-check">✓</span>
+                                </button>
+                                <button type="button" class="disappearing-option"
+                                        data-seconds="300" aria-pressed="false">
+                                    <span>5 minutes</span><span class="disappearing-check">✓</span>
+                                </button>
+                                <button type="button" class="disappearing-option"
+                                        data-seconds="3600" aria-pressed="false">
+                                    <span>1 hour</span><span class="disappearing-check">✓</span>
+                                </button>
+                                <button type="button" class="disappearing-option"
+                                        data-seconds="86400" aria-pressed="false">
+                                    <span>1 day</span><span class="disappearing-check">✓</span>
+                                </button>
+                                <button type="button" class="disappearing-option"
+                                        data-seconds="604800" aria-pressed="false">
+                                    <span>7 days</span><span class="disappearing-check">✓</span>
+                                </button>
+                            </div>
+
+                            <p id="disappearingStatus" class="disappearing-status"
+                               role="status"></p>
+                        </section>
+                    </header>
+
+                    <!-- MESSAGE HISTORY -->
+                    <div id="messages" class="messages" aria-live="polite">
+                        <div class="empty-chat">
+                            <div class="empty-chat-icon">✳</div>
+                            <h2>Your conversations, in one place.</h2>
+                            <p>Choose a conversation from the sidebar or find someone to start chatting.</p>
+                        </div>
+                    </div>
+
+                    <!-- MESSAGE COMPOSER -->
+                    <div class="composer-area">
+                        <form id="messageForm" class="message-form">
+                            <button id="attachButton" class="composer-icon-button"
+                                    type="button" disabled title="Attach file"
+                                    aria-label="Attach file">＋</button>
+
+                            <input id="fileInput" type="file" hidden>
+
+                            <button id="voiceButton" class="composer-icon-button"
+                                    type="button" disabled
+                                    title="Record voice message"
+                                    aria-label="Record voice message">🎙</button>
+
+                            <input id="messageInput" type="text"
+                                   placeholder="Write a message..."
+                                   autocomplete="off" disabled
+                                   aria-label="Write a message">
+
+                            <button id="sendButton" class="send-button"
+                                    type="submit" disabled>
+                                <span>Send</span>
+                                <span aria-hidden="true">↗</span>
+                            </button>
+                        </form>
+
+                        <div id="uploadStatus" class="upload-status" role="status"></div>
+                        <div class="composer-footnote">Keep your conversations private.</div>
+                    </div>
+                </main>
+            </div>
+        </div>
+    </section>
+
+    <!-- SINGLE VOICE / VIDEO CALL OVERLAY -->
+    <div id="taaraCallOverlay" class="taara-call-overlay hidden"
+         role="dialog" aria-modal="true" aria-label="TAARA voice or video call">
+        <div class="taara-call-card">
+            <div class="taara-call-brand">TAARA<span>*</span></div>
+            <div id="taaraCallStatus" class="taara-call-status">Ready</div>
+            <div id="taaraCallPerson" class="taara-call-person">Contact</div>
+
+            <div id="taaraIncomingActions" class="taara-call-actions hidden">
+                <button id="taaraAcceptCall" type="button" class="call-accept-button">
+                    Accept
+                </button>
+                <button id="taaraDeclineCall" type="button" class="call-decline-button">
+                    Decline
+                </button>
+            </div>
+
+            <div id="taaraActiveActions" class="taara-call-actions hidden">
+                <button id="taaraMuteCall" type="button">Mute</button>
+                <button id="taaraCameraCall" type="button">Camera off</button>
+                <button id="taaraEndCall" type="button" class="taara-end-call">
+                    End call
+                </button>
+            </div>
+
+            <div id="taaraCallVideos" class="taara-call-videos hidden">
+                <video id="taaraRemoteVideo" autoplay playsinline></video>
+                <video id="taaraLocalVideo" autoplay muted playsinline></video>
+            </div>
+
+            <audio id="taaraRemoteAudio" autoplay></audio>
         </div>
     </div>
-</section>
 
-<!-- TAARA* Call Interface -->
-<div id="taaraCallOverlay" class="taara-call-overlay hidden" role="dialog" aria-modal="true" aria-label="TAARA call">
-  <div class="taara-call-card">
-    <div class="taara-call-brand">TAARA*</div>
-    <div id="taaraCallStatus" class="taara-call-status">Ready</div>
-    <div id="taaraCallPerson" class="taara-call-person">Contact</div>
-
-    <div id="taaraIncomingActions" class="taara-call-actions hidden">
-      <button id="taaraAcceptCall" type="button">Accept</button>
-      <button id="taaraDeclineCall" type="button">Decline</button>
-    </div>
-
-    <div id="taaraActiveActions" class="taara-call-actions hidden">
-      <button id="taaraMuteCall" type="button">Mute</button>
-      <button id="taaraCameraCall" type="button">Camera off</button>
-      <button id="taaraEndCall" type="button" class="taara-end-call">End call</button>
-    </div>
-
-    <div id="taaraCallVideos" class="taara-call-videos hidden">
-      <video id="taaraRemoteVideo" autoplay playsinline></video>
-      <video id="taaraLocalVideo" autoplay muted playsinline></video>
-    </div>
-    <audio id="taaraRemoteAudio" autoplay></audio>
-  </div>
-</div>
-
-
-    
-<!-- TAARA* Voice / Video Call Interface -->
-<div
-    id="taaraCallOverlay"
-    class="taara-call-overlay hidden"
-    role="dialog"
-    aria-modal="true"
-    aria-label="TAARA voice or video call"
->
-    <div class="taara-call-card">
-        <div class="taara-call-brand">TAARA*</div>
-
-        <div id="taaraCallStatus" class="taara-call-status">
-            Ready
-        </div>
-
-        <div id="taaraCallPerson" class="taara-call-person">
-            Contact
-        </div>
-
-        <div id="taaraIncomingActions" class="taara-call-actions hidden">
-            <button id="taaraAcceptCall" type="button">
-                Accept
-            </button>
-            <button id="taaraDeclineCall" type="button">
-                Decline
-            </button>
-        </div>
-
-        <div id="taaraActiveActions" class="taara-call-actions hidden">
-            <button id="taaraMuteCall" type="button">
-                Mute
-            </button>
-            <button id="taaraCameraCall" type="button">
-                Camera off
-            </button>
-            <button id="taaraEndCall" class="taara-end-call" type="button">
-                End call
-            </button>
-        </div>
-
-        <div id="taaraCallVideos" class="taara-call-videos hidden">
-            <video id="taaraRemoteVideo" autoplay playsinline></video>
-            <video id="taaraLocalVideo" autoplay muted playsinline></video>
-        </div>
-
-        <audio id="taaraRemoteAudio" autoplay></audio>
-    </div>
-</div>
-    
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="script.js"></script>
 </body>
 </html>
