@@ -6094,6 +6094,16 @@ if (closeChatSettingsButton) {
     );
 }
 
+
+
+if (sharedMediaButton) {
+    sharedMediaButton.addEventListener("click", () => {
+        closeChatSettingsPanel();
+        openSharedMedia();
+    });
+}
+
+
 if (disappearingMessagesButton) {
     disappearingMessagesButton.addEventListener("click", () => {
         closeChatSettingsPanel();
