@@ -6104,6 +6104,26 @@ if (sharedMediaButton) {
 }
 
 
+if (clearChatButton) {
+    clearChatButton.addEventListener("click", async () => {
+        if (!currentConversationId) {
+            alert("Open a conversation first.");
+            return;
+        }
+
+        const confirmed = confirm(
+            "Clear this conversation? This action may affect messages visible to both participants. Continue only if you intend to permanently delete them."
+        );
+
+        if (!confirmed) return;
+
+        alert(
+            "Clear Chat is not connected yet. To protect your messages, we need to verify your Supabase delete permissions before enabling deletion."
+        );
+    });
+}
+
+
 if (disappearingMessagesButton) {
     disappearingMessagesButton.addEventListener("click", () => {
         closeChatSettingsPanel();
