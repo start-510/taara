@@ -6171,6 +6171,7 @@ if (sharedMediaButton) {
 }
 
 
+
 if (clearChatButton) {
     clearChatButton.addEventListener("click", async () => {
         if (!currentConversationId) {
@@ -6178,17 +6179,39 @@ if (clearChatButton) {
             return;
         }
 
-        const confirmed = confirm(
-            "Clear this conversation? This action may affect messages visible to both participants. Continue only if you intend to permanently delete them."
-        );
+        if (!confirm(
+            "Clear existing messages from your view? The other participant's messages will remain unchanged."
+        )) {
+            return;
+        }
 
-        if (!confirmed) return;
+        clearChatButton.disabled = true;
 
-        alert(
-            "Clear Chat is not connected yet. To protect your messages, we need to verify your Supabase delete permissions before enabling deletion."
-        );
+        try {
+            const { error } = await supabaseClient.rpc(
+                "clear_my_conversation",
+                { p_conversation_id: currentConversationId }
+            );
+
+            if (error) throw error;
+
+            closeChatSettingsPanel();
+
+            await loadMessages({
+                forceBottom: true,
+                preserveScroll: false
+            });
+
+            alert("Conversation cleared from your view.");
+        } catch (error) {
+            console.error("Clear Chat failed:", error);
+            alert("Unable to clear this conversation. Please try again.");
+        } finally {
+            clearChatButton.disabled = false;
+        }
     });
 }
+
 
 
 if (disappearingMessagesButton) {
