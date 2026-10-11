@@ -230,6 +230,13 @@ console.log("Profile button:", profileButton);
 console.log("Profile panel:", profilePanel);
 console.log("Close button:", closeProfileButton);
 
+
+
+
+const clearChatButton = document.getElementById("clearChatButton");
+const sharedMediaButton = document.getElementById("sharedMediaButton");
+
+
 // ============================================================
 // STATE
 // ============================================================
