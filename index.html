@@ -345,6 +345,45 @@
 
                             <p id="disappearingStatus" class="disappearing-status"
                                role="status"></p>
+                            
+<!-- CHAT SETTINGS PANEL -->
+<section
+    id="chatSettingsPanel"
+    class="chat-settings-panel hidden"
+    hidden
+    aria-label="Chat settings"
+>
+    <div class="chat-settings-header">
+        <h3>Chat Settings</h3>
+        <button
+            id="closeChatSettingsButton"
+            type="button"
+            aria-label="Close chat settings"
+        >×</button>
+    </div>
+
+    <button id="clearChatButton"
+            class="chat-settings-option"
+            type="button">
+        <span>Clear Chat</span>
+        <small>Remove messages from this conversation</small>
+    </button>
+
+    <button id="sharedMediaButton"
+            class="chat-settings-option"
+            type="button">
+        <span>Shared Media</span>
+        <small>View shared images and videos</small>
+    </button>
+
+    <button id="disappearingMessagesButton"
+            class="chat-settings-option"
+            type="button">
+        <span>Disappearing Messages</span>
+        <small>Manage message expiration</small>
+    </button>
+</section>
+
                         </section>
                     </header>
 
