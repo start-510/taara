@@ -5909,34 +5909,42 @@ function disableDisappearingSettings() {
 
 
 if (chatSettingsButton) {
+    chatSettingsButton.addEventListener("click", event => {
+        event.stopPropagation();
 
-    chatSettingsButton.addEventListener(
-        "click",
-        event => {
-
-            event.stopPropagation();
-
-            if (
-                chatSettingsButton.disabled ||
-                !currentConversationId
-            )
-                return;
-
-            if (
-                disappearingPanel &&
-                !disappearingPanel.hidden &&
-                disappearingPanel.style.display !==
-                    "none"
-            ) {
-
-                closeDisappearingPanel();
-
-            } else {
-
-                openDisappearingPanel();
-            }
+        if (chatSettingsButton.disabled || !currentConversationId) {
+            return;
         }
+
+        if (!chatSettingsPanel) {
+            console.error("TAARA*: Chat Settings panel not found.");
+            return;
+        }
+
+        const isOpen =
+            !chatSettingsPanel.hidden &&
+            chatSettingsPanel.style.display !== "none";
+
+        if (isOpen) {
+            closeChatSettingsPanel();
+        } else {
+            openChatSettingsPanel();
+        }
+    });
+}
+
+if (closeChatSettingsButton) {
+    closeChatSettingsButton.addEventListener(
+        "click",
+        closeChatSettingsPanel
     );
+}
+
+if (disappearingMessagesButton) {
+    disappearingMessagesButton.addEventListener("click", () => {
+        closeChatSettingsPanel();
+        openDisappearingPanel();
+    });
 }
 
 
