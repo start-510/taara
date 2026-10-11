@@ -1625,3 +1625,108 @@ button:focus:not(:focus-visible) {
         transition-duration: .01ms !important;
     }
 }
+
+
+/* TAARA* — FIX CHAT PANEL CLIPPED OFF SCREEN */
+
+#chatScreen,
+#chatScreen .chat-container {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+}
+
+#chatScreen .chat-container {
+    overflow: hidden;
+}
+
+#chatScreen .app-workspace {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    grid-template-columns: minmax(230px, 290px) minmax(0, 1fr);
+    overflow: hidden;
+}
+
+#chatScreen .sidebar {
+    min-width: 0;
+    max-width: 100%;
+}
+
+#chatScreen .chat-panel {
+    position: relative;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    height: 100%;
+    margin: 0;
+    padding-right: 0;
+    overflow: hidden;
+}
+
+#chatScreen .current-chat-header,
+#chatScreen .messages,
+#chatScreen #messages,
+#chatScreen .composer-area {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+}
+
+#chatScreen .current-chat-top,
+#chatScreen .chat-header-actions,
+#chatScreen .message-form {
+    min-width: 0;
+    max-width: 100%;
+}
+
+#chatScreen .messages,
+#chatScreen #messages {
+    overflow-x: hidden;
+    overflow-y: auto;
+    overflow-wrap: anywhere;
+}
+
+#chatScreen .message,
+#chatScreen .message-bubble,
+#chatScreen .message-content {
+    min-width: 0;
+    max-width: min(78%, 650px);
+    overflow-wrap: anywhere;
+}
+
+@media (max-width: 900px) {
+    #chatScreen .app-workspace {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    #chatScreen .app-workspace:not(.chat-open) .sidebar {
+        display: flex;
+    }
+
+    #chatScreen .app-workspace:not(.chat-open) .chat-panel {
+        display: none;
+    }
+
+    #chatScreen .app-workspace.chat-open .sidebar {
+        display: none;
+    }
+
+    #chatScreen .app-workspace.chat-open .chat-panel {
+        display: flex;
+        width: 100%;
+        max-width: 100%;
+        padding-left: 0;
+    }
+}
+
+@media (min-width: 901px) {
+    #chatScreen .app-workspace.chat-open {
+        grid-template-columns: minmax(230px, 290px) minmax(0, 1fr);
+    }
+
+    #chatScreen .app-workspace.chat-open .chat-panel {
+        display: flex;
+    }
+}
