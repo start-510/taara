@@ -2180,6 +2180,136 @@ async function addMessageToScreen(
 }
 
 
+async function openSharedMedia() {
+    if (!currentConversationId) {
+        alert("Open a conversation first.");
+        return;
+    }
+
+    const messages = Array.from(loadedMessages.values())
+        .filter(message =>
+            !message.deleted_at &&
+            (
+                message.file_path ||
+                ["image", "video", "audio", "file"].includes(
+                    String(message.message_type || "").toLowerCase()
+                )
+            )
+        );
+
+    if (!messages.length) {
+        alert("No shared media or files in this conversation yet.");
+        return;
+    }
+
+    const existing = document.getElementById("taaraSharedMediaOverlay");
+    if (existing) existing.remove();
+
+    const overlay = document.createElement("div");
+    overlay.id = "taaraSharedMediaOverlay";
+    overlay.style.cssText = `
+        position:fixed;inset:0;z-index:10000;
+        background:rgba(0,0,0,.72);display:flex;
+        align-items:center;justify-content:center;padding:16px;
+    `;
+
+    const panel = document.createElement("section");
+    panel.style.cssText = `
+        width:min(620px,100%);max-height:80dvh;overflow:auto;
+        background:#181920;color:#f4f5fa;border:1px solid #383943;
+        border-radius:14px;padding:18px;
+    `;
+
+    const header = document.createElement("div");
+    header.style.cssText =
+        "display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px";
+
+    const title = document.createElement("h2");
+    title.textContent = "Shared Media & Files";
+    title.style.cssText = "font-size:18px;margin:0";
+
+    const close = document.createElement("button");
+    close.type = "button";
+    close.textContent = "Close";
+    close.style.cssText =
+        "background:#f2c94c;color:#171717;border:0;border-radius:8px;padding:8px 12px;cursor:pointer";
+    close.addEventListener("click", () => overlay.remove());
+
+    header.append(title, close);
+    panel.appendChild(header);
+
+    for (const message of messages.slice().reverse()) {
+        const item = document.createElement("div");
+        item.style.cssText =
+            "padding:12px 0;border-top:1px solid #343540;display:flex;flex-direction:column;gap:6px";
+
+        const name = document.createElement("div");
+        name.textContent =
+            message.file_name ||
+            message.content ||
+            message.message_type ||
+            "Shared item";
+        name.style.cssText = "overflow-wrap:anywhere;font-weight:600";
+
+        const meta = document.createElement("small");
+        meta.textContent = new Date(message.created_at).toLocaleString();
+        meta.style.color = "#a4a6b2";
+
+        item.append(name, meta);
+
+        if (message.file_path) {
+            const open = document.createElement("button");
+            open.type = "button";
+            open.textContent = "Open shared file";
+            open.style.cssText =
+                "align-self:flex-start;background:#292b34;color:#f4f5fa;border:1px solid #444652;border-radius:8px;padding:8px 12px;cursor:pointer";
+
+            open.addEventListener("click", async () => {
+                open.disabled = true;
+                open.textContent = "Opening…";
+
+                try {
+                    const { data, error } = await supabaseClient
+                        .storage
+                        .from(CHAT_MEDIA_BUCKET)
+                        .createSignedUrl(message.file_path, 60);
+
+                    if (error) throw error;
+                    if (!data?.signedUrl) throw new Error("No file link was returned.");
+
+                    window.open(data.signedUrl, "_blank", "noopener,noreferrer");
+                } catch (error) {
+                    console.error("Could not open shared file:", error);
+                    alert("Unable to open this file. Check your access and try again.");
+                } finally {
+                    open.disabled = false;
+                    open.textContent = "Open shared file";
+                }
+            });
+
+            item.appendChild(open);
+        }
+
+        panel.appendChild(item);
+    }
+
+    overlay.addEventListener("click", event => {
+        if (event.target === overlay) overlay.remove();
+    });
+
+    const escapeHandler = event => {
+        if (event.key === "Escape") {
+            overlay.remove();
+            document.removeEventListener("keydown", escapeHandler);
+        }
+    };
+
+    document.addEventListener("keydown", escapeHandler);
+    overlay.appendChild(panel);
+    document.body.appendChild(overlay);
+}
+
+
 // ============================================================
 // MESSAGE CONTENT
 // ============================================================
