@@ -2202,6 +2202,39 @@ async function openSharedMedia() {
         return;
     }
 
+    
+if (clearChatButton) {
+    clearChatButton.addEventListener("click", async () => {
+        if (!currentConversationId) {
+            alert("Open a conversation first.");
+            return;
+        }
+
+        const confirmed = confirm(
+            "Clear this conversation from your view? This will remove the messages currently displayed, but they may return when you reload."
+        );
+
+        if (!confirmed) return;
+
+        if (messagesContainer) {
+            messagesContainer.innerHTML = "";
+        }
+
+        if (loadedMessages && typeof loadedMessages.clear === "function") {
+            loadedMessages.clear();
+        }
+
+        if (typeof closeChatSettingsPanel === "function") {
+            closeChatSettingsPanel();
+        }
+
+        alert(
+            "Messages cleared from the current view. They have not been deleted from the database."
+        );
+    });
+}
+
+
     const existing = document.getElementById("taaraSharedMediaOverlay");
     if (existing) existing.remove();
 
