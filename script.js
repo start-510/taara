@@ -7052,8 +7052,8 @@ async function acquireMedia(type) {
     localStream = await navigator.mediaDevices.getUserMedia({
       audio: true,
       video: isVideo
-        ? { facingMode: "user" }
-        : false
+  ? { facingMode: { ideal: "user" } }
+  : false
     });
   } catch (error) {
     console.error("TAARA media access error:", error.name, error.message);
