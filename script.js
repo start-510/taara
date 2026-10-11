@@ -1788,71 +1788,94 @@ async function openConversation(
         messageInput.focus();
 }
 
-async function loadMessages(
-    options = {}
-) {
 
-    if (!currentConversationId)
-        return;
+async function loadMessages(options = {}) {
+    if (!currentConversationId || !messagesContainer) return;
 
-    const {
-        forceBottom = true,
-        preserveScroll = false
-    } = options;
-
-    if (!messagesContainer)
-        return;
-
-    /*
-     * Remember the current position before
-     * rebuilding the message list.
-     */
-    const previousScrollHeight =
-        messagesContainer.scrollHeight;
-
-    const previousScrollTop =
-        messagesContainer.scrollTop;
-
-    const wasNearBottom =
-        isMessagesNearBottom();
+    const { forceBottom = true, preserveScroll = false } = options;
+    const previousScrollHeight = messagesContainer.scrollHeight;
+    const previousScrollTop = messagesContainer.scrollTop;
+    const wasNearBottom = isMessagesNearBottom();
 
     try {
-
+        // Get the clear timestamp for the current user.
         const {
-            data,
-            error
-        } =
-            await supabaseClient
-                .from("messages")
-                .select(`
-                    id,
-                    conversation_id,
-                    sender_id,
-                    content,
-                    created_at,
-                    message_type,
-                    file_path,
-                    file_name,
-                    file_size,
-                    mime_type,
-                    reply_to,
-                    edited_at,
-                    deleted_at,
-                    expires_at
-                `)
-                .eq(
-                    "conversation_id",
-                    currentConversationId
-                )
-                .order(
-                    "created_at",
-                    {
-                        ascending: true
-                    }
-                );
+            data: clearedAt,
+            error: clearTimeError
+        } = await supabaseClient.rpc(
+            "get_my_conversation_clear_time",
+            { p_conversation_id: currentConversationId }
+        );
 
-        if (error)
-            throw error;
+        if (clearTimeError) throw clearTimeError;
+
+        let query = supabaseClient
+            .from("messages")
+            .select(`
+                id,
+                conversation_id,
+                sender_id,
+                content,
+                created_at,
+                message_type,
+                file_path,
+                file_name,
+                file_size,
+                mime_type,
+                reply_to,
+                edited_at,
+                deleted_at,
+                expires_at
+            `)
+            .eq("conversation_id", currentConversationId)
+            .order("created_at", { ascending: true });
+
+        // Only hide messages created at or before this user's clear time.
+        if (clearedAt) {
+            query = query.gt("created_at", clearedAt);
+        }
+
+        const { data, error } = await query;
+        if (error) throw error;
+
+        clearAllMessageExpiryTimers();
+
+        if (pinnedMessageIds instanceof Set) {
+            pinnedMessageIds.clear();
+        }
+
+        loadedMessages.clear();
+        messagesContainer.innerHTML = "";
+
+        for (const message of data || []) {
+            loadedMessages.set(message.id, message);
+            await addMessageToScreen(message, currentUserId);
+        }
+
+        await loadAllReactions();
+
+        requestAnimationFrame(() => {
+            if (preserveScroll && previousScrollHeight > 0) {
+                const heightDifference =
+                    messagesContainer.scrollHeight - previousScrollHeight;
+
+                messagesContainer.scrollTop =
+                    previousScrollTop + heightDifference;
+
+                return;
+            }
+
+            if (forceBottom || wasNearBottom) {
+                scrollMessagesToBottom("auto");
+            }
+        });
+
+    } catch (error) {
+        console.error("Load messages failed:", error);
+        alert("Unable to load messages. Please try again.");
+    }
+}
+
 
 
         // =====================================================
