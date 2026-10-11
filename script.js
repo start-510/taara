@@ -5333,6 +5333,23 @@ if (chatSearchClose) {
     );
 }
 
+
+
+function openChatSettingsPanel() {
+    if (!chatSettingsPanel || !currentConversationId) return;
+
+    chatSettingsPanel.classList.remove("hidden");
+    chatSettingsPanel.hidden = false;
+}
+
+function closeChatSettingsPanel() {
+    if (!chatSettingsPanel) return;
+
+    chatSettingsPanel.classList.add("hidden");
+    chatSettingsPanel.hidden = true;
+}
+
+
 // ============================================================
 // REALTIME MESSAGES
 // ============================================================
