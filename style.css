@@ -2135,3 +2135,83 @@ img, video, audio {
         padding: 0 7px;
     }
 }
+
+/* TAARA* Chat Settings */
+.chat-settings-panel {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    z-index: 1000;
+    width: min(320px, calc(100vw - 32px));
+    padding: 14px;
+    background: #181920;
+    color: #f4f5fa;
+    border: 1px solid #363843;
+    border-radius: 12px;
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.35);
+}
+
+.chat-settings-panel[hidden],
+.chat-settings-panel.hidden {
+    display: none !important;
+}
+
+.chat-settings-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding-bottom: 12px;
+    margin-bottom: 8px;
+    border-bottom: 1px solid #30313a;
+}
+
+.chat-settings-header h3 {
+    margin: 0;
+    font-size: 16px;
+}
+
+#closeChatSettingsButton {
+    border: 0;
+    background: transparent;
+    color: #f4f5fa;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.chat-settings-option {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+    width: 100%;
+    padding: 12px;
+    margin-top: 5px;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    background: transparent;
+    color: #f4f5fa;
+    text-align: left;
+    cursor: pointer;
+}
+
+.chat-settings-option:hover {
+    background: #252731;
+    border-color: #f5c542;
+}
+
+.chat-settings-option span {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.chat-settings-option small {
+    color: #a6a8b3;
+    font-size: 12px;
+    line-height: 1.4;
+}
+
+#clearChatButton:hover {
+    border-color: #d96a6a;
+}
+
