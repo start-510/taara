@@ -2203,13 +2203,14 @@ async function addMessageToScreen(
 }
 
 
+
 async function openSharedMedia() {
     if (!currentConversationId) {
         alert("Open a conversation first.");
         return;
     }
 
-    const messages = Array.from(loadedMessages.values())
+    const allMessages = Array.from(loadedMessages.values())
         .filter(message =>
             !message.deleted_at &&
             (
@@ -2218,56 +2219,10 @@ async function openSharedMedia() {
                     String(message.message_type || "").toLowerCase()
                 )
             )
+        )
+        .sort((a, b) =>
+            new Date(b.created_at) - new Date(a.created_at)
         );
-
-    if (!messages.length) {
-        alert("No shared media or files in this conversation yet.");
-        return;
-    }
-
-    
-
-if (clearChatButton) {
-    clearChatButton.addEventListener("click", async () => {
-        if (!currentConversationId) {
-            alert("Open a conversation first.");
-            return;
-        }
-
-        if (!confirm(
-            "Clear existing messages from your view? The other participant's messages will remain unchanged."
-        )) {
-            return;
-        }
-
-        clearChatButton.disabled = true;
-
-        try {
-            const { error } = await supabaseClient.rpc(
-                "clear_my_conversation",
-                { p_conversation_id: currentConversationId }
-            );
-
-            if (error) throw error;
-
-            closeChatSettingsPanel();
-
-            await loadMessages({
-                forceBottom: true,
-                preserveScroll: false
-            });
-
-            alert("Conversation cleared from your view.");
-        } catch (error) {
-            console.error("Clear Chat failed:", error);
-            alert("Unable to clear this conversation. Please try again.");
-        } finally {
-            clearChatButton.disabled = false;
-        }
-    });
-}
-
-
 
     const existing = document.getElementById("taaraSharedMediaOverlay");
     if (existing) existing.remove();
@@ -2276,89 +2231,227 @@ if (clearChatButton) {
     overlay.id = "taaraSharedMediaOverlay";
     overlay.style.cssText = `
         position:fixed;inset:0;z-index:10000;
-        background:rgba(0,0,0,.72);display:flex;
-        align-items:center;justify-content:center;padding:16px;
+        background:rgba(8,9,12,.78);
+        display:flex;align-items:center;justify-content:center;
+        padding:16px;backdrop-filter:blur(5px);
     `;
 
     const panel = document.createElement("section");
     panel.style.cssText = `
-        width:min(620px,100%);max-height:80dvh;overflow:auto;
-        background:#181920;color:#f4f5fa;border:1px solid #383943;
-        border-radius:14px;padding:18px;
+        width:min(760px,100%);max-height:85dvh;
+        display:flex;flex-direction:column;overflow:hidden;
+        background:#181920;color:#f4f5fa;
+        border:1px solid #353641;border-radius:16px;
+        box-shadow:0 24px 70px rgba(0,0,0,.4);
     `;
 
-    const header = document.createElement("div");
-    header.style.cssText =
-        "display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px";
+    const header = document.createElement("header");
+    header.style.cssText = `
+        display:flex;justify-content:space-between;align-items:center;
+        gap:12px;padding:20px;border-bottom:1px solid #343540;
+    `;
+
+    const headingGroup = document.createElement("div");
 
     const title = document.createElement("h2");
-    title.textContent = "Shared Media & Files";
-    title.style.cssText = "font-size:18px;margin:0";
+    title.textContent = "Shared Media";
+    title.style.cssText = "font-size:20px;margin:0 0 5px;font-weight:700";
+
+    const subtitle = document.createElement("p");
+    subtitle.textContent = `${allMessages.length} shared items`;
+    subtitle.style.cssText = "font-size:13px;color:#a4a6b2;margin:0";
+
+    headingGroup.append(title, subtitle);
 
     const close = document.createElement("button");
     close.type = "button";
-    close.textContent = "Close";
-    close.style.cssText =
-        "background:#f2c94c;color:#171717;border:0;border-radius:8px;padding:8px 12px;cursor:pointer";
+    close.textContent = "✕";
+    close.setAttribute("aria-label", "Close shared media");
+    close.style.cssText = `
+        width:38px;height:38px;border-radius:10px;
+        border:1px solid #393b46;background:#242630;
+        color:#f4f5fa;font-size:17px;cursor:pointer;flex-shrink:0;
+    `;
+
     close.addEventListener("click", () => overlay.remove());
+    header.append(headingGroup, close);
 
-    header.append(title, close);
-    panel.appendChild(header);
+    const tabs = document.createElement("div");
+    tabs.style.cssText = `
+        display:flex;gap:8px;overflow-x:auto;padding:14px 20px;
+        border-bottom:1px solid #343540;
+    `;
 
-    for (const message of messages.slice().reverse()) {
-        const item = document.createElement("div");
-        item.style.cssText =
-            "padding:12px 0;border-top:1px solid #343540;display:flex;flex-direction:column;gap:6px";
+    const content = document.createElement("div");
+    content.style.cssText = `
+        padding:16px 20px 22px;overflow:auto;
+        display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+        gap:12px;align-content:start;
+    `;
 
-        const name = document.createElement("div");
-        name.textContent =
-            message.file_name ||
-            message.content ||
-            message.message_type ||
-            "Shared item";
-        name.style.cssText = "overflow-wrap:anywhere;font-weight:600";
+    const categories = [
+        { label: "All", value: "all" },
+        { label: "Images & Videos", value: "visual" },
+        { label: "Audio", value: "audio" },
+        { label: "Files", value: "file" }
+    ];
 
-        const meta = document.createElement("small");
-        meta.textContent = new Date(message.created_at).toLocaleString();
-        meta.style.color = "#a4a6b2";
+    let activeCategory = "all";
 
-        item.append(name, meta);
+    function getCategory(message) {
+        const type = String(message.message_type || "").toLowerCase();
+        const mime = String(message.mime_type || "").toLowerCase();
 
-        if (message.file_path) {
-            const open = document.createElement("button");
-            open.type = "button";
-            open.textContent = "Open shared file";
-            open.style.cssText =
-                "align-self:flex-start;background:#292b34;color:#f4f5fa;border:1px solid #444652;border-radius:8px;padding:8px 12px;cursor:pointer";
+        if (
+            type === "image" || type === "video" ||
+            mime.startsWith("image/") || mime.startsWith("video/")
+        ) return "visual";
 
-            open.addEventListener("click", async () => {
-                open.disabled = true;
-                open.textContent = "Opening…";
-
-                try {
-                    const { data, error } = await supabaseClient
-                        .storage
-                        .from(CHAT_MEDIA_BUCKET)
-                        .createSignedUrl(message.file_path, 60);
-
-                    if (error) throw error;
-                    if (!data?.signedUrl) throw new Error("No file link was returned.");
-
-                    window.open(data.signedUrl, "_blank", "noopener,noreferrer");
-                } catch (error) {
-                    console.error("Could not open shared file:", error);
-                    alert("Unable to open this file. Check your access and try again.");
-                } finally {
-                    open.disabled = false;
-                    open.textContent = "Open shared file";
-                }
-            });
-
-            item.appendChild(open);
+        if (type === "audio" || mime.startsWith("audio/")) {
+            return "audio";
         }
 
-        panel.appendChild(item);
+        return "file";
     }
+
+    async function openFile(message, button) {
+        if (!message.file_path) {
+            alert("This item has no attached file.");
+            return;
+        }
+
+        button.disabled = true;
+        button.textContent = "Opening…";
+
+        try {
+            const { data, error } = await supabaseClient
+                .storage
+                .from(CHAT_MEDIA_BUCKET)
+                .createSignedUrl(message.file_path, 60);
+
+            if (error) throw error;
+            if (!data?.signedUrl) throw new Error("No file URL returned.");
+
+            window.open(data.signedUrl, "_blank", "noopener,noreferrer");
+        } catch (error) {
+            console.error("Shared media open failed:", error);
+            alert("Unable to open this item. Please try again.");
+        } finally {
+            button.disabled = false;
+            button.textContent = "Open file ↗";
+        }
+    }
+
+    function renderItems() {
+        content.replaceChildren();
+
+        const filtered = allMessages.filter(message =>
+            activeCategory === "all" ||
+            getCategory(message) === activeCategory
+        );
+
+        if (!filtered.length) {
+            const empty = document.createElement("p");
+            empty.textContent = "No items in this category yet.";
+            empty.style.cssText =
+                "grid-column:1/-1;text-align:center;padding:36px 12px;color:#a4a6b2";
+            content.appendChild(empty);
+            return;
+        }
+
+        for (const message of filtered) {
+            const card = document.createElement("article");
+            card.style.cssText = `
+                min-width:0;padding:15px;border-radius:12px;
+                border:1px solid #343540;background:#202129;
+                display:flex;flex-direction:column;gap:10px;
+            `;
+
+            const icon = document.createElement("div");
+            icon.textContent =
+                getCategory(message) === "visual" ? "▧" :
+                getCategory(message) === "audio" ? "♫" : "↗";
+            icon.style.cssText = `
+                width:42px;height:42px;display:grid;place-items:center;
+                border-radius:10px;background:rgba(245,197,66,.12);
+                color:#f5c542;font-size:23px;
+            `;
+
+            const name = document.createElement("div");
+            name.textContent =
+                message.file_name ||
+                message.content ||
+                (message.message_type || "Shared item");
+            name.title = name.textContent;
+            name.style.cssText = `
+                font-size:14px;font-weight:600;overflow-wrap:anywhere;
+                display:-webkit-box;-webkit-line-clamp:2;
+                -webkit-box-orient:vertical;overflow:hidden;
+            `;
+
+            const date = document.createElement("small");
+            date.textContent = new Date(message.created_at).toLocaleString();
+            date.style.cssText = "font-size:12px;color:#a4a6b2";
+
+            card.append(icon, name, date);
+
+            if (message.file_size) {
+                const size = document.createElement("small");
+                const bytes = Number(message.file_size);
+                size.textContent = Number.isFinite(bytes) && bytes > 0
+                    ? bytes < 1024 * 1024
+                        ? `${(bytes / 1024).toFixed(0)} KB`
+                        : `${(bytes / (1024 * 1024)).toFixed(1)} MB`
+                    : "";
+                size.style.cssText = "font-size:12px;color:#a4a6b2";
+                if (size.textContent) card.appendChild(size);
+            }
+
+            if (message.file_path) {
+                const open = document.createElement("button");
+                open.type = "button";
+                open.textContent = "Open file ↗";
+                open.style.cssText = `
+                    margin-top:auto;padding:9px 12px;border-radius:8px;
+                    border:0;background:#f5c542;color:#171717;
+                    font-weight:600;cursor:pointer;
+                `;
+                open.addEventListener("click", () => openFile(message, open));
+                card.appendChild(open);
+            }
+
+            content.appendChild(card);
+        }
+    }
+
+    for (const category of categories) {
+        const tab = document.createElement("button");
+        tab.type = "button";
+        tab.textContent = category.label;
+        tab.style.cssText = `
+            flex-shrink:0;padding:9px 13px;border-radius:9px;
+            border:1px solid #393b46;background:#242630;
+            color:#f4f5fa;cursor:pointer;font-size:13px;
+        `;
+
+        tab.addEventListener("click", () => {
+            activeCategory = category.value;
+
+            Array.from(tabs.children).forEach(button => {
+                const selected = button === tab;
+                button.style.background = selected ? "#f5c542" : "#242630";
+                button.style.color = selected ? "#171717" : "#f4f5fa";
+                button.style.borderColor = selected ? "#f5c542" : "#393b46";
+            });
+
+            renderItems();
+        });
+
+        tabs.appendChild(tab);
+    }
+
+    panel.append(header, tabs, content);
+    overlay.appendChild(panel);
 
     overlay.addEventListener("click", event => {
         if (event.target === overlay) overlay.remove();
@@ -2372,9 +2465,13 @@ if (clearChatButton) {
     };
 
     document.addEventListener("keydown", escapeHandler);
-    overlay.appendChild(panel);
+
     document.body.appendChild(overlay);
+
+    // Highlight the default All tab.
+    tabs.children[0].click();
 }
+
 
 
 // ============================================================
