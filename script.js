@@ -6875,11 +6875,14 @@ checkExistingSession();
   let subscribed = false;
   let handlingOffer = false;
 
-  const rtcConfig = {
-    iceServers: [
-      { urls: "stun:stun.l.google.com:19302" }
-    ]
-  };
+ const rtcConfig = {
+  iceServers: [
+    { urls: "stun:stun.l.google.com:19302" },
+    { urls: "stun:stun1.l.google.com:19302" },
+    { urls: "stun:stun2.l.google.com:19302" }
+  ],
+  iceCandidatePoolSize: 10
+};
 
   function showOverlay() {
     overlay.classList.remove("hidden");
