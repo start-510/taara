@@ -4845,3 +4845,89 @@ body {
         transition-duration: 0.01ms !important;
     }
 }
+/* TAARA* — FINAL VIEWPORT AND LAYOUT FIX */
+
+#chatScreen {
+    height: 100vh;
+    height: 100dvh;
+    min-height: 0;
+    overflow: hidden;
+}
+
+#chatScreen .chat-container {
+    height: 100%;
+    min-height: 0;
+}
+
+#chatScreen .app-workspace {
+    flex: 1 1 0;
+    min-height: 0;
+    min-width: 0;
+}
+
+#chatScreen .sidebar,
+#chatScreen .chat-panel {
+    min-height: 0;
+    min-width: 0;
+}
+
+#chatScreen .sidebar {
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+#chatScreen .chat-panel {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+#chatScreen .messages {
+    flex: 1 1 0;
+    min-height: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+#chatScreen .composer-area {
+    flex: 0 0 auto;
+}
+
+@media (max-width: 760px) {
+    #chatScreen {
+        height: 100vh;
+        height: 100dvh;
+        padding: 0;
+    }
+
+    #chatScreen .chat-container {
+        width: 100%;
+        max-width: none;
+        padding-right: 12px;
+        padding-left: 12px;
+        border-radius: 0;
+    }
+
+    #chatScreen .app-workspace {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    #chatScreen .app-workspace:not(.chat-open) .sidebar {
+        display: flex;
+        width: 100%;
+    }
+
+    #chatScreen .app-workspace:not(.chat-open) .chat-panel {
+        display: none;
+    }
+
+    #chatScreen .app-workspace.chat-open .sidebar {
+        display: none;
+    }
+
+    #chatScreen .app-workspace.chat-open .chat-panel {
+        display: flex;
+        width: 100%;
+        padding-left: 0;
+    }
+}
