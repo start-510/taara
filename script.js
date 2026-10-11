@@ -2226,6 +2226,7 @@ async function openSharedMedia() {
     }
 
     
+
 if (clearChatButton) {
     clearChatButton.addEventListener("click", async () => {
         if (!currentConversationId) {
@@ -2233,29 +2234,39 @@ if (clearChatButton) {
             return;
         }
 
-        const confirmed = confirm(
-            "Clear this conversation from your view? This will remove the messages currently displayed, but they may return when you reload."
-        );
-
-        if (!confirmed) return;
-
-        if (messagesContainer) {
-            messagesContainer.innerHTML = "";
+        if (!confirm(
+            "Clear existing messages from your view? The other participant's messages will remain unchanged."
+        )) {
+            return;
         }
 
-        if (loadedMessages && typeof loadedMessages.clear === "function") {
-            loadedMessages.clear();
-        }
+        clearChatButton.disabled = true;
 
-        if (typeof closeChatSettingsPanel === "function") {
+        try {
+            const { error } = await supabaseClient.rpc(
+                "clear_my_conversation",
+                { p_conversation_id: currentConversationId }
+            );
+
+            if (error) throw error;
+
             closeChatSettingsPanel();
-        }
 
-        alert(
-            "Messages cleared from the current view. They have not been deleted from the database."
-        );
+            await loadMessages({
+                forceBottom: true,
+                preserveScroll: false
+            });
+
+            alert("Conversation cleared from your view.");
+        } catch (error) {
+            console.error("Clear Chat failed:", error);
+            alert("Unable to clear this conversation. Please try again.");
+        } finally {
+            clearChatButton.disabled = false;
+        }
     });
 }
+
 
 
     const existing = document.getElementById("taaraSharedMediaOverlay");
