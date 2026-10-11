@@ -7036,22 +7036,69 @@ pc.ontrack = async (event) => {
     });
   }
 
-  async function acquireMedia(type) {
-    if (!navigator.mediaDevices?.getUserMedia) {
-      throw new Error("Microphone/camera access requires HTTPS and a supported browser.");
-    }
+ 
+async function acquireMedia(type) {
+  if (!navigator.mediaDevices?.getUserMedia) {
+    throw new Error(
+      "Camera and microphone access requires HTTPS and a supported browser."
+    );
+  }
 
+  const isVideo = type === "video";
+
+  try {
+    // Request the microphone and camera for video calls.
+    // For voice calls, request only the microphone.
     localStream = await navigator.mediaDevices.getUserMedia({
       audio: true,
-      video: type === "video"
+      video: isVideo
+        ? { facingMode: "user" }
+        : false
     });
+  } catch (error) {
+    console.error("TAARA media access error:", error.name, error.message);
 
-    if (type === "video") {
-      localVideo.srcObject = localStream;
-      videos.classList.remove("hidden");
-      await localVideo.play().catch(() => {});
+    if (error.name === "NotFoundError" ||
+        error.name === "DevicesNotFoundError") {
+      throw new Error(
+        isVideo
+          ? "No camera or microphone was found. Check your device and try again."
+          : "No microphone was found. Connect or enable a microphone."
+      );
+    }
+
+    if (error.name === "NotAllowedError" ||
+        error.name === "PermissionDeniedError") {
+      throw new Error(
+        "Camera or microphone permission was denied. Allow access in your browser settings."
+      );
+    }
+
+    if (error.name === "NotReadableError") {
+      throw new Error(
+        "Your camera or microphone may be in use by another application. Close other apps using it and retry."
+      );
+    }
+
+    throw error;
+  }
+
+  if (isVideo) {
+    localVideo.srcObject = localStream;
+    localVideo.muted = true;
+    localVideo.autoplay = true;
+    localVideo.playsInline = true;
+
+    videos.classList.remove("hidden");
+
+    try {
+      await localVideo.play();
+    } catch (error) {
+      console.warn("Local video playback:", error);
     }
   }
+}
+
 
   async function startCall(type) {
     if (!currentConversationId || !currentChatUserId) {
