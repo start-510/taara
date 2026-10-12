@@ -1919,8 +1919,6 @@ async function addMessageToScreen(
                 ? "own-message"
                 : "received-message"
         }`;
-
-
     // =====================================================
     // MESSAGE CONTENT
     // =====================================================
@@ -1979,7 +1977,6 @@ async function addMessageToScreen(
         formatTime(
             message.created_at
         );
-
 
     // =====================================================
     // EDITED LABEL
