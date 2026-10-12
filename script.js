@@ -8088,13 +8088,14 @@ async function acquireMedia(type) {
         }
       } else if (payload.event === "accepted" && call.role === "caller") {
         setStatus("Connecting…");
-      } else if (payload.event === "declined") {
-        setStatus("Call declined");
-        await finishCall(false);
-      } else if (payload.event === "ended") {
-        setStatus("Call ended");
-        await finishCall(false);
-      }
+     } else if (payload.event === "declined") {
+    setStatus("Call declined");
+    await finishCall(false, "declined", "declined");
+
+} else if (payload.event === "ended") {
+    setStatus("Call ended");
+    await finishCall(false, "ended", "ended");
+}
     } catch (error) {
       console.error("Call signal handling failed:", error);
       setStatus("Call setup failed. Please try again.");
