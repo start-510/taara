@@ -8125,7 +8125,11 @@ async function acquireMedia(type) {
       });
       await sendSignal("accepted");
 
-      activeActions.classList.remove("hidden");
+await updateCallHistory("answered", {
+    answered: true
+});
+
+activeActions.classList.remove("hidden");
     } catch (error) {
       console.error("Accept call failed:", error);
       alert(`Couldn't accept the call: ${error.message}`);
