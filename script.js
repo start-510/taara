@@ -3867,7 +3867,9 @@ function createActionMenu(
 function openProfilePanel() {
     if (!profilePanel) return;
 
+    profilePanel.hidden = false;
     profilePanel.classList.remove("hidden");
+
     refreshProfilePanel();
 }
 
@@ -3875,6 +3877,7 @@ function closeProfilePanel() {
     if (!profilePanel) return;
 
     profilePanel.classList.add("hidden");
+    profilePanel.hidden = true;
 }
 
 function refreshProfilePanel() {
