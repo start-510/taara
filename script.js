@@ -8263,9 +8263,24 @@ endButton.addEventListener("click", () => {
   callHistoryButton.className = videoButton?.className || "";
   callHistoryButton.style.marginLeft = "8px";
 
-  if (videoButton?.parentElement) {
-    videoButton.insertAdjacentElement("afterend", callHistoryButton);
-  }
+ if (videoButton?.parentElement) {
+  videoButton.insertAdjacentElement("afterend", callHistoryButton);
+}
+
+Object.assign(callHistoryButton.style, {
+  display: "inline-flex",
+  visibility: "visible",
+  opacity: "1",
+  position: "relative",
+  zIndex: "10",
+  cursor: "pointer",
+  padding: "10px 14px",
+  borderRadius: "8px",
+  background: "#f5c542",
+  color: "#101116",
+  border: "none",
+  fontWeight: "600"
+});
 
   const callHistoryPanel = document.createElement("div");
   callHistoryPanel.id = "taaraCallHistoryPanel";
