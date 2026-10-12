@@ -7908,7 +7908,6 @@ pc.ontrack = async (event) => {
     });
   }
 
- 
 async function acquireMedia(type) {
   if (!navigator.mediaDevices?.getUserMedia) {
     throw new Error(
@@ -7918,44 +7917,109 @@ async function acquireMedia(type) {
 
   const isVideo = type === "video";
 
-  try {
-    // Request the microphone and camera for video calls.
-    // For voice calls, request only the microphone.
-    localStream = await navigator.mediaDevices.getUserMedia({
-      audio: true,
-      video: isVideo
-  ? { facingMode: { ideal: "user" } }
-  : false
-    });
-  } catch (error) {
-    console.error("TAARA media access error:", error.name, error.message);
+  // Keep the existing voice-call behavior unchanged.
+  if (!isVideo) {
+    try {
+      localStream = await navigator.mediaDevices.getUserMedia({
+        audio: true,
+        video: false
+      });
+    } catch (error) {
+      console.error("TAARA microphone error:", error.name, error.message);
 
-    if (error.name === "NotFoundError" ||
-        error.name === "DevicesNotFoundError") {
-      throw new Error(
-        isVideo
-          ? "No camera or microphone was found. Check your device and try again."
-          : "No microphone was found. Connect or enable a microphone."
-      );
+      if (
+        error.name === "NotFoundError" ||
+        error.name === "DevicesNotFoundError"
+      ) {
+        throw new Error(
+          "No microphone was found. Connect or enable a microphone."
+        );
+      }
+
+      if (
+        error.name === "NotAllowedError" ||
+        error.name === "PermissionDeniedError"
+      ) {
+        throw new Error(
+          "Microphone permission was denied. Allow access in browser settings."
+        );
+      }
+
+      throw error;
     }
 
-    if (error.name === "NotAllowedError" ||
-        error.name === "PermissionDeniedError") {
-      throw new Error(
-        "Camera or microphone permission was denied. Allow access in your browser settings."
-      );
-    }
-
-    if (error.name === "NotReadableError") {
-      throw new Error(
-        "Your camera or microphone may be in use by another application. Close other apps using it and retry."
-      );
-    }
-
-    throw error;
+    return;
   }
 
-  if (isVideo) {
+  // Video call: check the camera and microphone separately.
+  let videoStream = null;
+  let audioStream = null;
+
+  try {
+    try {
+      videoStream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: "user" },
+        audio: false
+      });
+    } catch (error) {
+      console.error("TAARA camera error:", error.name, error.message);
+
+      if (
+        error.name === "NotFoundError" ||
+        error.name === "DevicesNotFoundError"
+      ) {
+        throw new Error(
+          "No camera was found. Connect or enable a camera, then try again."
+        );
+      }
+
+      if (
+        error.name === "NotAllowedError" ||
+        error.name === "PermissionDeniedError"
+      ) {
+        throw new Error(
+          "Camera permission was denied. Allow camera access in your browser settings."
+        );
+      }
+
+      throw error;
+    }
+
+    try {
+      audioStream = await navigator.mediaDevices.getUserMedia({
+        audio: true,
+        video: false
+      });
+    } catch (error) {
+      console.error("TAARA microphone error:", error.name, error.message);
+
+      if (
+        error.name === "NotFoundError" ||
+        error.name === "DevicesNotFoundError"
+      ) {
+        throw new Error(
+          "No microphone was found. Connect or enable a microphone."
+        );
+      }
+
+      if (
+        error.name === "NotAllowedError" ||
+        error.name === "PermissionDeniedError"
+      ) {
+        throw new Error(
+          "Microphone permission was denied. Allow microphone access in your browser settings."
+        );
+      }
+
+      throw error;
+    }
+
+    // Combine the separately acquired camera and microphone tracks.
+    localStream = new MediaStream([
+      ...videoStream.getVideoTracks(),
+      ...audioStream.getAudioTracks()
+    ]);
+
     localVideo.srcObject = localStream;
     localVideo.muted = true;
     localVideo.autoplay = true;
@@ -7966,12 +8030,22 @@ async function acquireMedia(type) {
     try {
       await localVideo.play();
     } catch (error) {
-      console.warn("Local video playback:", error);
+      console.warn("TAARA local video playback:", error);
     }
+  } catch (error) {
+    // Release any devices acquired before setup failed.
+    videoStream?.getTracks().forEach(track => track.stop());
+    audioStream?.getTracks().forEach(track => track.stop());
+
+    if (localStream) {
+      localStream.getTracks().forEach(track => track.stop());
+      localStream = null;
+    }
+
+    throw error;
   }
 }
-
-
+    
   async function startCall(type) {
     if (!currentConversationId || !currentChatUserId) {
       alert("Open a conversation first.");
