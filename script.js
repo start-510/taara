@@ -4427,35 +4427,6 @@ try {
 // ============================================================
 
 function registerTaaraSettingsEvents() {
-    if (profileButton && !profileButton.dataset.settingsBound) {
-        profileButton.dataset.settingsBound = "true";
-
-        profileButton.addEventListener("click", event => {
-            event.stopPropagation();
-
-            if (
-                profilePanel.hidden ||
-                profilePanel.classList.contains("hidden")
-            ) {
-                openProfilePanel();
-            } else {
-                closeProfilePanel();
-            }
-        });
-    }
-
-    if (
-        closeProfileButton &&
-        !closeProfileButton.dataset.settingsBound
-    ) {
-        closeProfileButton.dataset.settingsBound = "true";
-
-        closeProfileButton.addEventListener("click", event => {
-            event.stopPropagation();
-            closeProfilePanel();
-        });
-    }
-
     const buttons = [
         [profileSettingsBtn, "profile"],
         [privacySettingsBtn, "privacy"],
@@ -4465,33 +4436,22 @@ function registerTaaraSettingsEvents() {
     ];
 
     buttons.forEach(([button, page]) => {
-        if (!button || button.dataset.settingsBound) return;
+        if (!button) {
+            console.error("Settings button missing for:", page);
+            return;
+        }
+
+        if (button.dataset.settingsBound === "true") return;
 
         button.dataset.settingsBound = "true";
 
         button.addEventListener("click", event => {
+            event.preventDefault();
             event.stopPropagation();
+
             openSettingsDetail(page);
         });
-    }
-
-    if (
-        settingsLogoutButton &&
-        !settingsLogoutButton.dataset.settingsBound
-    ) {
-        settingsLogoutButton.dataset.settingsBound = "true";
-
-        settingsLogoutButton.addEventListener("click", event => {
-            event.stopPropagation();
-            closeProfilePanel();
-
-            if (logoutButton) {
-                logoutButton.click();
-            } else {
-                console.error("Logout button not found.");
-            }
-        });
-    }
+    });
 }
 
 registerTaaraSettingsEvents();
