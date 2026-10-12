@@ -7994,6 +7994,7 @@ async function acquireMedia(type) {
     showOverlay();
 
     try {
+        await saveCallHistoryStart();
       await ensureSignalChannel(call.conversationId);
       await acquireMedia(type);
       await createPeerConnection();
