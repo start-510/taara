@@ -2206,6 +2206,67 @@ async function openSharedMedia() {
         return "file";
     }
 
+    // ============================================================
+// CHAT SETTINGS — BUTTON CONNECTIONS
+// ============================================================
+
+if (sharedMediaButton) {
+    sharedMediaButton.addEventListener("click", () => {
+        if (!currentConversationId) {
+            alert("Open a conversation first.");
+            return;
+        }
+
+        openSharedMedia();
+    });
+}
+
+    // ============================================================
+// CHAT SETTINGS — OPTION BUTTONS
+// ============================================================
+
+const chatSettingsPanel =
+    document.getElementById("chatSettingsPanel");
+
+const closeChatSettingsButton =
+    document.getElementById("closeChatSettingsButton");
+
+const clearChatButton =
+    document.getElementById("clearChatButton");
+
+const disappearingMessagesButton =
+    document.getElementById("disappearingMessagesButton");
+
+if (chatSettingsButton) {
+    chatSettingsButton.addEventListener("click", () => {
+        if (!currentConversationId || !chatSettingsPanel) return;
+
+        const isOpen = !chatSettingsPanel.hidden;
+
+        chatSettingsPanel.hidden = isOpen;
+        chatSettingsPanel.classList.toggle("hidden", isOpen);
+    });
+}
+
+if (closeChatSettingsButton) {
+    closeChatSettingsButton.addEventListener(
+        "click",
+        closeChatSettingsPanel
+    );
+}
+
+if (disappearingMessagesButton) {
+    disappearingMessagesButton.addEventListener("click", () => {
+        if (!currentConversationId) {
+            alert("Open a conversation first.");
+            return;
+        }
+
+        closeChatSettingsPanel();
+        openDisappearingPanel();
+    });
+}
+    
     async function openFile(message, button) {
         if (!message.file_path) {
             alert("This item has no attached file.");
