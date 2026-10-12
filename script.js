@@ -4427,6 +4427,41 @@ try {
 // ============================================================
 
 function registerTaaraSettingsEvents() {
+
+    // OPEN / CLOSE MAIN PROFILE PANEL
+    if (profileButton && !profileButton.dataset.settingsBound) {
+        profileButton.dataset.settingsBound = "true";
+
+        profileButton.addEventListener("click", event => {
+            event.stopPropagation();
+
+            if (!profilePanel) return;
+
+            if (
+                profilePanel.hidden ||
+                profilePanel.classList.contains("hidden")
+            ) {
+                openProfilePanel();
+            } else {
+                closeProfilePanel();
+            }
+        });
+    }
+
+    // CLOSE PROFILE PANEL
+    if (
+        closeProfileButton &&
+        !closeProfileButton.dataset.settingsBound
+    ) {
+        closeProfileButton.dataset.settingsBound = "true";
+
+        closeProfileButton.addEventListener("click", event => {
+            event.stopPropagation();
+            closeProfilePanel();
+        });
+    }
+
+    // OPEN EACH SETTINGS PAGE
     const buttons = [
         [profileSettingsBtn, "profile"],
         [privacySettingsBtn, "privacy"],
@@ -4436,22 +4471,33 @@ function registerTaaraSettingsEvents() {
     ];
 
     buttons.forEach(([button, page]) => {
-        if (!button) {
-            console.error("Settings button missing for:", page);
-            return;
-        }
-
-        if (button.dataset.settingsBound === "true") return;
+        if (!button || button.dataset.settingsBound) return;
 
         button.dataset.settingsBound = "true";
 
         button.addEventListener("click", event => {
             event.preventDefault();
             event.stopPropagation();
-
             openSettingsDetail(page);
         });
     });
+
+    // LOGOUT
+    if (
+        settingsLogoutButton &&
+        !settingsLogoutButton.dataset.settingsBound
+    ) {
+        settingsLogoutButton.dataset.settingsBound = "true";
+
+        settingsLogoutButton.addEventListener("click", event => {
+            event.stopPropagation();
+            closeProfilePanel();
+
+            if (logoutButton) {
+                logoutButton.click();
+            }
+        });
+    }
 }
 
 registerTaaraSettingsEvents();
