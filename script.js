@@ -8134,7 +8134,7 @@ activeActions.classList.remove("hidden");
     } catch (error) {
       console.error("Accept call failed:", error);
       alert(`Couldn't accept the call: ${error.message}`);
-      await finishCall(true, "declined");
+      await finishCall(true, "declined", "declined");
     }
   }
 
