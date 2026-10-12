@@ -8038,14 +8038,14 @@ async function acquireMedia(type) {
         await ensureSignalChannel(payload.conversation_id);
 
         call = {
-          type: payload.call_type === "video" ? "video" : "voice",
-          conversationId: payload.conversation_id,
-          peerId: payload.from,
-          peerName: payload.from_name || currentChatUsername || "Contact",
-          role: "receiver",
-          offer: payload.description
-        };
-
+  type: payload.call_type === "video" ? "video" : "voice",
+  conversationId: payload.conversation_id,
+  peerId: payload.from,
+  peerName: payload.from_name || currentChatUsername || "Contact",
+  role: "receiver",
+  offer: payload.description,
+  historyId: payload.call_history_id || null
+};
         personEl.textContent = call.peerName;
         setStatus(
           call.type === "video"
