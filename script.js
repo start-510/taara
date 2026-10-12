@@ -8071,6 +8071,9 @@ async function acquireMedia(type) {
     try {
       if (payload.event === "answer" && pc && call.role === "caller") {
         await pc.setRemoteDescription(payload.description);
+              await updateCallHistory("answered", {
+        answered: true
+    });
         for (const candidate of pendingCandidates) {
           await pc.addIceCandidate(candidate).catch(console.warn);
         }
