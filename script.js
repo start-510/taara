@@ -8185,12 +8185,12 @@ activeActions.classList.remove("hidden");
   acceptButton.addEventListener("click", () => void acceptCall());
 
   declineButton.addEventListener("click", () => {
-    void finishCall(true, "declined");
-  });
+    void finishCall(true, "declined", "declined");
+});
 
-  endButton.addEventListener("click", () => {
-    void finishCall(true, "ended");
-  });
+endButton.addEventListener("click", () => {
+    void finishCall(true, "ended", "ended");
+});
 
   muteButton.addEventListener("click", () => {
     if (!localStream) return;
