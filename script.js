@@ -7709,6 +7709,66 @@ checkExistingSession();
     statusEl.textContent = text;
   }
 
+    
+  // =========================================================
+  // CALL HISTORY — SAVE AND UPDATE RECORDS
+  // =========================================================
+
+  async function saveCallHistoryStart() {
+    if (!call || call.role !== "caller") return;
+
+    try {
+      const { data, error } = await supabaseClient
+        .from("call_history")
+        .insert({
+          conversation_id: call.conversationId,
+          caller_id: currentUserId,
+          receiver_id: call.peerId,
+          call_type: call.type,
+          call_status: "initiated"
+        })
+        .select("id")
+        .single();
+
+      if (error) throw error;
+
+      call.historyId = data.id;
+    } catch (error) {
+      // Call functionality must keep working if history saving fails.
+      console.error("Could not save call history:", error);
+      call.historyId = null;
+    }
+  }
+
+  async function updateCallHistory(status, options = {}) {
+    if (!call?.historyId) return;
+
+    const historyId = call.historyId;
+
+    const changes = {
+      call_status: status
+    };
+
+    if (options.answered) {
+      changes.answered_at = new Date().toISOString();
+    }
+
+    if (options.ended) {
+      changes.ended_at = new Date().toISOString();
+    }
+
+    try {
+      const { error } = await supabaseClient
+        .from("call_history")
+        .update(changes)
+        .eq("id", historyId);
+
+      if (error) throw error;
+    } catch (error) {
+      console.error("Could not update call history:", error);
+    }
+  }
+
   function sendSignal(event, extra = {}) {
     if (!signalChannel || !subscribed || !call) {
       return Promise.reject(new Error("Call signaling is not connected."));
