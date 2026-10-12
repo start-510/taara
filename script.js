@@ -4475,7 +4475,6 @@ function openDisappearingPanel() {
     );
 }
 
-
 function closeDisappearingPanel() {
 
     if (!disappearingPanel) {
