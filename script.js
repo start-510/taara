@@ -7733,9 +7733,10 @@ checkExistingSession();
       if (error) throw error;
 
       call.historyId = data.id;
+   
     } catch (error) {
-      // Call functionality must keep working if history saving fails.
       console.error("Could not save call history:", error);
+      alert("Call history save failed: " + (error.message || JSON.stringify(error)));
       call.historyId = null;
     }
   }
