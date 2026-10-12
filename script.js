@@ -8250,5 +8250,181 @@ endButton.addEventListener("click", () => {
     }
     if (pc) pc.close();
   });
+
+    
+  // =====================================================
+  // TAARA* — CALL HISTORY UI
+  // =====================================================
+
+  const callHistoryButton = document.createElement("button");
+  callHistoryButton.type = "button";
+  callHistoryButton.id = "taaraCallHistoryButton";
+  callHistoryButton.textContent = "Call History";
+  callHistoryButton.className = videoButton?.className || "";
+  callHistoryButton.style.marginLeft = "8px";
+
+  if (videoButton?.parentElement) {
+    videoButton.insertAdjacentElement("afterend", callHistoryButton);
+  }
+
+  const callHistoryPanel = document.createElement("div");
+  callHistoryPanel.id = "taaraCallHistoryPanel";
+  callHistoryPanel.className = "hidden";
+  callHistoryPanel.setAttribute("role", "dialog");
+  callHistoryPanel.setAttribute("aria-modal", "true");
+
+  Object.assign(callHistoryPanel.style, {
+    position: "fixed",
+    inset: "0",
+    zIndex: "100000",
+    background: "rgba(0,0,0,.72)",
+    display: "none",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: "18px"
+  });
+
+  callHistoryPanel.innerHTML = `
+    <section style="
+      width:min(520px,100%);
+      max-height:80vh;
+      overflow:auto;
+      background:#181920;
+      color:#f4f4f5;
+      border:1px solid #343640;
+      border-radius:16px;
+      padding:20px;
+      box-sizing:border-box;
+    ">
+      <header style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
+        <h2 style="margin:0;font-size:20px;">Call History</h2>
+        <button type="button" id="taaraCallHistoryClose"
+          aria-label="Close call history"
+          style="background:transparent;color:#f5c542;border:0;font-size:25px;cursor:pointer;">
+          &times;
+        </button>
+      </header>
+      <p id="taaraCallHistoryStatus" style="color:#b8b8c2;">Loading calls…</p>
+      <div id="taaraCallHistoryList"></div>
+    </section>
+  `;
+
+  document.body.appendChild(callHistoryPanel);
+
+  const historyStatus = callHistoryPanel.querySelector("#taaraCallHistoryStatus");
+  const historyList = callHistoryPanel.querySelector("#taaraCallHistoryList");
+
+  function closeCallHistory() {
+    callHistoryPanel.style.display = "none";
+  }
+
+  async function loadCallHistory() {
+    if (!currentUserId) {
+      historyStatus.textContent = "Please log in to view your call history.";
+      historyList.replaceChildren();
+      return;
+    }
+
+    historyStatus.textContent = "Loading calls…";
+    historyList.replaceChildren();
+
+    const { data, error } = await supabaseClient
+      .from("call_history")
+      .select("id, caller_id, receiver_id, call_type, call_status, started_at")
+      .or(`caller_id.eq.${currentUserId},receiver_id.eq.${currentUserId}`)
+      .order("created_at", { ascending: false })
+      .limit(100);
+
+    if (error) {
+      console.error("Call history load failed:", error);
+      historyStatus.textContent = "Couldn't load call history. Please try again.";
+      return;
+    }
+
+    if (!data?.length) {
+      historyStatus.textContent = "No calls recorded yet.";
+      return;
+    }
+
+    const otherIds = [...new Set(data.map(item =>
+      item.caller_id === currentUserId ? item.receiver_id : item.caller_id
+    ))];
+
+    let profileNames = {};
+
+    if (otherIds.length) {
+      const { data: profiles, error: profileError } = await supabaseClient
+        .from("profiles")
+        .select("id, username")
+        .in("id", otherIds);
+
+      if (!profileError && profiles) {
+        for (const profile of profiles) {
+          profileNames[profile.id] = profile.username;
+        }
+      }
+    }
+
+    historyStatus.textContent = `${data.length} recent call${data.length === 1 ? "" : "s"}`;
+
+    for (const item of data) {
+      const outgoing = item.caller_id === currentUserId;
+      const otherId = outgoing ? item.receiver_id : item.caller_id;
+      const name = profileNames[otherId] || "Contact";
+      const date = item.started_at
+        ? new Date(item.started_at).toLocaleString()
+        : "Time unavailable";
+
+      const row = document.createElement("div");
+
+      Object.assign(row.style, {
+        padding: "13px 0",
+        borderBottom: "1px solid #343640",
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        gap: "12px"
+      });
+
+      const details = document.createElement("div");
+      const title = document.createElement("div");
+      title.style.fontWeight = "600";
+      title.textContent =
+        `${outgoing ? "↗ Outgoing" : "↙ Incoming"} ${item.call_type === "video" ? "video" : "voice"} call`;
+
+      const subtitle = document.createElement("div");
+      subtitle.style.marginTop = "4px";
+      subtitle.style.color = "#c4c4cc";
+      subtitle.style.fontSize = "13px";
+      subtitle.textContent = `${name} · ${date}`;
+
+      const status = document.createElement("div");
+      status.style.marginTop = "4px";
+      status.style.fontSize = "12px";
+      status.style.color = "#f5c542";
+      status.textContent = item.call_status;
+
+      details.append(title, subtitle, status);
+      row.appendChild(details);
+      historyList.appendChild(row);
+    }
+  }
+
+  callHistoryButton.addEventListener("click", async () => {
+    callHistoryPanel.style.display = "flex";
+    await loadCallHistory();
+  });
+
+  callHistoryPanel.querySelector("#taaraCallHistoryClose")
+    .addEventListener("click", closeCallHistory);
+
+  callHistoryPanel.addEventListener("click", event => {
+    if (event.target === callHistoryPanel) closeCallHistory();
+  });
+
+  document.addEventListener("keydown", event => {
+    if (event.key === "Escape") closeCallHistory();
+  });
+
 })();
 
