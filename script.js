@@ -8161,6 +8161,10 @@ activeActions.classList.remove("hidden");
       pc = null;
     }
 
+     await updateCallHistory(historyStatus, {
+    ended: true
+});
+     
     if (localStream) {
       localStream.getTracks().forEach((track) => track.stop());
       localStream = null;
