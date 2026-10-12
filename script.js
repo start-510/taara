@@ -8269,7 +8269,7 @@ endButton.addEventListener("click", () => {
 
   const callHistoryPanel = document.createElement("div");
   callHistoryPanel.id = "taaraCallHistoryPanel";
-  callHistoryPanel.className = "hidden";
+  callHistoryPanel.className = "";
   callHistoryPanel.setAttribute("role", "dialog");
   callHistoryPanel.setAttribute("aria-modal", "true");
 
