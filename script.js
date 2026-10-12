@@ -3861,7 +3861,7 @@ function createActionMenu(
 
 
 // ============================================================
-// PROFILE & SETTINGS PANEL
+// TAARA* — PROFILE & SETTINGS
 // ============================================================
 
 function openProfilePanel() {
@@ -3878,6 +3878,8 @@ function closeProfilePanel() {
 
     profilePanel.classList.add("hidden");
     profilePanel.hidden = true;
+
+    closeSettingsDetail();
 }
 
 function refreshProfilePanel() {
@@ -3903,7 +3905,7 @@ function refreshProfilePanel() {
 
 
 // ============================================================
-// SETTINGS BUTTON ELEMENTS
+// SETTINGS ELEMENTS
 // ============================================================
 
 const profileSettingsBtn =
@@ -3923,103 +3925,576 @@ const appearanceSettingsBtn =
 
 
 // ============================================================
-// PROFILE PANEL EVENTS — SINGLE HANDLERS
+// SETTINGS DETAIL WINDOW
 // ============================================================
 
-if (profileButton) {
-    profileButton.addEventListener("click", (event) => {
-        event.stopPropagation();
+let settingsDetailWindow = null;
+let settingsPreviousOverflow = "";
 
-        if (!profilePanel) return;
+function createSettingsDetailWindow() {
+    if (settingsDetailWindow) return settingsDetailWindow;
 
-        if (profilePanel.classList.contains("hidden")) {
-            openProfilePanel();
+    const style = document.createElement("style");
+
+    style.id = "taaraSettingsDetailStyles";
+
+    style.textContent = `
+        #taaraSettingsDetail {
+            position: fixed;
+            inset: 0;
+            z-index: 999999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            box-sizing: border-box;
+            background: rgba(8, 9, 12, .78);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+        }
+
+        #taaraSettingsDetail.open {
+            display: flex;
+        }
+
+        #taaraSettingsDetail *,
+        #taaraSettingsDetail *::before,
+        #taaraSettingsDetail *::after {
+            box-sizing: border-box;
+        }
+
+        #taaraSettingsDetail .ts-card {
+            width: 100%;
+            max-width: 440px;
+            max-height: 85vh;
+            overflow-y: auto;
+            background: #181920;
+            color: #f4f4f5;
+            border: 1px solid #363740;
+            border-radius: 14px;
+            padding: 22px;
+            box-shadow: 0 18px 55px rgba(0, 0, 0, .4);
+        }
+
+        #taaraSettingsDetail .ts-top {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        #taaraSettingsDetail .ts-back {
+            width: 38px;
+            height: 38px;
+            flex-shrink: 0;
+            border: 1px solid #41424a;
+            border-radius: 9px;
+            background: #25262e;
+            color: white;
+            cursor: pointer;
+            font-size: 20px;
+        }
+
+        #taaraSettingsDetail .ts-title {
+            margin: 0;
+            font-size: 19px;
+        }
+
+        #taaraSettingsDetail .ts-subtitle {
+            margin: 5px 0 0;
+            color: #a6a7b0;
+            font-size: 13px;
+        }
+
+        #taaraSettingsDetail .ts-section {
+            padding: 15px 0;
+            border-top: 1px solid #30313a;
+        }
+
+        #taaraSettingsDetail .ts-label {
+            display: block;
+            margin-bottom: 7px;
+            color: #f5c542;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .5px;
+        }
+
+        #taaraSettingsDetail .ts-value {
+            overflow-wrap: anywhere;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        #taaraSettingsDetail .ts-description {
+            color: #c0c0c8;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        #taaraSettingsDetail .ts-action {
+            display: block;
+            width: 100%;
+            margin-top: 10px;
+            padding: 12px;
+            border: 1px solid #41424a;
+            border-radius: 9px;
+            background: #24252d;
+            color: #f5f5f5;
+            text-align: left;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        #taaraSettingsDetail .ts-action:hover {
+            border-color: #f5c542;
+        }
+
+        #taaraSettingsDetail .ts-action.primary {
+            background: #f5c542;
+            color: #171717;
+            border-color: #f5c542;
+            font-weight: 700;
+        }
+
+        #taaraSettingsDetail .ts-status {
+            color: #f5c542;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 480px) {
+            #taaraSettingsDetail {
+                padding: 10px;
+            }
+
+            #taaraSettingsDetail .ts-card {
+                padding: 17px;
+                max-height: 88vh;
+            }
+        }
+    `;
+
+    if (!document.getElementById("taaraSettingsDetailStyles")) {
+        document.head.appendChild(style);
+    }
+
+    settingsDetailWindow = document.createElement("div");
+    settingsDetailWindow.id = "taaraSettingsDetail";
+
+    settingsDetailWindow.innerHTML = `
+        <section class="ts-card"
+                 role="dialog"
+                 aria-modal="true"
+                 aria-labelledby="tsHeading">
+
+            <div class="ts-top">
+                <button class="ts-back"
+                        type="button"
+                        data-ts-back
+                        aria-label="Back">
+                    ←
+                </button>
+
+                <div>
+                    <h2 class="ts-title" id="tsHeading">
+                        Settings
+                    </h2>
+
+                    <p class="ts-subtitle" id="tsSubtitle">
+                        TAARA* preferences
+                    </p>
+                </div>
+            </div>
+
+            <div id="tsContent"></div>
+        </section>
+    `;
+
+    document.body.appendChild(settingsDetailWindow);
+
+    settingsDetailWindow
+        .querySelector("[data-ts-back]")
+        .addEventListener("click", closeSettingsDetail);
+
+    settingsDetailWindow.addEventListener("click", event => {
+        if (event.target === settingsDetailWindow) {
+            closeSettingsDetail();
+        }
+    });
+
+    return settingsDetailWindow;
+}
+
+
+// ============================================================
+// CLOSE SETTINGS DETAIL
+// ============================================================
+
+function closeSettingsDetail() {
+    if (!settingsDetailWindow) return;
+
+    settingsDetailWindow.classList.remove("open");
+
+    document.body.style.overflow = settingsPreviousOverflow;
+}
+
+
+// ============================================================
+// OPEN SETTINGS DETAIL
+// ============================================================
+
+function openSettingsDetail(page) {
+    const modal = createSettingsDetailWindow();
+
+    const heading = modal.querySelector("#tsHeading");
+    const subtitle = modal.querySelector("#tsSubtitle");
+    const content = modal.querySelector("#tsContent");
+
+    const username =
+        (loggedInUsername?.textContent || "User").replace(/^@/, "");
+
+    const pages = {
+        profile: {
+            title: "Profile details",
+            subtitle: "Your TAARA* account",
+            html: `
+                <div class="ts-section">
+                    <span class="ts-label">Username</span>
+                    <div class="ts-value" id="tsUsername"></div>
+                </div>
+
+                <div class="ts-section">
+                    <span class="ts-label">Account status</span>
+                    <div class="ts-value">Signed in</div>
+                </div>
+
+                <div class="ts-section">
+                    <span class="ts-label">Profile photo</span>
+                    <p class="ts-description">
+                        Your default avatar is currently displayed.
+                        Profile photo editing is not connected yet.
+                    </p>
+                </div>
+            `
+        },
+
+        privacy: {
+            title: "Privacy",
+            subtitle: "Conversation privacy",
+            html: `
+                <div class="ts-section">
+                    <span class="ts-label">Conversation access</span>
+                    <p class="ts-description">
+                        TAARA* uses account authentication and
+                        conversation membership to control access.
+                    </p>
+                </div>
+
+                <div class="ts-section">
+                    <span class="ts-label">Disappearing messages</span>
+                    <p class="ts-description">
+                        Open Chat Settings inside a conversation
+                        to manage its disappearing-message timer.
+                    </p>
+                </div>
+
+                <div class="ts-section">
+                    <span class="ts-label">Clear chat</span>
+                    <p class="ts-description">
+                        Use Chat Settings to clear your view
+                        of the selected conversation.
+                    </p>
+                </div>
+            `
+        },
+
+        security: {
+            title: "Security",
+            subtitle: "Account protection",
+            html: `
+                <div class="ts-section">
+                    <span class="ts-label">Sign-in method</span>
+                    <div class="ts-value">Username and PIN</div>
+                    <p class="ts-description">
+                        Keep your PIN private.
+                    </p>
+                </div>
+
+                <div class="ts-section">
+                    <span class="ts-label">Shared devices</span>
+                    <p class="ts-description">
+                        Log out when you finish using a shared device.
+                    </p>
+
+                    <button class="ts-action primary"
+                            type="button"
+                            data-ts-logout>
+                        Log out of TAARA*
+                    </button>
+                </div>
+
+                <div class="ts-section">
+                    <span class="ts-label">Change PIN</span>
+                    <p class="ts-description">
+                        PIN changes are not enabled here. They must
+                        be connected to your authentication backend.
+                    </p>
+                </div>
+            `
+        },
+
+        notifications: {
+            title: "Notifications",
+            subtitle: "Browser permission",
+            html: `
+                <div class="ts-section">
+                    <span class="ts-label">Permission status</span>
+                    <div class="ts-value" id="tsNotificationStatus">
+                        Checking…
+                    </div>
+
+                    <p class="ts-description">
+                        Browser permission alone does not implement
+                        message notifications. Delivery logic is
+                        also required.
+                    </p>
+
+                    <button class="ts-action primary"
+                            type="button"
+                            data-ts-notifications>
+                        Request browser permission
+                    </button>
+
+                    <p class="ts-status"
+                       id="tsNotificationFeedback"
+                       aria-live="polite"></p>
+                </div>
+            `
+        },
+
+        appearance: {
+            title: "Appearance",
+            subtitle: "Display preferences",
+            html: `
+                <div class="ts-section">
+                    <span class="ts-label">Theme</span>
+                    <div class="ts-value">Charcoal &amp; Yellow</div>
+                    <p class="ts-description">
+                        Your existing theme is preserved.
+                    </p>
+                </div>
+
+                <div class="ts-section">
+                    <span class="ts-label">Reduced motion</span>
+                    <p class="ts-description">
+                        Reduce interface animations and transitions.
+                    </p>
+
+                    <button class="ts-action"
+                            type="button"
+                            data-ts-motion></button>
+                </div>
+            `
+        }
+    };
+
+    const selected = pages[page];
+
+    if (!selected) return;
+
+    heading.textContent = selected.title;
+    subtitle.textContent = selected.subtitle;
+    content.innerHTML = selected.html;
+
+    if (page === "profile") {
+        content.querySelector("#tsUsername").textContent =
+            username.startsWith("@") ? username : `@${username}`;
+    }
+
+    if (page === "notifications") {
+        const status =
+            content.querySelector("#tsNotificationStatus");
+
+        const button =
+            content.querySelector("[data-ts-notifications]");
+
+        const feedback =
+            content.querySelector("#tsNotificationFeedback");
+
+        if (!("Notification" in window)) {
+            status.textContent = "Unsupported by this browser";
+            button.disabled = true;
         } else {
+            status.textContent = Notification.permission;
+
+            button.addEventListener("click", async () => {
+                if (!window.isSecureContext) {
+                    feedback.textContent =
+                        "Browser notifications require HTTPS.";
+                    return;
+                }
+
+                try {
+                    const result =
+                        await Notification.requestPermission();
+
+                    status.textContent = result;
+                    feedback.textContent =
+                        result === "granted"
+                            ? "Browser permission granted."
+                            : result === "denied"
+                            ? "Permission denied. Check browser settings."
+                            : "Permission was not granted.";
+                } catch (error) {
+                    console.error(error);
+                    feedback.textContent =
+                        "Could not request permission.";
+                }
+            });
+        }
+    }
+
+    if (page === "appearance") {
+        const button = content.querySelector("[data-ts-motion]");
+
+        function updateMotionLabel() {
+            const enabled =
+                document.body.classList.contains("taara-reduced-motion");
+
+            button.textContent = enabled
+                ? "Reduced motion: ON — turn OFF"
+                : "Reduced motion: OFF — turn ON";
+        }
+
+        updateMotionLabel();
+
+        button.addEventListener("click", () => {
+            const enabled = document.body.classList.toggle(
+                "taara-reduced-motion"
+            );
+
+            try {
+                localStorage.setItem(
+                    "taaraReducedMotion",
+                    String(enabled)
+                );
+            } catch (error) {
+                console.warn("Could not save preference.", error);
+            }
+
+            updateMotionLabel();
+        });
+    }
+
+    const logoutAction = content.querySelector("[data-ts-logout]");
+
+    if (logoutAction) {
+        logoutAction.addEventListener("click", () => {
             closeProfilePanel();
-        }
-    });
-}
 
-if (closeProfileButton) {
-    closeProfileButton.addEventListener("click", (event) => {
-        event.stopPropagation();
-        closeProfilePanel();
-    });
-}
+            if (logoutButton) {
+                logoutButton.click();
+            }
+        });
+    }
 
+    if (!modal.classList.contains("open")) {
+        settingsPreviousOverflow = document.body.style.overflow;
+    }
 
-// ============================================================
-// PROFILE SETTINGS
-// ============================================================
-
-if (profileSettingsBtn) {
-    profileSettingsBtn.addEventListener("click", () => {
-        alert("Profile settings clicked");
-    });
+    modal.classList.add("open");
+    document.body.style.overflow = "hidden";
 }
 
 
 // ============================================================
-// PRIVACY SETTINGS
+// RESTORE SAVED MOTION PREFERENCE
 // ============================================================
 
-if (privacySettingsBtn) {
-    privacySettingsBtn.addEventListener("click", () => {
-        alert("Privacy settings clicked");
-    });
+try {
+    if (localStorage.getItem("taaraReducedMotion") === "true") {
+        document.body.classList.add("taara-reduced-motion");
+    }
+} catch (error) {
+    console.warn("Could not load motion preference.", error);
 }
 
 
 // ============================================================
-// SECURITY SETTINGS
+// REGISTER PANEL EVENTS ONLY ONCE
 // ============================================================
 
-if (securitySettingsBtn) {
-    securitySettingsBtn.addEventListener("click", () => {
-        alert("Security settings clicked");
-    });
+function registerTaaraSettingsEvents() {
+    if (profileButton && !profileButton.dataset.settingsBound) {
+        profileButton.dataset.settingsBound = "true";
+
+        profileButton.addEventListener("click", event => {
+            event.stopPropagation();
+
+            if (
+                profilePanel.hidden ||
+                profilePanel.classList.contains("hidden")
+            ) {
+                openProfilePanel();
+            } else {
+                closeProfilePanel();
+            }
+        });
+    }
+
+    if (
+        closeProfileButton &&
+        !closeProfileButton.dataset.settingsBound
+    ) {
+        closeProfileButton.dataset.settingsBound = "true";
+
+        closeProfileButton.addEventListener("click", event => {
+            event.stopPropagation();
+            closeProfilePanel();
+        });
+    }
+
+    const buttons = [
+        [profileSettingsBtn, "profile"],
+        [privacySettingsBtn, "privacy"],
+        [securitySettingsBtn, "security"],
+        [notificationSettingsBtn, "notifications"],
+        [appearanceSettingsBtn, "appearance"]
+    ];
+
+    buttons.forEach(([button, page]) => {
+        if (!button || button.dataset.settingsBound) return;
+
+        button.dataset.settingsBound = "true";
+
+        button.addEventListener("click", event => {
+            event.stopPropagation();
+            openSettingsDetail(page);
+        });
+    }
+
+    if (
+        settingsLogoutButton &&
+        !settingsLogoutButton.dataset.settingsBound
+    ) {
+        settingsLogoutButton.dataset.settingsBound = "true";
+
+        settingsLogoutButton.addEventListener("click", event => {
+            event.stopPropagation();
+            closeProfilePanel();
+
+            if (logoutButton) {
+                logoutButton.click();
+            } else {
+                console.error("Logout button not found.");
+            }
+        });
+    }
 }
 
-
-// ============================================================
-// NOTIFICATION SETTINGS
-// ============================================================
-
-if (notificationSettingsBtn) {
-    notificationSettingsBtn.addEventListener("click", () => {
-        alert("Notification settings clicked");
-    });
-}
-
-
-// ============================================================
-// APPEARANCE SETTINGS
-// ============================================================
-
-if (appearanceSettingsBtn) {
-    appearanceSettingsBtn.addEventListener("click", () => {
-        alert("Appearance settings clicked");
-    });
-}
-
-
-// ============================================================
-// SETTINGS LOGOUT — SINGLE HANDLER
-// ============================================================
-
-if (settingsLogoutButton) {
-    settingsLogoutButton.addEventListener("click", (event) => {
-        event.stopPropagation();
-        closeProfilePanel();
-
-        if (logoutButton) {
-            logoutButton.click();
-        } else {
-            console.error("Logout button not found.");
-        }
-    });
-}
-
+registerTaaraSettingsEvents();
 
 // ============================================================
 // DISAPPEARING MESSAGE SETTINGS UI
