@@ -7783,6 +7783,7 @@ checkExistingSession();
         from: currentUserId,
         to: call.peerId,
         call_type: call.type,
+              call_history_id: call.historyId || null,
         ...extra
       }
     });
