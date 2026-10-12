@@ -8138,7 +8138,11 @@ activeActions.classList.remove("hidden");
     }
   }
 
-  async function finishCall(notifyPeer = true, signalEvent = "ended") {
+ async function finishCall(
+    notifyPeer = true,
+    signalEvent = "ended",
+    historyStatus = "ended"
+) {
     const oldCall = call;
 
     // Send the end signal before clearing call state.
