@@ -8013,7 +8013,7 @@ async function acquireMedia(type) {
     } catch (error) {
       console.error("Start call failed:", error);
       alert(`Couldn't start the call: ${error.message}`);
-      await finishCall(false);
+     await finishCall(false, "ended", "failed");
     }
   }
 
